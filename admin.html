@@ -318,23 +318,23 @@ input[type=range]{width:100%;}
   </main>
 </div>
 
-<script src="translations.js"></script>
-<script src="data.js"></script>
-<script src="admin.js"></script>
+<script src="js/translations.js"></script>
+<script src="js/data.js"></script>
+<script src="js/admin.js"></script>
 <!-- استدعاء Firebase الإصدار 10 -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
   import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
   import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 const firebaseConfig = {
-    apiKey: "AIzaSyAMLeRa5BeV6YQf7rqLx0JQd3fb_LhbeSU",
-    authDomain: "portfolio-2933c.firebaseapp.com",
-    projectId: "portfolio-2933c",
-    storageBucket: "portfolio-2933c.firebasestorage.app",
-    messagingSenderId: "599965326470",
-    appId: "1:599965326470:web:ff465c87d42bb0ab188507",
-    measurementId: "G-WBTPVJLRF4"
-  };
+  apiKey: "AIzaSyAMLeRa5BeV6YQf7rqLx0JQd3fb_LhbeSU",
+  authDomain: "portfolio-2933c.firebaseapp.com",
+  projectId: "portfolio-2933c",
+  storageBucket: "portfolio-2933c.firebasestorage.app",
+  messagingSenderId: "599965326470",
+  appId: "1:599965326470:web:ff465c87d42bb0ab188507",
+  measurementId: "G-WBTPVJLRF4"
+};
 
   // تهيئة فايربيس
   const app = initializeApp(firebaseConfig);
