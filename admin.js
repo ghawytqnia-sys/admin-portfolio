@@ -1,458 +1,337 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin — Portfolio CMS</title>
-<meta name="robots" content="noindex, nofollow">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<style>
-:root{
-  --ink:#0B1220; --ink-2:#121B2E; --gold:#C08B3D; --gold-l:#E3B36B; --teal:#1F8A70; --teal-l:#38C9A6;
-  --bg:#0B1220; --bg-2:#121B2E; --surface:rgba(255,255,255,.04); --text:#EDEFF3; --text-dim:#A6ADBB; --border:rgba(255,255,255,.09);
-  --radius:12px; --font-display:'Poppins',sans-serif; --font-body:'Inter',sans-serif;
-}
-*{box-sizing:border-box; margin:0; padding:0;}
-body{font-family:var(--font-body); background:var(--bg); color:var(--text); min-height:100vh;}
-a{color:inherit;}
-h1,h2,h3{font-family:var(--font-display);}
-button, input, textarea, select{font-family:inherit;}
+/* ============================================================
+   ADMIN PANEL LOGIC
+   Note: This is a client-side, local-only login for casual
+   protection of the editing UI — it is NOT secure server auth.
+   ============================================================ */
+(function(){
+  const K_USER = 'portfolio_admin_user';
+  const K_PASS = 'portfolio_admin_pass';
+  const K_SESSION = 'portfolio_admin_session';
+  const K_I18N = 'portfolio_i18n_overrides';
+  const K_DATA = 'portfolio_data_overrides';
+  const K_THEME = 'portfolio_theme_custom';
 
-/* ---- LOGIN ---- */
-#loginScreen{min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px;}
-.login-card{width:100%; max-width:380px; background:var(--bg-2); border:1px solid var(--border); border-radius:16px; padding:36px 30px;}
-.login-card h1{font-size:22px; margin-bottom:6px;}
-.login-card p{color:var(--text-dim); font-size:13.5px; margin-bottom:26px;}
-.field{margin-bottom:16px;}
-.field label{display:block; font-size:12.5px; color:var(--text-dim); margin-bottom:6px;}
-.field input{width:100%; padding:12px 14px; border-radius:9px; border:1px solid var(--border); background:var(--surface); color:var(--text); font-size:14.5px;}
-.field input:focus{outline:none; border-color:var(--gold);}
-.btn{display:inline-flex; align-items:center; gap:8px; padding:12px 20px; border-radius:9px; font-weight:600; font-size:14px; border:1px solid transparent; cursor:pointer; transition:.2s ease;}
-.btn-primary{background:linear-gradient(135deg,var(--gold),var(--gold-l)); color:#181008; width:100%; justify-content:center;}
-.btn-primary:hover{opacity:.92;}
-.btn-ghost{border-color:var(--border); background:var(--surface); color:var(--text);}
-.btn-ghost:hover{border-color:var(--gold); color:var(--gold-l);}
-.btn-danger{border-color:rgba(220,90,90,.4); color:#e07a7a; background:rgba(220,90,90,.08);}
-.hint{font-size:12px; color:var(--text-dim); margin-top:14px; line-height:1.6;}
-.hint b{color:var(--gold-l);}
+  let currentLangTab = {}; // per group
 
-/* ---- SHELL ---- */
-#app{display:none; min-height:100vh; grid-template-columns:250px 1fr;}
-#app.show{display:grid;}
-.sidebar{background:var(--bg-2); border-right:1px solid var(--border); padding:24px 16px; display:flex; flex-direction:column; gap:4px;}
-.brand{font-family:var(--font-display); font-weight:800; font-size:17px; padding:8px 12px 22px; display:flex; align-items:center; gap:10px;}
-.brand .dot{width:8px; height:8px; border-radius:50%; background:var(--gold);}
-.nav-item{display:flex; align-items:center; gap:12px; padding:11px 14px; border-radius:9px; font-size:14px; color:var(--text-dim); cursor:pointer; transition:.2s ease;}
-.nav-item i{width:18px; text-align:center;}
-.nav-item:hover{background:var(--surface); color:var(--text);}
-.nav-item.active{background:rgba(192,139,61,.12); color:var(--gold-l);}
-.sidebar-foot{margin-top:auto; padding-top:16px; border-top:1px solid var(--border);}
+  /* ---------- AUTH ---------- */
+  function getCreds(){
+    return {
+      user: localStorage.getItem(K_USER) || 'admin',
+      pass: localStorage.getItem(K_PASS) || 'admin123'
+    };
+  }
 
-.main{padding:32px 40px; max-width:980px;}
-.main-head{display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:28px; flex-wrap:wrap; gap:14px;}
-.main-head h2{font-size:24px; margin-bottom:6px;}
-.main-head p{color:var(--text-dim); font-size:13.5px;}
-.panel{display:none;}
-.panel.active{display:block;}
-.card{background:var(--bg-2); border:1px solid var(--border); border-radius:14px; padding:24px; margin-bottom:20px;}
-.card h3{font-size:15px; margin-bottom:4px;}
-.card .desc{color:var(--text-dim); font-size:12.5px; margin-bottom:18px;}
-.grid2{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
-textarea.code{
-  width:100%; min-height:280px; background:#070C16; border:1px solid var(--border); border-radius:10px; color:#c9e6d8;
-  font-family:'SFMono-Regular',Consolas,monospace; font-size:12.5px; padding:16px; line-height:1.6; resize:vertical;
-}
-.row-actions{display:flex; gap:10px; margin-top:14px; flex-wrap:wrap;}
-.status-msg{font-size:13px; margin-top:12px; padding:10px 14px; border-radius:8px; display:none;}
-.status-msg.ok{display:block; background:rgba(31,138,112,.14); color:var(--teal-l); border:1px solid rgba(31,138,112,.3);}
-.status-msg.err{display:block; background:rgba(220,90,90,.1); color:#e07a7a; border:1px solid rgba(220,90,90,.3);}
-.lang-tabs{display:flex; gap:8px; margin-bottom:16px;}
-.lang-tab{padding:7px 16px; border-radius:100px; border:1px solid var(--border); font-size:12.5px; cursor:pointer; color:var(--text-dim);}
-.lang-tab.active{background:rgba(192,139,61,.14); border-color:var(--gold); color:var(--gold-l);}
-.color-row{display:flex; align-items:center; justify-content:space-between; padding:12px 0; border-bottom:1px solid var(--border);}
-.color-row:last-child{border-bottom:none;}
-.color-row input[type=color]{width:44px; height:34px; border-radius:8px; border:1px solid var(--border); background:none; cursor:pointer;}
-.color-row .lbl{font-size:13.5px;}
-.color-row .lbl small{display:block; color:var(--text-dim); font-size:11.5px; margin-top:2px;}
-.stat-cards{display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:14px; margin-bottom:24px;}
-.stat-mini{background:var(--bg-2); border:1px solid var(--border); border-radius:12px; padding:18px;}
-.stat-mini b{font-family:var(--font-display); font-size:24px; display:block; color:var(--gold-l);}
-.stat-mini span{font-size:12px; color:var(--text-dim);}
-input[type=range]{width:100%;}
-.field-inline{margin-bottom:14px;}
-.field-inline label{display:block; font-size:12.5px; color:var(--text-dim); margin-bottom:6px;}
-.field-inline input, .field-inline textarea{width:100%; padding:11px 13px; border-radius:8px; border:1px solid var(--border); background:var(--surface); color:var(--text); font-size:13.5px;}
-.field-inline textarea{min-height:80px; resize:vertical;}
-.topbar-open{display:flex; gap:10px; margin-bottom:20px;}
-@media(max-width:860px){
-  #app.show{grid-template-columns:1fr;}
-  .sidebar{position:fixed; z-index:50; inset:0 30% 0 0; transform:translateX(-105%); transition:.3s ease;}
-  .sidebar.open{transform:translateX(0);}
-  .main{padding:22px;}
-  .grid2{grid-template-columns:1fr;}
-}
-</style>
-</head>
-<body>
+  function showApp(){
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('app').classList.add('show');
+    initAppData();
+  }
 
-<!-- ============ LOGIN ============ -->
-<div id="loginScreen">
-  <div class="login-card">
-    <h1><i class="fa-solid fa-shield-halved" style="color:var(--gold-l)"></i> Admin Access</h1>
-    <p>Sign in to edit your portfolio content, theme, and translations.</p>
-    <div class="field">
-      <label>Username</label>
-      <input type="text" id="loginUser" placeholder="admin" autocomplete="username">
-    </div>
-    <div class="field">
-      <label>Password</label>
-      <input type="password" id="loginPass" placeholder="••••••••" autocomplete="current-password">
-    </div>
-    <label style="display:flex; align-items:center; gap:8px; font-size:13px; color:var(--text-dim); margin-bottom:18px;">
-      <input type="checkbox" id="rememberMe"> Remember me on this device
-    </label>
-    <button class="btn btn-primary" id="loginBtn"><i class="fa-solid fa-right-to-bracket"></i> Sign In</button>
-    <p class="status-msg" id="loginMsg"></p>
-    <p class="hint">Default credentials: <b>admin</b> / <b>admin123</b>. This is a client-side, local-only login meant to keep the panel out of casual view — it does not provide real server-side security. Change your password after signing in.</p>
-  </div>
-</div>
-
-<!-- ============ APP SHELL ============ -->
-<div id="app">
-  <aside class="sidebar" id="sidebar">
-    <div class="brand"><span class="dot"></span> Portfolio CMS</div>
-    <div class="nav-item active" data-panel="overview"><i class="fa-solid fa-gauge"></i> Overview</div>
-    <div class="nav-item" data-panel="hero"><i class="fa-solid fa-bullseye"></i> Hero & About</div>
-    <div class="nav-item" data-panel="experience"><i class="fa-solid fa-briefcase"></i> Experience</div>
-    <div class="nav-item" data-panel="projects"><i class="fa-solid fa-diagram-project"></i> Projects</div>
-    <div class="nav-item" data-panel="skills"><i class="fa-solid fa-layer-group"></i> Skills</div>
-    <div class="nav-item" data-panel="certs"><i class="fa-solid fa-certificate"></i> Certificates</div>
-    <div class="nav-item" data-panel="theme"><i class="fa-solid fa-palette"></i> Theme</div>
-    <div class="nav-item" data-panel="backup"><i class="fa-solid fa-database"></i> Backup & Restore</div>
-    <div class="nav-item" data-panel="account"><i class="fa-solid fa-key"></i> Account</div>
-    <div class="sidebar-foot">
-      <a href="index.html" target="_blank" class="nav-item"><i class="fa-solid fa-arrow-up-right-from-square"></i> View Site</a>
-      <div class="nav-item" id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i> Log Out</div>
-    </div>
-  </aside>
-
-  <main class="main">
-    <div class="topbar-open">
-      <button class="btn btn-ghost" id="menuToggle" style="display:none;"><i class="fa-solid fa-bars"></i></button>
-    </div>
-
-    <!-- OVERVIEW -->
-    <section class="panel active" id="panel-overview">
-      <div class="main-head"><div><h2>Overview</h2><p>Everything here saves straight to this browser's local storage and is read live by your portfolio site.</p></div></div>
-      <div class="stat-cards">
-        <div class="stat-mini"><b id="statExp">–</b><span>Experience Entries</span></div>
-        <div class="stat-mini"><b id="statProj">–</b><span>Projects</span></div>
-        <div class="stat-mini"><b id="statSkill">–</b><span>Skill Categories</span></div>
-        <div class="stat-mini"><b id="statCert">–</b><span>Certificates Listed</span></div>
-      </div>
-      <div class="card">
-        <h3>How this works</h3>
-        <div class="desc">No server, no database — your edits are written to <code>localStorage</code> in this browser and read by <code>index.html</code> on load.</div>
-        <p style="font-size:13.5px; color:var(--text-dim); line-height:1.8;">
-          For deployment (e.g. GitHub Pages / Netlify), edit content here, then use <b>Backup &amp; Restore → Export</b> to download a JSON snapshot, and hand that file to a developer to bake into <code>js/data.js</code> / <code>js/translations.js</code> permanently — or keep using this panel per-browser for quick local edits.
-        </p>
-      </div>
-    </section>
-
-    <!-- HERO & ABOUT -->
-    <section class="panel" id="panel-hero">
-      <div class="main-head"><div><h2>Hero &amp; About</h2><p>Edit headline copy in English and Arabic.</p></div></div>
-      <div class="lang-tabs" data-group="hero">
-        <div class="lang-tab active" data-lang="en">English</div>
-        <div class="lang-tab" data-lang="ar">العربية</div>
-      </div>
-      <div class="card">
-        <h3>Hero Section</h3>
-        <div class="desc">The eyebrow, headline, and lead paragraph shown at the top of the site.</div>
-        <div class="field-inline"><label>Eyebrow tag</label><input id="f_hero_eyebrow"></div>
-        <div class="grid2">
-          <div class="field-inline"><label>Headline part 1</label><input id="f_hero_title1"></div>
-          <div class="field-inline"><label>Headline accent</label><input id="f_hero_title2"></div>
-        </div>
-        <div class="field-inline"><label>Lead paragraph</label><textarea id="f_hero_lead"></textarea></div>
-      </div>
-      <div class="card">
-        <h3>About Section</h3>
-        <div class="field-inline"><label>Title</label><input id="f_about_title"></div>
-        <div class="field-inline"><label>Paragraph 1</label><textarea id="f_about_p1"></textarea></div>
-        <div class="field-inline"><label>Paragraph 2</label><textarea id="f_about_p2"></textarea></div>
-      </div>
-      <div class="row-actions">
-        <button class="btn btn-primary" id="saveHero"><i class="fa-solid fa-floppy-disk"></i> Save Changes</button>
-      </div>
-      <p class="status-msg" id="heroMsg"></p>
-    </section>
-
-    <!-- EXPERIENCE (JSON editor) -->
-    <section class="panel" id="panel-experience">
-      <div class="main-head"><div><h2>Experience</h2><p>Edit your work history as structured data. Each entry needs role, company, period, and bullets.</p></div></div>
-      <div class="lang-tabs" data-group="experience"><div class="lang-tab active" data-lang="en">English</div><div class="lang-tab" data-lang="ar">العربية</div></div>
-      <div class="card">
-        <h3>Experience JSON</h3>
-        <div class="desc">Array of objects: <code>{role, company, period, bullets:[...]}</code></div>
-        <textarea class="code" id="json_experience"></textarea>
-        <div class="row-actions">
-          <button class="btn btn-primary" id="saveExperience"><i class="fa-solid fa-floppy-disk"></i> Save</button>
-          <button class="btn btn-ghost" id="formatExperience"><i class="fa-solid fa-broom"></i> Format JSON</button>
-        </div>
-        <p class="status-msg" id="experienceMsg"></p>
-      </div>
-    </section>
-
-    <!-- PROJECTS -->
-    <section class="panel" id="panel-projects">
-      <div class="main-head"><div><h2>Projects</h2><p>Showcase cards on your portfolio.</p></div></div>
-      <div class="lang-tabs" data-group="projects"><div class="lang-tab active" data-lang="en">English</div><div class="lang-tab" data-lang="ar">العربية</div></div>
-      <div class="card">
-        <h3>Projects JSON</h3>
-        <div class="desc">Array of objects: <code>{title, desc, tags:[...], status, icon, details}</code>. Icon uses Font Awesome class names, e.g. <code>fa-mobile-screen-button</code>.</div>
-        <textarea class="code" id="json_projects"></textarea>
-        <div class="row-actions">
-          <button class="btn btn-primary" id="saveProjects"><i class="fa-solid fa-floppy-disk"></i> Save</button>
-          <button class="btn btn-ghost" id="formatProjects"><i class="fa-solid fa-broom"></i> Format JSON</button>
-        </div>
-        <p class="status-msg" id="projectsMsg"></p>
-      </div>
-    </section>
-
-    <!-- SKILLS -->
-    <section class="panel" id="panel-skills">
-      <div class="main-head"><div><h2>Skills</h2><p>Category bars and the radar chart.</p></div></div>
-      <div class="lang-tabs" data-group="skills"><div class="lang-tab active" data-lang="en">English</div><div class="lang-tab" data-lang="ar">العربية</div></div>
-      <div class="card">
-        <h3>Skill Categories JSON</h3>
-        <div class="desc">Array of objects: <code>{name, icon, skills:[{label, value}]}</code>. Value is 0–100.</div>
-        <textarea class="code" id="json_skillCats"></textarea>
-      </div>
-      <div class="card">
-        <h3>Radar Chart</h3>
-        <div class="grid2">
-          <div class="field-inline"><label>Labels (comma-separated)</label><input id="f_radar_labels"></div>
-          <div class="field-inline"><label>Values (comma-separated, 0–100)</label><input id="f_radar_values"></div>
-        </div>
-        <div class="row-actions">
-          <button class="btn btn-primary" id="saveSkills"><i class="fa-solid fa-floppy-disk"></i> Save</button>
-          <button class="btn btn-ghost" id="formatSkills"><i class="fa-solid fa-broom"></i> Format JSON</button>
-        </div>
-        <p class="status-msg" id="skillsMsg"></p>
-      </div>
-    </section>
-
-    <!-- CERTS -->
-    <section class="panel" id="panel-certs">
-      <div class="main-head"><div><h2>Certificates &amp; Courses</h2><p>One line per certificate, grouped by platform.</p></div></div>
-      <div class="lang-tabs" data-group="certs"><div class="lang-tab active" data-lang="en">English</div><div class="lang-tab" data-lang="ar">العربية</div></div>
-      <div class="card">
-        <h3>Elaraby E-Learning Platform</h3>
-        <textarea class="code" id="list_certsElaraby" style="min-height:160px;"></textarea>
-      </div>
-      <div class="card">
-        <h3>Almentor Platform</h3>
-        <textarea class="code" id="list_certsAlmentor" style="min-height:160px;"></textarea>
-        <div class="row-actions">
-          <button class="btn btn-primary" id="saveCerts"><i class="fa-solid fa-floppy-disk"></i> Save</button>
-        </div>
-        <p class="status-msg" id="certsMsg"></p>
-      </div>
-    </section>
-
-    <!-- THEME -->
-    <section class="panel" id="panel-theme">
-      <div class="main-head"><div><h2>Theme Customizer</h2><p>Adjust the accent colors and corner rounding used across the site.</p></div></div>
-      <div class="card">
-        <div class="color-row"><div class="lbl">Primary accent (gold)<small>Buttons, highlights, timeline dots</small></div><input type="color" id="c_gold" value="#C08B3D"></div>
-        <div class="color-row"><div class="lbl">Primary accent — light<small>Gradient highlight, hover states</small></div><input type="color" id="c_goldLight" value="#E3B36B"></div>
-        <div class="color-row"><div class="lbl">Secondary accent (teal)<small>Success states, chart points</small></div><input type="color" id="c_teal" value="#1F8A70"></div>
-        <div class="color-row"><div class="lbl">Secondary accent — light<small>Gradient blend, links</small></div><input type="color" id="c_tealLight" value="#38C9A6"></div>
-        <div class="field-inline" style="margin-top:16px;">
-          <label>Corner radius: <span id="radiusVal">14</span>px</label>
-          <input type="range" id="c_radius" min="0" max="28" value="14">
-        </div>
-        <div class="row-actions">
-          <button class="btn btn-primary" id="saveTheme"><i class="fa-solid fa-floppy-disk"></i> Apply Theme</button>
-          <button class="btn btn-ghost" id="resetTheme"><i class="fa-solid fa-rotate-left"></i> Reset to Default</button>
-        </div>
-        <p class="status-msg" id="themeMsg"></p>
-      </div>
-    </section>
-
-    <!-- BACKUP -->
-    <section class="panel" id="panel-backup">
-      <div class="main-head"><div><h2>Backup &amp; Restore</h2><p>Export everything to a JSON file, or restore from a previous backup.</p></div></div>
-      <div class="card">
-        <h3>Export</h3>
-        <div class="desc">Downloads all content, translations, and theme overrides as one JSON file.</div>
-        <button class="btn btn-primary" id="exportBtn"><i class="fa-solid fa-download"></i> Export Backup</button>
-      </div>
-      <div class="card">
-        <h3>Import</h3>
-        <div class="desc">Restore from a previously exported backup file. This replaces current overrides.</div>
-        <input type="file" id="importFile" accept="application/json" style="margin-bottom:14px;">
-        <br><button class="btn btn-ghost" id="importBtn"><i class="fa-solid fa-upload"></i> Import Backup</button>
-        <p class="status-msg" id="importMsg"></p>
-      </div>
-      <div class="card">
-        <h3>Reset Website</h3>
-        <div class="desc">Clears all local overrides and restores the original CV-based content.</div>
-        <button class="btn btn-danger" id="resetAllBtn"><i class="fa-solid fa-triangle-exclamation"></i> Reset Everything</button>
-      </div>
-    </section>
-
-    <!-- ACCOUNT -->
-    <section class="panel" id="panel-account">
-      <div class="main-head"><div><h2>Account</h2><p>Update your admin credentials.</p></div></div>
-      <div class="card">
-        <div class="field-inline"><label>New username</label><input id="acc_user" placeholder="admin"></div>
-        <div class="field-inline"><label>New password</label><input type="password" id="acc_pass" placeholder="••••••••"></div>
-        <button class="btn btn-primary" id="saveAccount"><i class="fa-solid fa-floppy-disk"></i> Update Credentials</button>
-        <p class="status-msg" id="accountMsg"></p>
-      </div>
-    </section>
-  </main>
-</div>
-
-<script src="js/translations.js"></script>
-<script src="js/data.js"></script>
-<script src="js/admin.js"></script>
-<!-- استدعاء Firebase الإصدار 10 -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-  import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-const firebaseConfig = {
-  apiKey: "AIzaSyAMLeRa5BeV6YQf7rqLx0JQd3fb_LhbeSU",
-  authDomain: "portfolio-2933c.firebaseapp.com",
-  projectId: "portfolio-2933c",
-  storageBucket: "portfolio-2933c.firebasestorage.app",
-  messagingSenderId: "599965326470",
-  appId: "1:599965326470:web:ff465c87d42bb0ab188507",
-  measurementId: "G-WBTPVJLRF4"
-};
-
-  // تهيئة فايربيس
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
-
-  // عناصر واجهة المستخدم
-  const loginScreen = document.getElementById('loginScreen');
-  const appShell = document.getElementById('app');
-  const loginBtn = document.getElementById('loginBtn');
-  const logoutBtn = document.getElementById('logoutBtn');
-  const loginMsg = document.getElementById('loginMsg');
-  
-  // 1. مراقبة حالة تسجيل الدخول
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      // تم تسجيل الدخول بنجاح
-      loginScreen.style.display = 'none';
-      appShell.classList.add('show');
-      loadDataFromFirebase(); // جلب البيانات عند الدخول
-    } else {
-      // غير مسجل الدخول
-      loginScreen.style.display = 'flex';
-      appShell.classList.remove('show');
-    }
-  });
-
-  // 2. عملية تسجيل الدخول
-  loginBtn.addEventListener('click', () => {
-    const email = document.getElementById('loginUser').value; // استخدم الإيميل بدلاً من اليوزرنيم
-    const pass = document.getElementById('loginPass').value;
-    
-    loginBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Loading...';
-    
-    signInWithEmailAndPassword(auth, email, pass)
-      .then(() => {
-        loginMsg.className = 'status-msg ok';
-        loginMsg.innerText = "Login successful!";
-        loginBtn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Sign In';
-      })
-      .catch((error) => {
-        loginMsg.className = 'status-msg err';
-        loginMsg.innerText = "Error: " + error.message;
-        loginBtn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Sign In';
-      });
-  });
-
-  // 3. تسجيل الخروج
-  logoutBtn.addEventListener('click', () => {
-    signOut(auth);
-  });
-
-  // 4. جلب البيانات من قاعدة البيانات وعرضها في الحقول
-  async function loadDataFromFirebase() {
-    try {
-      const docRef = doc(db, "portfolio", "content");
-      const docSnap = await getDoc(docRef);
-      
-      if (docSnap.exists()) {
-        const data = docSnap.data();
-        // مثال: تعبئة حقول الـ Hero بالبيانات المحفوظة
-        if(data.heroEn) {
-            document.getElementById('f_hero_eyebrow').value = data.heroEn.eyebrow || "";
-            document.getElementById('f_hero_title1').value = data.heroEn.title1 || "";
-            document.getElementById('f_hero_lead').value = data.heroEn.lead || "";
-        }
-        if(data.experienceData) {
-            document.getElementById('json_experience').value = JSON.stringify(data.experienceData, null, 2);
-        }
-        // ... يمكنك إضافة باقي الحقول هنا بنفس الطريقة
+  function tryLogin(){
+    const u = document.getElementById('loginUser').value.trim();
+    const p = document.getElementById('loginPass').value;
+    const creds = getCreds();
+    const msg = document.getElementById('loginMsg');
+    if(u === creds.user && p === creds.pass){
+      if(document.getElementById('rememberMe').checked){
+        sessionStorage.setItem(K_SESSION, '1');
+        localStorage.setItem(K_SESSION, '1');
+      } else {
+        sessionStorage.setItem(K_SESSION, '1');
       }
-    } catch (e) {
-      console.error("Error loading data: ", e);
+      showApp();
+    } else {
+      msg.className = 'status-msg err';
+      msg.textContent = 'Incorrect username or password.';
     }
   }
 
-  // 5. حفظ التعديلات إلى قاعدة البيانات
-  document.getElementById('saveHero').addEventListener('click', async () => {
-    const heroMsg = document.getElementById('heroMsg');
-    heroMsg.className = 'status-msg';
-    heroMsg.innerText = 'Saving...';
-    heroMsg.style.display = 'block';
-
-    try {
-      // نستخدم { merge: true } حتى لا نحذف البيانات الأخرى
-      await setDoc(doc(db, "portfolio", "content"), {
-        heroEn: {
-          eyebrow: document.getElementById('f_hero_eyebrow').value,
-          title1: document.getElementById('f_hero_title1').value,
-          lead: document.getElementById('f_hero_lead').value
-        }
-      }, { merge: true });
-      
-      heroMsg.className = 'status-msg ok';
-      heroMsg.innerText = 'Saved to Firebase successfully!';
-    } catch (error) {
-      heroMsg.className = 'status-msg err';
-      heroMsg.innerText = 'Error saving: ' + error.message;
+  function checkSession(){
+    if(sessionStorage.getItem(K_SESSION) === '1' || localStorage.getItem(K_SESSION) === '1'){
+      showApp();
     }
-  });
+  }
 
-  // مثال: حفظ قسم الخبرات
-  document.getElementById('saveExperience').addEventListener('click', async () => {
-    const expMsg = document.getElementById('experienceMsg');
-    try {
-      const parsedData = JSON.parse(document.getElementById('json_experience').value);
-      await setDoc(doc(db, "portfolio", "content"), {
-        experienceData: parsedData
-      }, { merge: true });
-      
-      expMsg.className = 'status-msg ok';
-      expMsg.innerText = 'Experience saved to Firebase!';
-    } catch (error) {
-      expMsg.className = 'status-msg err';
-      expMsg.innerText = 'Invalid JSON or Error: ' + error.message;
+  function logout(){
+    sessionStorage.removeItem(K_SESSION);
+    localStorage.removeItem(K_SESSION);
+    location.reload();
+  }
+
+  /* ---------- NAV ---------- */
+  function initNav(){
+    document.querySelectorAll('.nav-item[data-panel]').forEach(item=>{
+      item.addEventListener('click', ()=>{
+        document.querySelectorAll('.nav-item[data-panel]').forEach(n=>n.classList.remove('active'));
+        item.classList.add('active');
+        document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+        document.getElementById('panel-' + item.getAttribute('data-panel')).classList.add('active');
+        document.getElementById('sidebar').classList.remove('open');
+      });
+    });
+    document.querySelectorAll('.lang-tabs').forEach(group=>{
+      const g = group.getAttribute('data-group');
+      currentLangTab[g] = 'en';
+      group.querySelectorAll('.lang-tab').forEach(tab=>{
+        tab.addEventListener('click', ()=>{
+          group.querySelectorAll('.lang-tab').forEach(t=>t.classList.remove('active'));
+          tab.classList.add('active');
+          currentLangTab[g] = tab.getAttribute('data-lang');
+          loadPanel(g);
+        });
+      });
+    });
+  }
+
+  /* ---------- OVERRIDE HELPERS ---------- */
+  function getOverrides(key){
+    try{ return JSON.parse(localStorage.getItem(key)) || {}; }catch(e){ return {}; }
+  }
+  function saveOverrides(key, obj){
+    localStorage.setItem(key, JSON.stringify(obj));
+  }
+  function setDeep(obj, pathArr, value){
+    let cur = obj;
+    for(let i=0;i<pathArr.length-1;i++){
+      cur[pathArr[i]] = cur[pathArr[i]] || {};
+      cur = cur[pathArr[i]];
     }
-  });
+    cur[pathArr[pathArr.length-1]] = value;
+  }
+  function flash(id, ok, text){
+    const el = document.getElementById(id);
+    el.className = 'status-msg ' + (ok ? 'ok' : 'err');
+    el.textContent = text;
+    setTimeout(()=>{ el.className = 'status-msg'; }, 3500);
+  }
 
-</script>
-</body>
-</html>
+  /* ---------- LOAD PANEL DATA INTO FIELDS ---------- */
+  function loadPanel(group){
+    const lang = currentLangTab[group] || 'en';
+    if(group === 'hero'){
+      const t = TRANSLATIONS[lang];
+      document.getElementById('f_hero_eyebrow').value = t.hero.eyebrow;
+      document.getElementById('f_hero_title1').value = t.hero.title1;
+      document.getElementById('f_hero_title2').value = t.hero.title2;
+      document.getElementById('f_hero_lead').value = t.hero.lead;
+      document.getElementById('f_about_title').value = t.about.title;
+      document.getElementById('f_about_p1').value = t.about.p1;
+      document.getElementById('f_about_p2').value = t.about.p2;
+    }
+    if(group === 'experience'){
+      document.getElementById('json_experience').value = JSON.stringify(SITE_DATA[lang].experience, null, 2);
+    }
+    if(group === 'projects'){
+      document.getElementById('json_projects').value = JSON.stringify(SITE_DATA[lang].projects, null, 2);
+    }
+    if(group === 'skills'){
+      document.getElementById('json_skillCats').value = JSON.stringify(SITE_DATA[lang].skillCats, null, 2);
+      document.getElementById('f_radar_labels').value = SITE_DATA[lang].radarLabels.join(', ');
+      document.getElementById('f_radar_values').value = SITE_DATA[lang].radarValues.join(', ');
+    }
+    if(group === 'certs'){
+      document.getElementById('list_certsElaraby').value = SITE_DATA[lang].certsElaraby.join('\n');
+      document.getElementById('list_certsAlmentor').value = SITE_DATA[lang].certsAlmentor.join('\n');
+    }
+  }
+
+  /* ---------- SAVE HANDLERS ---------- */
+  function saveHero(){
+    const lang = currentLangTab.hero || 'en';
+    const ov = getOverrides(K_I18N);
+    ov[lang] = ov[lang] || {};
+    setDeep(ov, [lang,'hero','eyebrow'], document.getElementById('f_hero_eyebrow').value);
+    setDeep(ov, [lang,'hero','title1'], document.getElementById('f_hero_title1').value);
+    setDeep(ov, [lang,'hero','title2'], document.getElementById('f_hero_title2').value);
+    setDeep(ov, [lang,'hero','lead'], document.getElementById('f_hero_lead').value);
+    setDeep(ov, [lang,'about','title'], document.getElementById('f_about_title').value);
+    setDeep(ov, [lang,'about','p1'], document.getElementById('f_about_p1').value);
+    setDeep(ov, [lang,'about','p2'], document.getElementById('f_about_p2').value);
+    saveOverrides(K_I18N, ov);
+    flash('heroMsg', true, 'Saved. Refresh the live site to see changes.');
+  }
+
+  function saveJsonField(fieldId, dataKey, msgId){
+    const lang = currentLangTab[dataKey === 'experience' ? 'experience' : dataKey] || 'en';
+    try{
+      const parsed = JSON.parse(document.getElementById(fieldId).value);
+      const ov = getOverrides(K_DATA);
+      ov[lang] = ov[lang] || {};
+      ov[lang][dataKey] = parsed;
+      saveOverrides(K_DATA, ov);
+      flash(msgId, true, 'Saved. Refresh the live site to see changes.');
+      return true;
+    }catch(e){
+      flash(msgId, false, 'Invalid JSON — please check formatting. (' + e.message + ')');
+      return false;
+    }
+  }
+
+  function saveSkills(){
+    const lang = currentLangTab.skills || 'en';
+    let skillCats;
+    try{
+      skillCats = JSON.parse(document.getElementById('json_skillCats').value);
+    }catch(e){
+      flash('skillsMsg', false, 'Invalid JSON in skill categories.');
+      return;
+    }
+    const labels = document.getElementById('f_radar_labels').value.split(',').map(s=>s.trim()).filter(Boolean);
+    const values = document.getElementById('f_radar_values').value.split(',').map(s=>parseInt(s.trim(),10)).filter(n=>!isNaN(n));
+    const ov = getOverrides(K_DATA);
+    ov[lang] = ov[lang] || {};
+    ov[lang].skillCats = skillCats;
+    ov[lang].radarLabels = labels;
+    ov[lang].radarValues = values;
+    saveOverrides(K_DATA, ov);
+    flash('skillsMsg', true, 'Saved. Refresh the live site to see changes.');
+  }
+
+  function saveCerts(){
+    const lang = currentLangTab.certs || 'en';
+    const ov = getOverrides(K_DATA);
+    ov[lang] = ov[lang] || {};
+    ov[lang].certsElaraby = document.getElementById('list_certsElaraby').value.split('\n').map(s=>s.trim()).filter(Boolean);
+    ov[lang].certsAlmentor = document.getElementById('list_certsAlmentor').value.split('\n').map(s=>s.trim()).filter(Boolean);
+    saveOverrides(K_DATA, ov);
+    flash('certsMsg', true, 'Saved. Refresh the live site to see changes.');
+  }
+
+  /* ---------- THEME ---------- */
+  function loadTheme(){
+    const t = JSON.parse(localStorage.getItem(K_THEME) || '{}');
+    document.getElementById('c_gold').value = t.gold || '#C08B3D';
+    document.getElementById('c_goldLight').value = t.goldLight || '#E3B36B';
+    document.getElementById('c_teal').value = t.teal || '#1F8A70';
+    document.getElementById('c_tealLight').value = t.tealLight || '#38C9A6';
+    document.getElementById('c_radius').value = t.radius || 14;
+    document.getElementById('radiusVal').textContent = t.radius || 14;
+  }
+  function saveTheme(){
+    const theme = {
+      gold: document.getElementById('c_gold').value,
+      goldLight: document.getElementById('c_goldLight').value,
+      teal: document.getElementById('c_teal').value,
+      tealLight: document.getElementById('c_tealLight').value,
+      radius: document.getElementById('c_radius').value
+    };
+    localStorage.setItem(K_THEME, JSON.stringify(theme));
+    flash('themeMsg', true, 'Theme applied. Refresh the live site to see changes.');
+  }
+  function resetTheme(){
+    localStorage.removeItem(K_THEME);
+    loadTheme();
+    flash('themeMsg', true, 'Theme reset to defaults.');
+  }
+
+  /* ---------- BACKUP / RESTORE ---------- */
+  function exportBackup(){
+    const payload = {
+      i18n: getOverrides(K_I18N),
+      data: getOverrides(K_DATA),
+      theme: JSON.parse(localStorage.getItem(K_THEME) || 'null'),
+      exportedAt: new Date().toISOString()
+    };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'portfolio-backup.json';
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function importBackup(){
+    const file = document.getElementById('importFile').files[0];
+    if(!file){ flash('importMsg', false, 'Choose a backup file first.'); return; }
+    const reader = new FileReader();
+    reader.onload = (e)=>{
+      try{
+        const payload = JSON.parse(e.target.result);
+        if(payload.i18n) saveOverrides(K_I18N, payload.i18n);
+        if(payload.data) saveOverrides(K_DATA, payload.data);
+        if(payload.theme) localStorage.setItem(K_THEME, JSON.stringify(payload.theme));
+        flash('importMsg', true, 'Backup restored. Reloading panel...');
+        setTimeout(()=> location.reload(), 1200);
+      }catch(err){
+        flash('importMsg', false, 'Could not read that file: ' + err.message);
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  function resetAll(){
+    if(!confirm('This clears all edits and restores the original CV-based content. Continue?')) return;
+    localStorage.removeItem(K_I18N);
+    localStorage.removeItem(K_DATA);
+    localStorage.removeItem(K_THEME);
+    location.reload();
+  }
+
+  /* ---------- ACCOUNT ---------- */
+  function saveAccount(){
+    const u = document.getElementById('acc_user').value.trim();
+    const p = document.getElementById('acc_pass').value;
+    if(!u || !p){ flash('accountMsg', false, 'Enter both a username and password.'); return; }
+    localStorage.setItem(K_USER, u);
+    localStorage.setItem(K_PASS, p);
+    flash('accountMsg', true, 'Credentials updated.');
+    document.getElementById('acc_pass').value = '';
+  }
+
+  /* ---------- STATS ---------- */
+  function updateStats(){
+    document.getElementById('statExp').textContent = SITE_DATA.en.experience.length;
+    document.getElementById('statProj').textContent = SITE_DATA.en.projects.length;
+    document.getElementById('statSkill').textContent = SITE_DATA.en.skillCats.length;
+    const certCount = SITE_DATA.en.certsElaraby.length + SITE_DATA.en.certsAlmentor.length;
+    document.getElementById('statCert').textContent = certCount;
+  }
+
+  /* ---------- INIT APP DATA ---------- */
+  function initAppData(){
+    updateStats();
+    loadPanel('hero');
+    loadPanel('experience');
+    loadPanel('projects');
+    loadPanel('skills');
+    loadPanel('certs');
+    loadTheme();
+
+    document.getElementById('saveHero').addEventListener('click', saveHero);
+    document.getElementById('saveExperience').addEventListener('click', ()=>saveJsonField('json_experience','experience','experienceMsg'));
+    document.getElementById('formatExperience').addEventListener('click', ()=>{
+      try{ document.getElementById('json_experience').value = JSON.stringify(JSON.parse(document.getElementById('json_experience').value), null, 2); }catch(e){}
+    });
+    document.getElementById('saveProjects').addEventListener('click', ()=>saveJsonField('json_projects','projects','projectsMsg'));
+    document.getElementById('formatProjects').addEventListener('click', ()=>{
+      try{ document.getElementById('json_projects').value = JSON.stringify(JSON.parse(document.getElementById('json_projects').value), null, 2); }catch(e){}
+    });
+    document.getElementById('saveSkills').addEventListener('click', saveSkills);
+    document.getElementById('formatSkills').addEventListener('click', ()=>{
+      try{ document.getElementById('json_skillCats').value = JSON.stringify(JSON.parse(document.getElementById('json_skillCats').value), null, 2); }catch(e){}
+    });
+    document.getElementById('saveCerts').addEventListener('click', saveCerts);
+
+    document.getElementById('c_radius').addEventListener('input', (e)=>{
+      document.getElementById('radiusVal').textContent = e.target.value;
+    });
+    document.getElementById('saveTheme').addEventListener('click', saveTheme);
+    document.getElementById('resetTheme').addEventListener('click', resetTheme);
+
+    document.getElementById('exportBtn').addEventListener('click', exportBackup);
+    document.getElementById('importBtn').addEventListener('click', importBackup);
+    document.getElementById('resetAllBtn').addEventListener('click', resetAll);
+
+    document.getElementById('saveAccount').addEventListener('click', saveAccount);
+    document.getElementById('logoutBtn').addEventListener('click', logout);
+    document.getElementById('menuToggle').addEventListener('click', ()=> document.getElementById('sidebar').classList.toggle('open'));
+  }
+
+  /* ---------- BOOT ---------- */
+  window.addEventListener('DOMContentLoaded', ()=>{
+    checkSession();
+    document.getElementById('loginBtn').addEventListener('click', tryLogin);
+    document.getElementById('loginPass').addEventListener('keydown', (e)=>{ if(e.key === 'Enter') tryLogin(); });
+    initNav();
+  });
+})();
