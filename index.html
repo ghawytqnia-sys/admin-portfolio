@@ -61,7 +61,7 @@ button, input, textarea, select{font-family:inherit;}
 .panel{display:none;}
 .panel.active{display:block;}
 .card{background:var(--bg-2); border:1px solid var(--border); border-radius:14px; padding:26px; margin-bottom:24px; box-shadow:0 4px 20px rgba(0,0,0,0.15);}
-.card h3{font-size:16px; margin-bottom:6px; font-weight:600; color:#fff; display:flex; align-items:center; gap:8px;}
+.card h3{font-size:16px; margin-bottom:14px; font-weight:600; color:#fff; display:flex; align-items:center; gap:8px;}
 .card .desc{color:var(--text-dim); font-size:13px; margin-bottom:20px;}
 
 /* ---- تقسيم اللغات ---- */
@@ -73,7 +73,7 @@ button, input, textarea, select{font-family:inherit;}
 .field-inline{margin-bottom:16px;}
 .field-inline label{display:block; font-size:13px; color:var(--text-dim); margin-bottom:6px; font-weight:500;}
 .field-inline input, .field-inline textarea, .field-inline select{width:100%; padding:12px 14px; border-radius:8px; border:1px solid var(--border); background:var(--surface); color:var(--text); font-size:14px; transition:border .2s;}
-.field-inline input:focus, .field-inline textarea:focus{outline:none; border-color:var(--teal-l);}
+.field-inline input:focus, .field-inline textarea:focus, .field-inline select:focus{outline:none; border-color:var(--teal-l);}
 .field-inline textarea{min-height:90px; resize:vertical; line-height:1.5;}
 
 textarea.code{
@@ -87,6 +87,8 @@ textarea.code{
 .upload-box i{font-size:32px; color:var(--text-dim); margin-bottom:10px;}
 .upload-box input[type="file"]{display:none;}
 .upload-box label{cursor:pointer; display:block; font-size:14px; color:var(--text); font-weight:600;}
+.preview-container{margin-top:12px; display:none; align-items:center; justify-content:center; gap:10px;}
+.preview-container img{max-height:80px; border-radius:8px; border:1px solid var(--border);}
 
 /* ---- العدادات الإحصائية ---- */
 .stat-cards{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:16px; margin-bottom:28px;}
@@ -153,6 +155,12 @@ textarea.code{
   </aside>
 
   <main class="main">
+    <div style="display:flex; justify-content:flex-end; margin-bottom:20px;">
+      <button class="btn btn-ghost" id="forceFetchBtn" style="border-color:var(--teal-l); color:var(--teal-l);">
+        <i class="fa-solid fa-cloud-arrow-down"></i> جلب وتحديث البيانات من السيرفر الآن
+      </button>
+    </div>
+
     <section class="panel active" id="panel-overview">
       <div class="main-head"><div><h2>إحصائيات قاعدة البيانات</h2><p>تزامن حي ومباشر مع خوادم Firebase Firestore.</p></div></div>
       <div class="stat-cards">
@@ -164,8 +172,9 @@ textarea.code{
       <div class="card">
         <h3><i class="fa-solid fa-circle-nodes" style="color:var(--teal-l)"></i> حالة الاتصال بالنظام</h3>
         <div class="desc" style="line-height:1.8; font-size:14px; margin-top:8px; color:var(--text-dim);">
-          لوحة التحكم متصلة الآن مباشرة بملف البيانات المحلي وبـ Firebase Firestore. التعديلات المضافة هنا يتم نشرها وتحديثها لايف على الموقع فور الحفظ وبدون الحاجة لإعادة رفع أي كود.
+          لوحة التحكم متصلة الآن مباشرة بملف البيانات المحلي وبـ Firebase Firestore. التعديلات المضافة هنا يتم نشرها وتحديثها لايف على الموقع فور الحفظ وبدون الحاجة لإعادة رفع أي كود. يمكنك سحب الداتا يدوياً في أي وقت من الزرار العلوي.
         </div>
+        <p class="status-msg" id="fetchStatusMsg"></p>
       </div>
     </section>
 
@@ -187,7 +196,22 @@ textarea.code{
     </section>
 
     <section class="panel" id="panel-hero">
-      <div class="main-head"><div><h2>الواجهة الرئيسية ونبذة عني</h2><p>تحديث النصوص الثابتة للغتين العربية والإنجليزية معاً.</p></div></div>
+      <div class="main-head"><div><h2>الواجهة الرئيسية ونبذة عني</h2><p>تحديث الصورة الشخصية والنصوص الثابتة للغتين العربية والإنجليزية.</p></div></div>
+      
+      <div class="card">
+        <h3><i class="fa-solid fa-image"></i> إعدادات الصورة الشخصية (Profile Picture)</h3>
+        <div class="upload-box">
+          <i class="fa-solid fa-user-circle" style="color:var(--gold-l)"></i>
+          <label for="uploadProfileImg">اضغط هنا لرفع صورتك الشخصية وتحديثها لايف</label>
+          <input type="file" id="uploadProfileImg" accept="image/*">
+          <div class="preview-container" id="previewProfileWrap">
+            <img src="" id="previewProfileImg" style="border-radius:50%; width:90px; height:90px; object-fit:cover;">
+            <input type="hidden" id="f_profile_img">
+            <span style="font-size:12px; color:var(--teal-l); cursor:pointer;" id="copyProfileUrlBtn">تم الرفع بنجاح</span>
+          </div>
+        </div>
+      </div>
+
       <div class="card">
         <h3><i class="fa-solid fa-font"></i> نصوص قسم الافتتاحية والتعريف</h3>
         <div class="lang-box-grid">
@@ -209,7 +233,7 @@ textarea.code{
           </div>
         </div>
       </div>
-      <div class="row-actions"><button class="btn btn-primary" id="saveHero"><i class="fa-solid fa-floppy-disk"></i> حفظ كافة النصوص المعربة</button></div>
+      <div class="row-actions"><button class="btn btn-primary" id="saveHero"><i class="fa-solid fa-floppy-disk"></i> حفظ كافة إعدادات الواجهة والصورة</button></div>
       <p class="status-msg" id="heroMsg"></p>
     </section>
 
@@ -227,9 +251,21 @@ textarea.code{
 
     <section class="panel" id="panel-projects">
       <div class="main-head"><div><h2>استوديو إدارة المشاريع</h2><p>تعديل بطاقات وإضافة روابط وصور للمشاريع البرمجية والحلول الرقمية.</p></div></div>
+      
+      <div class="card">
+        <h3><i class="fa-solid fa-cloud-arrow-up"></i> رفع صور المشاريع (Cloudinary)</h3>
+        <div class="upload-box" style="padding:16px;">
+          <label for="uploadProjectImg">ارفع صورة المشروع لنسخ رابطها واستخدامه في الـ JSON</label>
+          <input type="file" id="uploadProjectImg" accept="image/*">
+          <div class="preview-container" id="previewProjectWrap">
+            <img src="" id="previewProjectImg">
+            <span style="font-size:12px; color:var(--teal-l); cursor:pointer; background:var(--surface); padding:4px 8px; border-radius:4px;" id="copyProjectUrlBtn">نسخ الرابط للمشروع</span>
+          </div>
+        </div>
+      </div>
+
       <div class="card">
         <h3><i class="fa-solid fa-database"></i> مصفوفة المشاريع الكاملة</h3>
-        <div class="desc">يدعم الحقول الموسعة: <code>title, desc, tags[], status, icon, details, projectUrl, githubUrl</code></div>
         <textarea class="code" id="json_projects"></textarea>
         <div class="row-actions">
           <button class="btn btn-primary" id="saveProjects"><i class="fa-solid fa-floppy-disk"></i> مزامنة وحفظ المشاريع لايف</button>
@@ -279,11 +315,25 @@ textarea.code{
     </section>
 
     <section class="panel" id="panel-theme">
-      <div class="main-head"><div><h2>مظهر وألوان الموقع</h2><p>تحديث رموز ألوان الـ CSS التفاعلية عبر قاعدة البيانات مباشرة.</p></div></div>
+      <div class="main-head"><div><h2>مظهر وألوان الموقع (Theme Control)</h2><p>تغيير الثيم الافتراضي، الألوان الأساسية، وانحناء الحواف بالكامل.</p></div></div>
       <div class="card">
+        <div class="field-inline" style="margin-bottom:20px;">
+          <label><i class="fa-solid fa-circle-half-stroke"></i> الوضع الافتراضي للموقع (Theme Mode)</label>
+          <select id="f_theme_mode" style="padding:12px; border-radius:8px; border:1px solid var(--border); background:var(--surface); color:var(--text); width:100%;">
+            <option value="dark">الوضع المظلم (Dark Mode)</option>
+            <option value="light">الوضع المضيء (Light Mode)</option>
+          </select>
+        </div>
+        
         <div class="color-row"><div class="lbl">اللون الأساسي التفاعلي (الذهبي Hex)</div><input type="color" id="c_gold" value="#C08B3D"></div>
         <div class="color-row"><div class="lbl">اللون الثانوي للمؤشرات (التيل Hex)</div><input type="color" id="c_teal" value="#1F8A70"></div>
-        <div class="row-actions"><button class="btn btn-primary" id="saveTheme"><i class="fa-solid fa-floppy-disk"></i> تطبيق وحفظ رموز المظهر</button></div>
+        
+        <div class="field-inline" style="margin-top:20px;">
+          <label><i class="fa-solid fa-shapes"></i> درجة انحناء حواف الكروت (Border Radius - px)</label>
+          <input type="number" id="c_radius" value="14" min="0" max="40" style="direction:ltr;">
+        </div>
+
+        <div class="row-actions"><button class="btn btn-primary" id="saveTheme"><i class="fa-solid fa-floppy-disk"></i> تطبيق وحفظ الثيم الشامل</button></div>
         <p class="status-msg" id="themeMsg"></p>
       </div>
     </section>
@@ -291,12 +341,14 @@ textarea.code{
 </div>
 
 <script src="data.js"></script>
-<script src="translations.js"></script>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
   import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
   import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  const CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/portfolio-2933c/image/upload";
+  const CLOUDINARY_PRESET = "portfolio_preset"; // تأكد من إنشاء Preset بهذا الاسم في Cloudinary
 
   const firebaseConfig = {
     apiKey: "AIzaSyAMLeRa5BeV6YQf7rqLx0JQd3fb_LhbeSU",
@@ -354,6 +406,50 @@ textarea.code{
 
   logoutBtn.addEventListener('click', () => signOut(auth));
 
+  // رفع الصور لـ Cloudinary عامة (صورة شخصية / مشاريع)
+  async function handleMediaUpload(fileElement, previewWrapId, previewImgId, hiddenInputId, copyBtnId) {
+    const file = fileElement.files[0];
+    if(!file) return;
+    
+    document.getElementById(copyBtnId).innerText = "جاري الرفع...";
+    document.getElementById(previewWrapId).style.display = "flex";
+
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', CLOUDINARY_PRESET);
+
+    try {
+      const res = await fetch(CLOUDINARY_URL, { method: "POST", body: formData });
+      const cloudData = await res.json();
+      if(cloudData.secure_url) {
+        document.getElementById(previewImgId).src = cloudData.secure_url;
+        if(hiddenInputId) document.getElementById(hiddenInputId).value = cloudData.secure_url;
+        
+        document.getElementById(copyBtnId).innerText = "نسخ الرابط";
+        document.getElementById(copyBtnId).onclick = () => {
+          navigator.clipboard.writeText(cloudData.secure_url);
+          alert("تم نسخ الرابط بنجاح!");
+        };
+      } else { alert("خطأ في Cloudinary: تأكد من إعدادات الـ Preset."); }
+    } catch(e) { console.error("CDN failure: ", e); }
+  }
+
+  document.getElementById('uploadProfileImg').addEventListener('change', function() {
+    handleMediaUpload(this, 'previewProfileWrap', 'previewProfileImg', 'f_profile_img', 'copyProfileUrlBtn');
+  });
+  document.getElementById('uploadProjectImg').addEventListener('change', function() {
+    handleMediaUpload(this, 'previewProjectWrap', 'previewProjectImg', null, 'copyProjectUrlBtn');
+  });
+
+  // زرار جلب البيانات الفوري
+  document.getElementById('forceFetchBtn').addEventListener('click', async () => {
+    const statusMsg = document.getElementById('fetchStatusMsg');
+    statusMsg.className = 'status-msg'; statusMsg.innerText = 'جاري سحب البيانات...'; statusMsg.style.display = 'block';
+    await loadDataFromFirebase();
+    statusMsg.className = 'status-msg ok'; statusMsg.innerText = 'تم سحب أحدث بيانات من السيرفر بنجاح!';
+    setTimeout(()=> statusMsg.style.display = 'none', 3000);
+  });
+
   // محرك استخراج البيانات الذكي من ملفات الـ PDF والـ Word المرفوعة
   document.getElementById('cvFileDrop').addEventListener('change', function(e) {
     const file = e.target.files[0];
@@ -394,7 +490,6 @@ textarea.code{
     }
   });
 
-  // التعبئة التلقائية للبيانات الأساسية المستخرجة
   function smartAutofillFields(text) {
     const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/;
     const phoneRegex = /(\+20|0)?1[0125]\d{8}/;
@@ -405,30 +500,38 @@ textarea.code{
     if(foundPhone) document.getElementById('f_contact_phone').value = foundPhone[0];
   }
 
-  // محرك جلب البيانات من فايربيس أو الملف المحلي
+  // محرك جلب البيانات من فايربيس
   async function loadDataFromFirebase() {
     try {
       const docRef = doc(db, "portfolio", "content");
       const docSnap = await getDoc(docRef);
       const data = docSnap.exists() ? docSnap.data() : {};
       
-      // تأمين النصوص الافتراضية
       const defaultEn = { eyebrow: "Sales Executive → Digital Builder", title1: "Turning trust into growth", lead: "A professional sales executive.", title: "About Me", p1: "I'm a 31-year-old professional."};
       const defaultAr = { eyebrow: "تنفيذي مبيعات ← بناء منتجات", title1: "أحوّل ثقة العملاء إلى نمو", lead: "محترف مبيعات عمره 31 عامًا.", title: "نبذة عني", p1: "أنا محترف مبيعات وخبرتي واسعة."};
 
+      // تحميل نصوص الإنجليزي
       document.getElementById('f_hero_eyebrow_en').value = data.heroEn?.eyebrow || defaultEn.eyebrow;
       document.getElementById('f_hero_title1_en').value = data.heroEn?.title1 || defaultEn.title1;
       document.getElementById('f_hero_lead_en').value = data.heroEn?.lead || defaultEn.lead;
       document.getElementById('f_about_title_en').value = data.aboutEn?.title || defaultEn.title;
       document.getElementById('f_about_p1_en').value = data.aboutEn?.p1 || defaultEn.p1;
 
+      // تحميل نصوص العربي
       document.getElementById('f_hero_eyebrow_ar').value = data.heroAr?.eyebrow || defaultAr.eyebrow;
       document.getElementById('f_hero_title1_ar').value = data.heroAr?.title1 || defaultAr.title1;
       document.getElementById('f_hero_lead_ar').value = data.heroAr?.lead || defaultAr.lead;
       document.getElementById('f_about_title_ar').value = data.aboutAr?.title || defaultAr.title;
       document.getElementById('f_about_p1_ar').value = data.aboutAr?.p1 || defaultAr.p1;
 
-      // الاعتماد على SITE_DATA من ملف data.js الذي تم استدعاؤه فوق
+      // تحميل الصورة الشخصية
+      if(data.aboutData?.profileImg) {
+        document.getElementById('f_profile_img').value = data.aboutData.profileImg;
+        document.getElementById('previewProfileImg').src = data.aboutData.profileImg;
+        document.getElementById('previewProfileWrap').style.display = "flex";
+      }
+
+      // المصفوفات
       const finalExp = data.experienceData || (window.SITE_DATA ? SITE_DATA.en.experience : []);
       document.getElementById('json_experience').value = JSON.stringify(finalExp, null, 2);
       document.getElementById('statExp').innerText = finalExp.length;
@@ -448,12 +551,16 @@ textarea.code{
       document.getElementById('list_certsAlmentor').value = JSON.stringify(finalAlmentor, null, 2);
       document.getElementById('statCert').innerText = finalElaraby.length + finalAlmentor.length;
 
+      // الاتصال
       document.getElementById('f_contact_email').value = data.contactData?.email || "abdosultan306@gmail.com";
       document.getElementById('f_contact_phone').value = data.contactData?.phone || "+20 111 455 0112";
       document.getElementById('f_contact_location').value = data.contactData?.location || "Madinat El-Salam, Cairo, Egypt";
 
+      // الثيم (المظهر)
+      document.getElementById('f_theme_mode').value = data.themeData?.mode || "dark";
       document.getElementById('c_gold').value = data.themeData?.gold || "#C08B3D";
       document.getElementById('c_teal').value = data.themeData?.teal || "#1F8A70";
+      document.getElementById('c_radius').value = data.themeData?.radius || "14";
 
     } catch (e) { console.error("Telemetry loading failure: ", e); }
   }
@@ -463,17 +570,18 @@ textarea.code{
     const msg = document.getElementById('heroMsg'); msg.className = 'status-msg'; msg.innerText = 'جاري الحفظ...'; msg.style.display = 'block';
     try {
       await setDoc(doc(db, "portfolio", "content"), {
+        aboutData: { profileImg: document.getElementById('f_profile_img').value },
         heroEn: { eyebrow: document.getElementById('f_hero_eyebrow_en').value, title1: document.getElementById('f_hero_title1_en').value, lead: document.getElementById('f_hero_lead_en').value },
         aboutEn: { title: document.getElementById('f_about_title_en').value, p1: document.getElementById('f_about_p1_en').value },
         heroAr: { eyebrow: document.getElementById('f_hero_eyebrow_ar').value, title1: document.getElementById('f_hero_title1_ar').value, lead: document.getElementById('f_hero_lead_ar').value },
         aboutAr: { title: document.getElementById('f_about_title_ar').value, p1: document.getElementById('f_about_p1_ar').value }
       }, { merge: true });
-      msg.className = 'status-msg ok'; msg.innerText = 'تم حفظ ومزامنة نصوص الهوية والافتتاحية لايف بنجاح!';
+      msg.className = 'status-msg ok'; msg.innerText = 'تم حفظ ومزامنة نصوص الهوية والصورة لايف بنجاح!';
     } catch (e) { msg.className = 'status-msg err'; msg.innerText = e.message; }
   });
 
   document.getElementById('saveExperience').addEventListener('click', async () => {
-    const msg = document.getElementById('experienceMsg'); msg.className = 'status-msg'; msg.innerText = 'جاري مزامنة المصفوفات...'; msg.style.display = 'block';
+    const msg = document.getElementById('experienceMsg'); msg.className = 'status-msg'; msg.innerText = 'جاري المزامنة...'; msg.style.display = 'block';
     try {
       const parsed = JSON.parse(document.getElementById('json_experience').value);
       await setDoc(doc(db, "portfolio", "content"), { experienceData: parsed }, { merge: true });
@@ -486,7 +594,7 @@ textarea.code{
     try {
       const parsed = JSON.parse(document.getElementById('json_projects').value);
       await setDoc(doc(db, "portfolio", "content"), { projectsData: parsed }, { merge: true });
-      msg.className = 'status-msg ok'; msg.innerText = 'تم مزامنة وتحديث استوديو المشاريع والروابط لايف!'; loadDataFromFirebase();
+      msg.className = 'status-msg ok'; msg.innerText = 'تم مزامنة استوديو المشاريع بنجاح!'; loadDataFromFirebase();
     } catch (e) { msg.className = 'status-msg err'; msg.innerText = 'JSON غير سليم: ' + e.message; }
   });
 
@@ -523,11 +631,16 @@ textarea.code{
   });
 
   document.getElementById('saveTheme').addEventListener('click', async () => {
-    const msg = document.getElementById('themeMsg'); msg.className = 'status-msg'; msg.innerText = 'جاري التحديث...'; msg.style.display = 'block';
+    const msg = document.getElementById('themeMsg'); msg.className = 'status-msg'; msg.innerText = 'جاري التحديث الشامل...'; msg.style.display = 'block';
     try {
-      const themeColors = { gold: document.getElementById('c_gold').value, teal: document.getElementById('c_teal').value };
-      await setDoc(doc(db, "portfolio", "content"), { themeData: themeColors }, { merge: true });
-      msg.className = 'status-msg ok'; msg.innerText = 'تم تطبيق وحفظ رموز الألوان والمظهر بنجاح!'; loadDataFromFirebase();
+      const themeConfig = { 
+        mode: document.getElementById('f_theme_mode').value,
+        gold: document.getElementById('c_gold').value, 
+        teal: document.getElementById('c_teal').value,
+        radius: document.getElementById('c_radius').value
+      };
+      await setDoc(doc(db, "portfolio", "content"), { themeData: themeConfig }, { merge: true });
+      msg.className = 'status-msg ok'; msg.innerText = 'تم تطبيق وحفظ الثيم الشامل بنجاح!'; loadDataFromFirebase();
     } catch (e) { msg.className = 'status-msg err'; msg.innerText = e.message; }
   });
 </script>
