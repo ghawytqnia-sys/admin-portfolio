@@ -7,7 +7,7 @@
 <meta name="robots" content="noindex, nofollow">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700&family=Alexandria:wght@400;500;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
@@ -41,6 +41,9 @@ button, input, textarea, select{font-family:inherit;}
 .btn-primary:hover{opacity:.95; transform:translateY(-1px);}
 .btn-ghost{border-color:var(--border); background:var(--surface); color:var(--text);}
 .btn-ghost:hover{border-color:var(--gold); color:var(--gold-l);}
+.btn-danger{border-color:rgba(220,90,90,.4); color:#e07a7a; background:rgba(220,90,90,.08);}
+.btn-danger:hover{background:rgba(220,90,90,0.16); border-color:#e07a7a;}
+.btn-icon{padding:8px; font-size:14px;}
 
 /* ---- الهيكل الرئيسي ---- */
 #app{display:none; min-height:100vh; grid-template-columns:1fr 260px;}
@@ -61,27 +64,21 @@ button, input, textarea, select{font-family:inherit;}
 .panel{display:none;}
 .panel.active{display:block;}
 .card{background:var(--bg-2); border:1px solid var(--border); border-radius:14px; padding:26px; margin-bottom:24px; box-shadow:0 4px 20px rgba(0,0,0,0.15);}
-.card h3{font-size:16px; margin-bottom:14px; font-weight:600; color:#fff; display:flex; align-items:center; gap:8px;}
-.card .desc{color:var(--text-dim); font-size:13px; margin-bottom:20px;}
+.card h3{font-size:16px; margin-bottom:16px; font-weight:600; color:#fff; display:flex; align-items:center; gap:8px;}
 
-/* ---- تقسيم اللغات ---- */
+/* ---- التقسيم والمربعات ---- */
 .lang-box-grid{display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:16px;}
 .lang-partition{background:rgba(255,255,255,0.01); border:1px solid var(--border); padding:20px; border-radius:10px; direction:ltr; text-align:left;}
 .lang-partition.rtl-dir{direction:rtl; text-align:right;}
-.lang-partition h4{font-size:13px; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:14px; color:var(--gold-l); display:flex; align-items:center; gap:6px;}
+.lang-partition h4{font-size:13px; text-transform:uppercase; margin-bottom:14px; color:var(--gold-l);}
 
 .field-inline{margin-bottom:16px;}
 .field-inline label{display:block; font-size:13px; color:var(--text-dim); margin-bottom:6px; font-weight:500;}
-.field-inline input, .field-inline textarea, .field-inline select{width:100%; padding:12px 14px; border-radius:8px; border:1px solid var(--border); background:var(--surface); color:var(--text); font-size:14px; transition:border .2s;}
-.field-inline input:focus, .field-inline textarea:focus, .field-inline select:focus{outline:none; border-color:var(--teal-l);}
+.field-inline input, .field-inline textarea, .field-inline select{width:100%; padding:12px 14px; border-radius:8px; border:1px solid var(--border); background:var(--surface); color:var(--text); font-size:14px;}
+.field-inline input:focus, .field-inline textarea:focus{outline:none; border-color:var(--teal-l);}
 .field-inline textarea{min-height:90px; resize:vertical; line-height:1.5;}
+textarea.code{ width:100%; min-height:300px; background:#050912; border:1px solid var(--border); border-radius:10px; color:#c9e6d8; font-family:Consolas, monospace; font-size:13px; padding:18px; direction:ltr; text-align:left;}
 
-textarea.code{
-  width:100%; min-height:300px; background:#050912; border:1px solid var(--border); border-radius:10px; color:#c9e6d8;
-  font-family:Consolas, Monaco, monospace; font-size:13px; padding:18px; line-height:1.6; resize:vertical; direction:ltr; text-align:left;
-}
-
-/* ---- صناديق السحب والرفع ---- */
 .upload-box{border:2px dashed var(--border); padding:24px; border-radius:10px; text-align:center; background:rgba(0,0,0,0.15); transition:all 0.3s; margin-bottom:16px;}
 .upload-box:hover{border-color:var(--gold); background:rgba(192,139,61,0.02);}
 .upload-box i{font-size:32px; color:var(--text-dim); margin-bottom:10px;}
@@ -90,25 +87,36 @@ textarea.code{
 .preview-container{margin-top:12px; display:none; align-items:center; justify-content:center; gap:10px;}
 .preview-container img{max-height:80px; border-radius:8px; border:1px solid var(--border);}
 
-/* ---- العدادات الإحصائية ---- */
+/* ---- الإحصائيات والمظهر ---- */
 .stat-cards{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:16px; margin-bottom:28px;}
-.stat-mini{background:var(--bg-2); border:1px solid var(--border); border-radius:12px; padding:20px; box-shadow:0 4px 15px rgba(0,0,0,0.1); text-align:right;}
+.stat-mini{background:var(--bg-2); border:1px solid var(--border); border-radius:12px; padding:20px; text-align:right;}
 .stat-mini b{font-family:var(--font-display); font-size:28px; display:block; color:var(--gold-l); line-height:1.1;}
-.stat-mini span{font-size:13px; color:var(--text-dim); font-weight:500;}
+.stat-mini span{font-size:13px; color:var(--text-dim);}
 
 .status-msg{font-size:13.5px; margin-top:14px; padding:12px 16px; border-radius:8px; display:none; font-weight:500; text-align:right;}
 .status-msg.ok{display:block; background:rgba(31,138,112,.14); color:var(--teal-l); border:1px solid rgba(31,138,112,.3);}
 .status-msg.err{display:block; background:rgba(220,90,90,.1); color:#e07a7a; border:1px solid rgba(220,90,90,.3);}
 
-.topbar-mobile{display:none; background:var(--bg-2); padding:14px 20px; border-bottom:1px solid var(--border); align-items:center; justify-content:space-between; position:sticky; top:0; z-index:1000; width:100%;}
+.color-row{display:flex; align-items:center; justify-content:space-between; padding:12px 0; border-bottom:1px solid var(--border);}
+.color-row input[type=color]{width:44px; height:34px; border-radius:8px; border:1px solid var(--border); background:none; cursor:pointer;}
+
+/* ---- Projects Visual Builder ---- */
+.project-list-ui { display: flex; flex-direction: column; gap: 16px; margin-bottom: 20px; }
+.proj-builder-item { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 20px; position: relative; }
+.proj-builder-item .actions { position: absolute; top: 16px; left: 16px; display: flex; gap: 8px; }
+.proj-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+/* ---- Smart Parser UI ---- */
+.smart-review-box { background: rgba(31,138,112,.08); border: 1px solid var(--teal-l); padding: 20px; border-radius: 12px; margin-top: 20px; display: none; }
+.smart-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
+.smart-item:last-child { border-bottom: none; }
+.smart-item b { color: var(--teal-l); font-size: 14px; }
+.smart-item span { font-size: 14px; color: #fff; direction: ltr; }
 
 @media(max-width:920px){
   #app{grid-template-columns:1fr;}
-  .topbar-mobile{display:flex;}
-  .sidebar{position:fixed; z-index:9999; inset:0 0 0 20%; transform:translateX(105%); transition:transform .3s ease; height:100vh; border-left:none; border-right:1px solid var(--border);}
-  .sidebar.open{transform:translateX(0);}
+  .sidebar{position:fixed; z-index:9999; inset:0 0 0 20%; transform:translateX(105%); transition:transform .3s ease; height:100vh;}
   .main{padding:24px 20px;}
-  .lang-box-grid{grid-template-columns:1fr;}
 }
 </style>
 </head>
@@ -117,37 +125,25 @@ textarea.code{
 <div id="loginScreen">
   <div class="login-card">
     <h1><i class="fa-solid fa-shield-halved" style="color:var(--gold-l)"></i> استوديو التحكم</h1>
-    <p>قم بتسجيل الدخول لتعديل وإدارة محتوى البورتوفوليو.</p>
-    <div class="field">
-      <label>البريد الإلكتروني</label>
-      <input type="email" id="loginUser" placeholder="admin@example.com">
-    </div>
-    <div class="field">
-      <label>كلمة المرور السريّة</label>
-      <input type="password" id="loginPass" placeholder="••••••••">
-    </div>
-    <button class="btn btn-primary" id="loginBtn" style="width:100%"><i class="fa-solid fa-right-to-bracket"></i> تسجيل الدخول وآمن النظام</button>
+    <p>قم بتسجيل الدخول لإدارة نظام البورتوفوليو الشامل.</p>
+    <div class="field"><label>البريد الإلكتروني</label><input type="email" id="loginUser"></div>
+    <div class="field"><label>كلمة المرور السريّة</label><input type="password" id="loginPass"></div>
+    <button class="btn btn-primary" id="loginBtn" style="width:100%"><i class="fa-solid fa-right-to-bracket"></i> تسجيل الدخول</button>
     <p class="status-msg" id="loginMsg"></p>
   </div>
 </div>
 
 <div id="app">
-  <div class="topbar-mobile">
-    <button class="btn btn-ghost" id="menuToggle" style="padding:8px 14px;"><i class="fa-solid fa-bars"></i> القائمة</button>
-    <span style="font-weight:700; font-size:16px; color:var(--gold-l);">لوحة التحكم الذكية</span>
-  </div>
-
   <aside class="sidebar" id="sidebar">
     <div class="brand"><span class="dot"></span> استوديو التحكم</div>
-    <div class="nav-item active" data-panel="overview"><i class="fa-solid fa-gauge"></i> الإحصائيات العامة</div>
-    <div class="nav-item" data-panel="parser"><i class="fa-solid fa-wand-magic-sparkles"></i> سحب البيانات الذكي</div>
+    <div class="nav-item active" data-panel="overview"><i class="fa-solid fa-gauge"></i> الإحصائيات</div>
+    <div class="nav-item" data-panel="parser"><i class="fa-solid fa-wand-magic-sparkles"></i> سحب البيانات (CV)</div>
     <div class="nav-item" data-panel="hero"><i class="fa-solid fa-bullseye"></i> الواجهة والتعريف</div>
     <div class="nav-item" data-panel="experience"><i class="fa-solid fa-briefcase"></i> الخبرات المهنية</div>
     <div class="nav-item" data-panel="projects"><i class="fa-solid fa-diagram-project"></i> استوديو المشاريع</div>
     <div class="nav-item" data-panel="skills"><i class="fa-solid fa-layer-group"></i> المهارات والتقييم</div>
-    <div class="nav-item" data-panel="certs"><i class="fa-solid fa-certificate"></i> الشهادات والكورسات</div>
     <div class="nav-item" data-panel="contact"><i class="fa-solid fa-address-book"></i> وسائل الاتصال</div>
-    <div class="nav-item" data-panel="theme"><i class="fa-solid fa-palette"></i> مظهر الموقع</div>
+    <div class="nav-item" data-panel="theme"><i class="fa-solid fa-palette"></i> المظهر الشامل (Theme)</div>
     <div class="sidebar-foot">
       <a href="index.html" target="_blank" class="nav-item"><i class="fa-solid fa-arrow-up-right-from-square"></i> عرض الموقع</a>
       <div class="nav-item" id="logoutBtn" style="color:#e07a7a;"><i class="fa-solid fa-right-from-bracket"></i> إنهاء الجلسة</div>
@@ -155,185 +151,130 @@ textarea.code{
   </aside>
 
   <main class="main">
-    <div style="display:flex; justify-content:flex-end; margin-bottom:20px;">
-      <button class="btn btn-ghost" id="forceFetchBtn" style="border-color:var(--teal-l); color:var(--teal-l);">
-        <i class="fa-solid fa-cloud-arrow-down"></i> جلب وتحديث البيانات من السيرفر الآن
-      </button>
-    </div>
-
     <section class="panel active" id="panel-overview">
       <div class="main-head"><div><h2>إحصائيات قاعدة البيانات</h2><p>تزامن حي ومباشر مع خوادم Firebase Firestore.</p></div></div>
       <div class="stat-cards">
-        <div class="stat-mini"><b id="statExp">0</b><span>خبرات مسجلة</span></div>
-        <div class="stat-mini"><b id="statProj">0</b><span>مشاريع معروضة</span></div>
-        <div class="stat-mini"><b id="statSkill">0</b><span>مجموعات مهارية</span></div>
-        <div class="stat-mini"><b id="statCert">0</b><span>شهادة وكورس</span></div>
-      </div>
-      <div class="card">
-        <h3><i class="fa-solid fa-circle-nodes" style="color:var(--teal-l)"></i> حالة الاتصال بالنظام</h3>
-        <div class="desc" style="line-height:1.8; font-size:14px; margin-top:8px; color:var(--text-dim);">
-          لوحة التحكم متصلة الآن مباشرة بملف البيانات المحلي وبـ Firebase Firestore. التعديلات المضافة هنا يتم نشرها وتحديثها لايف على الموقع فور الحفظ وبدون الحاجة لإعادة رفع أي كود. يمكنك سحب الداتا يدوياً في أي وقت من الزرار العلوي.
-        </div>
-        <p class="status-msg" id="fetchStatusMsg"></p>
+        <div class="stat-mini"><b id="statExp">0</b><span>خبرات</span></div>
+        <div class="stat-mini"><b id="statProj">0</b><span>مشاريع</span></div>
       </div>
     </section>
 
     <section class="panel" id="panel-parser">
-      <div class="main-head"><div><h2>معالج المستندات الذكي</h2><p>ارفع ملف الـ CV الخاص بك (PDF أو Word) ليقوم النظام بسحب النصوص وتوزيعها تلقائياً.</p></div></div>
+      <div class="main-head"><div><h2>المعالج الذكي للسيرة الذاتية (Smart Parser)</h2><p>ارفع CV ليقوم النظام بتحليل واستخراج البيانات أوتوماتيكياً للرجوع إليها.</p></div></div>
       <div class="card">
-        <h3><i class="fa-solid fa-file-invoice"></i> سحب البيانات والـ Parsing</h3>
         <div class="upload-box">
           <i class="fa-solid fa-file-pdf" style="color:var(--gold-l)"></i>
-          <label for="cvFileDrop">اضغط هنا لرفع ملف السيرة الذاتية (PDF أو DOCX)</label>
-          <input type="file" id="cvFileDrop" accept=".pdf,.docx">
+          <label for="cvFileDrop">اضغط لرفع ملف السيرة (PDF)</label>
+          <input type="file" id="cvFileDrop" accept=".pdf">
         </div>
         <div id="parseStatus" class="status-msg"></div>
-        <div class="field-inline" style="margin-top:20px;">
-          <label>النص المستخرج والمعالج من المستند:</label>
-          <textarea id="extractedCvText" style="min-height:160px; font-size:13px; line-height:1.6;" placeholder="سيظهر النص المستخلص بالكامل هنا لنسخ الأجزاء اللى تحتاجها..."></textarea>
+
+        <div class="smart-review-box" id="smartReviewUI">
+          <h3 style="margin-bottom: 16px; color:var(--teal-l); border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:10px;">
+            <i class="fa-solid fa-microchip"></i> بيانات تم التعرف عليها (Smart Review)
+          </h3>
+          <div class="smart-item"><b>البريد الإلكتروني:</b> <span id="cv_email_ext">لم يتم العثور عليه</span></div>
+          <div class="smart-item"><b>رقم الهاتف:</b> <span id="cv_phone_ext">لم يتم العثور عليه</span></div>
+          <div class="field-inline" style="margin-top:16px;">
+            <label>نص الخبرات المستخرج (قم بنسخه وتعديله في قسم الخبرات):</label>
+            <textarea id="cv_exp_ext" style="min-height:100px;" readonly></textarea>
+          </div>
+          <button class="btn btn-primary" id="applyCvDataBtn" style="margin-top:10px;"><i class="fa-solid fa-check"></i> اعتماد معلومات الاتصال</button>
         </div>
       </div>
     </section>
 
     <section class="panel" id="panel-hero">
-      <div class="main-head"><div><h2>الواجهة الرئيسية ونبذة عني</h2><p>تحديث الصورة الشخصية والنصوص الثابتة للغتين العربية والإنجليزية.</p></div></div>
-      
+      <div class="main-head"><div><h2>الواجهة الرئيسية ونبذة عني</h2></div></div>
       <div class="card">
-        <h3><i class="fa-solid fa-image"></i> إعدادات الصورة الشخصية (Profile Picture)</h3>
+        <h3><i class="fa-solid fa-image"></i> الصورة الشخصية</h3>
         <div class="upload-box">
-          <i class="fa-solid fa-user-circle" style="color:var(--gold-l)"></i>
-          <label for="uploadProfileImg">اضغط هنا لرفع صورتك الشخصية وتحديثها لايف</label>
+          <label for="uploadProfileImg">رفع صورتك الشخصية</label>
           <input type="file" id="uploadProfileImg" accept="image/*">
           <div class="preview-container" id="previewProfileWrap">
-            <img src="" id="previewProfileImg" style="border-radius:50%; width:90px; height:90px; object-fit:cover;">
+            <img src="" id="previewProfileImg" style="border-radius:50%; width:80px; height:80px;">
             <input type="hidden" id="f_profile_img">
-            <span style="font-size:12px; color:var(--teal-l); cursor:pointer;" id="copyProfileUrlBtn">تم الرفع بنجاح</span>
           </div>
         </div>
       </div>
-
       <div class="card">
-        <h3><i class="fa-solid fa-font"></i> نصوص قسم الافتتاحية والتعريف</h3>
         <div class="lang-box-grid">
-          <div class="lang-partition">
-            <h4><i class="fa-solid fa-flag-usa"></i> English Section</h4>
-            <div class="field-inline"><label>Hero Eyebrow</label><input id="f_hero_eyebrow_en"></div>
-            <div class="field-inline"><label>Headline Title</label><input id="f_hero_title1_en"></div>
-            <div class="field-inline"><label>Lead Paragraph</label><textarea id="f_hero_lead_en"></textarea></div>
-            <div class="field-inline"><label>About Section Title</label><input id="f_about_title_en"></div>
-            <div class="field-inline"><label>About Paragraph 1</label><textarea id="f_about_p1_en"></textarea></div>
-          </div>
           <div class="lang-partition rtl-dir">
             <h4><i class="fa-solid fa-flag"></i> القسم العربي</h4>
-            <div class="field-inline"><label>الوسم العلوي</label><input id="f_hero_eyebrow_ar"></div>
+            <div class="field-inline"><label>الوسم (Eyebrow)</label><input id="f_hero_eyebrow_ar"></div>
             <div class="field-inline"><label>عنوان الواجهة</label><input id="f_hero_title1_ar"></div>
             <div class="field-inline"><label>الفقرة الافتتاحية</label><textarea id="f_hero_lead_ar"></textarea></div>
-            <div class="field-inline"><label>عنوان قسم نبذة عني</label><input id="f_about_title_ar"></div>
-            <div class="field-inline"><label>الفقرة التعريفية الأولى</label><textarea id="f_about_p1_ar"></textarea></div>
+          </div>
+          <div class="lang-partition">
+            <h4><i class="fa-solid fa-flag-usa"></i> English Section</h4>
+            <div class="field-inline"><label>Eyebrow</label><input id="f_hero_eyebrow_en"></div>
+            <div class="field-inline"><label>Title</label><input id="f_hero_title1_en"></div>
+            <div class="field-inline"><label>Lead</label><textarea id="f_hero_lead_en"></textarea></div>
           </div>
         </div>
       </div>
-      <div class="row-actions"><button class="btn btn-primary" id="saveHero"><i class="fa-solid fa-floppy-disk"></i> حفظ كافة إعدادات الواجهة والصورة</button></div>
+      <button class="btn btn-primary" id="saveHero"><i class="fa-solid fa-floppy-disk"></i> حفظ الواجهة</button>
       <p class="status-msg" id="heroMsg"></p>
     </section>
 
     <section class="panel" id="panel-experience">
-      <div class="main-head"><div><h2>الخبرات المهنية</h2><p>إدارة وتعديل هيكل وتاريخ خبرات العمل السابقة.</p></div></div>
+      <div class="main-head"><div><h2>الخبرات المهنية</h2></div></div>
       <div class="card">
-        <h3><i class="fa-solid fa-code"></i> مصفوفة الـ Experience JSON</h3>
         <textarea class="code" id="json_experience"></textarea>
-        <div class="row-actions">
-          <button class="btn btn-primary" id="saveExperience"><i class="fa-solid fa-floppy-disk"></i> حفظ الخبرات المهنية</button>
-        </div>
+        <div style="margin-top:16px;"><button class="btn btn-primary" id="saveExperience">حفظ الخبرات</button></div>
         <p class="status-msg" id="experienceMsg"></p>
       </div>
     </section>
 
     <section class="panel" id="panel-projects">
-      <div class="main-head"><div><h2>استوديو إدارة المشاريع</h2><p>تعديل بطاقات وإضافة روابط وصور للمشاريع البرمجية والحلول الرقمية.</p></div></div>
-      
+      <div class="main-head"><div><h2>إدارة المشاريع (Visual Builder)</h2><p>أضف، عدّل، واحذف مشاريعك بكل سهولة مع دعم الروابط والصور.</p></div></div>
       <div class="card">
-        <h3><i class="fa-solid fa-cloud-arrow-up"></i> رفع صور المشاريع (Cloudinary)</h3>
-        <div class="upload-box" style="padding:16px;">
-          <label for="uploadProjectImg">ارفع صورة المشروع لنسخ رابطها واستخدامه في الـ JSON</label>
-          <input type="file" id="uploadProjectImg" accept="image/*">
-          <div class="preview-container" id="previewProjectWrap">
-            <img src="" id="previewProjectImg">
-            <span style="font-size:12px; color:var(--teal-l); cursor:pointer; background:var(--surface); padding:4px 8px; border-radius:4px;" id="copyProjectUrlBtn">نسخ الرابط للمشروع</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <h3><i class="fa-solid fa-database"></i> مصفوفة المشاريع الكاملة</h3>
-        <textarea class="code" id="json_projects"></textarea>
-        <div class="row-actions">
-          <button class="btn btn-primary" id="saveProjects"><i class="fa-solid fa-floppy-disk"></i> مزامنة وحفظ المشاريع لايف</button>
+        <div id="projectListUI" class="project-list-ui"></div>
+        <button class="btn btn-ghost" id="addProjectBtn" style="width:100%; justify-content:center; border:2px dashed var(--border);"><i class="fa-solid fa-plus"></i> إضافة مشروع جديد</button>
+        <div style="margin-top:24px; text-align:left;">
+          <button class="btn btn-primary" id="saveProjectsData"><i class="fa-solid fa-floppy-disk"></i> حفظ ونشر جميع المشاريع</button>
         </div>
         <p class="status-msg" id="projectsMsg"></p>
       </div>
     </section>
 
     <section class="panel" id="panel-skills">
-      <div class="main-head"><div><h2>إدارة مصفوفة المهارات</h2><p>تعديل نسب الأشرطة وتحديث بيانات ومسميات مخطط الرادار.</p></div></div>
+      <div class="main-head"><div><h2>المهارات</h2></div></div>
       <div class="card">
-        <h3><i class="fa-solid fa-chart-pie"></i> مصفوفة المهارات والنسب JSON</h3>
         <textarea class="code" id="json_skillCats"></textarea>
-        <div class="row-actions">
-          <button class="btn btn-primary" id="saveSkills"><i class="fa-solid fa-floppy-disk"></i> حفظ وتحديث المهارات</button>
-        </div>
-        <p class="status-msg" id="skillsMsg"></p>
-      </div>
-    </section>
-
-    <section class="panel" id="panel-certs">
-      <div class="main-head"><div><h2>إدارة الشهادات التعليمية</h2><p>إضافة وحذف مسميات وروابط الكورسات التدريبية المعتمدة.</p></div></div>
-      <div class="card">
-        <h3>كورسات منصة العربي التعليمية (مصفوفة نصوص)</h3>
-        <textarea class="code" id="list_certsElaraby" style="min-height:140px;"></textarea>
-      </div>
-      <div class="card">
-        <h3>كورسات منصة المنتور Almentor</h3>
-        <textarea class="code" id="list_certsAlmentor" style="min-height:140px;"></textarea>
-        <div class="row-actions"><button class="btn btn-primary" id="saveCerts"><i class="fa-solid fa-floppy-disk"></i> تحديث ومزامنة الشهادات</button></div>
-        <p class="status-msg" id="certsMsg"></p>
+        <div style="margin-top:16px;"><button class="btn btn-primary" id="saveSkills">حفظ المهارات</button></div>
       </div>
     </section>
 
     <section class="panel" id="panel-contact">
-      <div class="main-head"><div><h2>بيانات وسائل الاتصال</h2><p>تحديث أرقام الهواتف، البريد الإلكتروني، والموقع الجغرافي.</p></div></div>
+      <div class="main-head"><div><h2>بيانات الاتصال</h2></div></div>
       <div class="card">
-        <h3><i class="fa-solid fa-address-card"></i> قنوات الاتصال الحية</h3>
-        <div class="grid2">
-          <div class="field-inline"><label>البريد الإلكتروني المباشر</label><input id="f_contact_email"></div>
-          <div class="field-inline"><label>رقم الهاتف / الواتساب</label><input id="f_contact_phone" dir="ltr" style="text-align:left;"></div>
-        </div>
-        <div class="field-inline"><label>الموقع والنطاق الجغرافي الحالي</label><input id="f_contact_location"></div>
-        <div class="row-actions"><button class="btn btn-primary" id="saveContact"><i class="fa-solid fa-floppy-disk"></i> حفظ قنوات الاتصال</button></div>
+        <div class="field-inline"><label>البريد الإلكتروني</label><input id="f_contact_email" dir="ltr" style="text-align:left;"></div>
+        <div class="field-inline"><label>رقم الهاتف</label><input id="f_contact_phone" dir="ltr" style="text-align:left;"></div>
+        <div class="field-inline"><label>الموقع الجغرافي</label><input id="f_contact_location"></div>
+        <button class="btn btn-primary" id="saveContact">حفظ الاتصال</button>
         <p class="status-msg" id="contactMsg"></p>
       </div>
     </section>
 
     <section class="panel" id="panel-theme">
-      <div class="main-head"><div><h2>مظهر وألوان الموقع (Theme Control)</h2><p>تغيير الثيم الافتراضي، الألوان الأساسية، وانحناء الحواف بالكامل.</p></div></div>
+      <div class="main-head"><div><h2>المظهر الشامل (Theme Engine)</h2></div></div>
       <div class="card">
-        <div class="field-inline" style="margin-bottom:20px;">
-          <label><i class="fa-solid fa-circle-half-stroke"></i> الوضع الافتراضي للموقع (Theme Mode)</label>
-          <select id="f_theme_mode" style="padding:12px; border-radius:8px; border:1px solid var(--border); background:var(--surface); color:var(--text); width:100%;">
-            <option value="dark">الوضع المظلم (Dark Mode)</option>
-            <option value="light">الوضع المضيء (Light Mode)</option>
-          </select>
+        <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
+          <button class="btn btn-ghost" id="undoThemeBtn"><i class="fa-solid fa-rotate-left"></i> تراجع عن آخر تغيير (Undo)</button>
+          <button class="btn btn-danger" id="resetThemeBtn"><i class="fa-solid fa-rotate-left"></i> استعادة ألوان الافتراضي (Reset)</button>
         </div>
         
-        <div class="color-row"><div class="lbl">اللون الأساسي التفاعلي (الذهبي Hex)</div><input type="color" id="c_gold" value="#C08B3D"></div>
-        <div class="color-row"><div class="lbl">اللون الثانوي للمؤشرات (التيل Hex)</div><input type="color" id="c_teal" value="#1F8A70"></div>
+        <div class="color-row"><div class="lbl">اللون الأساسي (Primary)</div><input type="color" id="c_gold" value="#C08B3D"></div>
+        <div class="color-row"><div class="lbl">اللون الثانوي (Secondary)</div><input type="color" id="c_teal" value="#1F8A70"></div>
+        <div class="color-row"><div class="lbl">لون الخلفية (Background)</div><input type="color" id="c_bg" value="#0B1220"></div>
+        <div class="color-row"><div class="lbl">لون الكروت (Surface)</div><input type="color" id="c_surface" value="#121B2E"></div>
         
-        <div class="field-inline" style="margin-top:20px;">
-          <label><i class="fa-solid fa-shapes"></i> درجة انحناء حواف الكروت (Border Radius - px)</label>
-          <input type="number" id="c_radius" value="14" min="0" max="40" style="direction:ltr;">
+        <div class="field-inline" style="margin-top:24px;">
+          <label>درجة انحناء الحواف (Border Radius - px)</label>
+          <input type="number" id="c_radius" value="14" min="0" max="40" style="direction:ltr; text-align:left;">
         </div>
-
-        <div class="row-actions"><button class="btn btn-primary" id="saveTheme"><i class="fa-solid fa-floppy-disk"></i> تطبيق وحفظ الثيم الشامل</button></div>
+        <button class="btn btn-primary" id="saveTheme"><i class="fa-solid fa-floppy-disk"></i> تطبيق وحفظ المظهر</button>
         <p class="status-msg" id="themeMsg"></p>
       </div>
     </section>
@@ -347,8 +288,9 @@ textarea.code{
   import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
   import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-  const CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/portfolio-2933c/image/upload";
-  const CLOUDINARY_PRESET = "portfolio_preset"; // تأكد من إنشاء Preset بهذا الاسم في Cloudinary
+  const CLOUDINARY_CLOUD_NAME = "dxkxuajgf"; 
+  const CLOUDINARY_UPLOAD_PRESET = "portfolio_preset"; 
+  const CLOUDINARY_URL = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
 
   const firebaseConfig = {
     apiKey: "AIzaSyAMLeRa5BeV6YQf7rqLx0JQd3fb_LhbeSU",
@@ -356,292 +298,241 @@ textarea.code{
     projectId: "portfolio-2933c",
     storageBucket: "portfolio-2933c.firebasestorage.app",
     messagingSenderId: "599965326470",
-    appId: "1:599965326470:web:ff465c87d42bb0ab188507",
-    measurementId: "G-WBTPVJLRF4"
+    appId: "1:599965326470:web:ff465c87d42bb0ab188507"
   };
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getFirestore(app);
 
-  const loginScreen = document.getElementById('loginScreen');
-  const appShell = document.getElementById('app');
-  const loginBtn = document.getElementById('loginBtn');
-  const logoutBtn = document.getElementById('logoutBtn');
-  const loginMsg = document.getElementById('loginMsg');
-
-  // تنقل التبويبات في القائمة الجانبية
+  // UI Setup
   document.querySelectorAll('.sidebar .nav-item[data-panel]').forEach(item => {
     item.addEventListener('click', () => {
       document.querySelectorAll('.sidebar .nav-item').forEach(i => i.classList.remove('active'));
       document.querySelectorAll('.main .panel').forEach(p => p.classList.remove('active'));
       item.classList.add('active');
       document.getElementById('panel-' + item.getAttribute('data-panel')).classList.add('active');
-      document.getElementById('sidebar').classList.remove('open');
     });
   });
 
-  // تفعيل المنيو على الموبايل
-  document.getElementById('menuToggle').addEventListener('click', (e) => {
-    e.stopPropagation(); document.getElementById('sidebar').classList.toggle('open');
-  });
-  document.addEventListener('click', () => { document.getElementById('sidebar').classList.remove('open'); });
-
   onAuthStateChanged(auth, (user) => {
-    if (user) {
-      loginScreen.style.display = 'none'; appShell.classList.add('show'); loadDataFromFirebase();
-    } else {
-      loginScreen.style.display = 'flex'; appShell.classList.remove('show');
-    }
+    if (user) { 
+        document.getElementById('loginScreen').style.display = 'none'; 
+        document.getElementById('app').classList.add('show'); 
+        loadDataFromFirebase(); 
+    } 
   });
 
-  loginBtn.addEventListener('click', () => {
-    const email = document.getElementById('loginUser').value;
-    const pass = document.getElementById('loginPass').value;
-    loginBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري التحقق...';
-    signInWithEmailAndPassword(auth, email, pass)
-      .then(() => { loginMsg.className = 'status-msg ok'; loginMsg.innerText = "تم المصادقة بنجاح!"; })
-      .catch((error) => { loginMsg.className = 'status-msg err'; loginMsg.innerText = "خطأ: " + error.message; loginBtn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> تسجيل الدخول وآمن النظام'; });
+  document.getElementById('loginBtn').addEventListener('click', () => {
+    signInWithEmailAndPassword(auth, document.getElementById('loginUser').value, document.getElementById('loginPass').value)
+      .catch((err) => { document.getElementById('loginMsg').className = 'status-msg err'; document.getElementById('loginMsg').innerText = err.message; });
   });
+  document.getElementById('logoutBtn').addEventListener('click', () => signOut(auth));
 
-  logoutBtn.addEventListener('click', () => signOut(auth));
-
-  // رفع الصور لـ Cloudinary عامة (صورة شخصية / مشاريع)
-  async function handleMediaUpload(fileElement, previewWrapId, previewImgId, hiddenInputId, copyBtnId) {
-    const file = fileElement.files[0];
-    if(!file) return;
-    
-    document.getElementById(copyBtnId).innerText = "جاري الرفع...";
-    document.getElementById(previewWrapId).style.display = "flex";
-
+  // Image Upload helper
+  async function uploadToCloudinary(file) {
     const formData = new FormData();
     formData.append('file', file);
-    formData.append('upload_preset', CLOUDINARY_PRESET);
-
-    try {
-      const res = await fetch(CLOUDINARY_URL, { method: "POST", body: formData });
-      const cloudData = await res.json();
-      if(cloudData.secure_url) {
-        document.getElementById(previewImgId).src = cloudData.secure_url;
-        if(hiddenInputId) document.getElementById(hiddenInputId).value = cloudData.secure_url;
-        
-        document.getElementById(copyBtnId).innerText = "نسخ الرابط";
-        document.getElementById(copyBtnId).onclick = () => {
-          navigator.clipboard.writeText(cloudData.secure_url);
-          alert("تم نسخ الرابط بنجاح!");
-        };
-      } else { alert("خطأ في Cloudinary: تأكد من إعدادات الـ Preset."); }
-    } catch(e) { console.error("CDN failure: ", e); }
+    formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+    const res = await fetch(CLOUDINARY_URL, { method: "POST", body: formData });
+    const data = await res.json();
+    return data.secure_url;
   }
 
-  document.getElementById('uploadProfileImg').addEventListener('change', function() {
-    handleMediaUpload(this, 'previewProfileWrap', 'previewProfileImg', 'f_profile_img', 'copyProfileUrlBtn');
-  });
-  document.getElementById('uploadProjectImg').addEventListener('change', function() {
-    handleMediaUpload(this, 'previewProjectWrap', 'previewProjectImg', null, 'copyProjectUrlBtn');
-  });
-
-  // زرار جلب البيانات الفوري
-  document.getElementById('forceFetchBtn').addEventListener('click', async () => {
-    const statusMsg = document.getElementById('fetchStatusMsg');
-    statusMsg.className = 'status-msg'; statusMsg.innerText = 'جاري سحب البيانات...'; statusMsg.style.display = 'block';
-    await loadDataFromFirebase();
-    statusMsg.className = 'status-msg ok'; statusMsg.innerText = 'تم سحب أحدث بيانات من السيرفر بنجاح!';
-    setTimeout(()=> statusMsg.style.display = 'none', 3000);
-  });
-
-  // محرك استخراج البيانات الذكي من ملفات الـ PDF والـ Word المرفوعة
-  document.getElementById('cvFileDrop').addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    const status = document.getElementById('parseStatus');
-    const output = document.getElementById('extractedCvText');
-    if(!file) return;
-
-    status.className = 'status-msg ok'; status.innerText = "جاري فحص وقراءة المستند المرفوع..."; status.style.display = "block";
-
-    if(file.type === "application/pdf") {
-      const fileReader = new FileReader();
-      fileReader.onload = function() {
-        const typedarray = new Uint8Array(this.result);
-        pdfjsLib.getDocument(typedarray).promise.then(function(pdf) {
-          let maxPages = pdf.numPages;
-          let countPromises = [];
-          for (let j = 1; j <= maxPages; j++) {
-            countPromises.push(pdf.getPage(j).then(page => page.getTextContent().then(text => text.items.map(s => s.str).join(' '))));
-          }
-          Promise.all(countPromises).then(pageTexts => {
-            output.value = pageTexts.join('\n');
-            status.innerText = "تم سحب وتحليل نصوص الـ PDF الذكية بنجاح! يمكنك الآن نسخها وتوزيعها.";
-            smartAutofillFields(output.value);
-          });
-        });
-      };
-      fileReader.readAsArrayBuffer(file);
-    } else if(file.name.endsWith('.docx')) {
-      const reader = new FileReader();
-      reader.onload = function(event) {
-        mammoth.extractRawText({ arrayBuffer: event.target.result }).then(result => {
-          output.value = result.value;
-          status.innerText = "تم استخلاص وهيكلة نصوص ملف الـ Word بنجاح!";
-          smartAutofillFields(output.value);
-        }).catch(err => { status.className = 'status-msg err'; status.innerText = "فشل المعالج في قراءة ملف الـ Word."; });
-      };
-      reader.readAsArrayBuffer(file);
+  document.getElementById('uploadProfileImg').addEventListener('change', async function() {
+    if(this.files[0]) {
+      const url = await uploadToCloudinary(this.files[0]);
+      if(url) {
+        document.getElementById('previewProfileImg').src = url;
+        document.getElementById('f_profile_img').value = url;
+        document.getElementById('previewProfileWrap').style.display = 'flex';
+      }
     }
   });
 
-  function smartAutofillFields(text) {
-    const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/;
-    const phoneRegex = /(\+20|0)?1[0125]\d{8}/;
-    const foundEmail = text.match(emailRegex);
-    const foundPhone = text.match(phoneRegex);
+  // Data State
+  let projectsArray = [];
+  let themeHistory = [];
 
-    if(foundEmail) document.getElementById('f_contact_email').value = foundEmail[0];
-    if(foundPhone) document.getElementById('f_contact_phone').value = foundPhone[0];
-  }
+  const defaultTheme = { gold: "#C08B3D", teal: "#1F8A70", bg: "#0B1220", surface: "#121B2E", radius: "14" };
 
-  // محرك جلب البيانات من فايربيس
   async function loadDataFromFirebase() {
-    try {
-      const docRef = doc(db, "portfolio", "content");
-      const docSnap = await getDoc(docRef);
-      const data = docSnap.exists() ? docSnap.data() : {};
-      
-      const defaultEn = { eyebrow: "Sales Executive → Digital Builder", title1: "Turning trust into growth", lead: "A professional sales executive.", title: "About Me", p1: "I'm a 31-year-old professional."};
-      const defaultAr = { eyebrow: "تنفيذي مبيعات ← بناء منتجات", title1: "أحوّل ثقة العملاء إلى نمو", lead: "محترف مبيعات عمره 31 عامًا.", title: "نبذة عني", p1: "أنا محترف مبيعات وخبرتي واسعة."};
+    const docSnap = await getDoc(doc(db, "portfolio", "content"));
+    const data = docSnap.exists() ? docSnap.data() : {};
+    
+    // Theme setup & History
+    const currTheme = data.themeData || defaultTheme;
+    themeHistory = [currTheme];
+    applyThemeToInputs(currTheme);
 
-      // تحميل نصوص الإنجليزي
-      document.getElementById('f_hero_eyebrow_en').value = data.heroEn?.eyebrow || defaultEn.eyebrow;
-      document.getElementById('f_hero_title1_en').value = data.heroEn?.title1 || defaultEn.title1;
-      document.getElementById('f_hero_lead_en').value = data.heroEn?.lead || defaultEn.lead;
-      document.getElementById('f_about_title_en').value = data.aboutEn?.title || defaultEn.title;
-      document.getElementById('f_about_p1_en').value = data.aboutEn?.p1 || defaultEn.p1;
+    // Hero
+    document.getElementById('f_hero_eyebrow_en').value = data.heroEn?.eyebrow || "";
+    document.getElementById('f_hero_title1_en').value = data.heroEn?.title1 || "";
+    document.getElementById('f_hero_lead_en').value = data.heroEn?.lead || "";
+    document.getElementById('f_hero_eyebrow_ar').value = data.heroAr?.eyebrow || "";
+    document.getElementById('f_hero_title1_ar').value = data.heroAr?.title1 || "";
+    document.getElementById('f_hero_lead_ar').value = data.heroAr?.lead || "";
+    
+    if(data.aboutData?.profileImg) {
+      document.getElementById('f_profile_img').value = data.aboutData.profileImg;
+      document.getElementById('previewProfileImg').src = data.aboutData.profileImg;
+      document.getElementById('previewProfileWrap').style.display = "flex";
+    }
 
-      // تحميل نصوص العربي
-      document.getElementById('f_hero_eyebrow_ar').value = data.heroAr?.eyebrow || defaultAr.eyebrow;
-      document.getElementById('f_hero_title1_ar').value = data.heroAr?.title1 || defaultAr.title1;
-      document.getElementById('f_hero_lead_ar').value = data.heroAr?.lead || defaultAr.lead;
-      document.getElementById('f_about_title_ar').value = data.aboutAr?.title || defaultAr.title;
-      document.getElementById('f_about_p1_ar').value = data.aboutAr?.p1 || defaultAr.p1;
+    // JSON Arrays
+    document.getElementById('json_experience').value = JSON.stringify(data.experienceData || SITE_DATA.en.experience, null, 2);
+    document.getElementById('json_skillCats').value = JSON.stringify(data.skillCatsData || SITE_DATA.en.skillCats, null, 2);
+    
+    // Contact
+    document.getElementById('f_contact_email').value = data.contactData?.email || "";
+    document.getElementById('f_contact_phone').value = data.contactData?.phone || "";
+    document.getElementById('f_contact_location').value = data.contactData?.location || "";
 
-      // تحميل الصورة الشخصية
-      if(data.aboutData?.profileImg) {
-        document.getElementById('f_profile_img').value = data.aboutData.profileImg;
-        document.getElementById('previewProfileImg').src = data.aboutData.profileImg;
-        document.getElementById('previewProfileWrap').style.display = "flex";
-      }
+    // Projects Visual Builder
+    projectsArray = data.projectsData || SITE_DATA.en.projects || [];
+    renderProjectsUI();
 
-      // المصفوفات
-      const finalExp = data.experienceData || (window.SITE_DATA ? SITE_DATA.en.experience : []);
-      document.getElementById('json_experience').value = JSON.stringify(finalExp, null, 2);
-      document.getElementById('statExp').innerText = finalExp.length;
-
-      const finalProj = data.projectsData || (window.SITE_DATA ? SITE_DATA.en.projects : []);
-      document.getElementById('json_projects').value = JSON.stringify(finalProj, null, 2);
-      document.getElementById('statProj').innerText = finalProj.length;
-
-      const finalSkills = data.skillCatsData || (window.SITE_DATA ? SITE_DATA.en.skillCats : []);
-      document.getElementById('json_skillCats').value = JSON.stringify(finalSkills, null, 2);
-      document.getElementById('statSkill').innerText = finalSkills.length;
-
-      const finalElaraby = data.certsElarabyData || (window.SITE_DATA ? SITE_DATA.en.certsElaraby : []);
-      document.getElementById('list_certsElaraby').value = JSON.stringify(finalElaraby, null, 2);
-
-      const finalAlmentor = data.certsAlmentorData || (window.SITE_DATA ? SITE_DATA.en.certsAlmentor : []);
-      document.getElementById('list_certsAlmentor').value = JSON.stringify(finalAlmentor, null, 2);
-      document.getElementById('statCert').innerText = finalElaraby.length + finalAlmentor.length;
-
-      // الاتصال
-      document.getElementById('f_contact_email').value = data.contactData?.email || "abdosultan306@gmail.com";
-      document.getElementById('f_contact_phone').value = data.contactData?.phone || "+20 111 455 0112";
-      document.getElementById('f_contact_location').value = data.contactData?.location || "Madinat El-Salam, Cairo, Egypt";
-
-      // الثيم (المظهر)
-      document.getElementById('f_theme_mode').value = data.themeData?.mode || "dark";
-      document.getElementById('c_gold').value = data.themeData?.gold || "#C08B3D";
-      document.getElementById('c_teal').value = data.themeData?.teal || "#1F8A70";
-      document.getElementById('c_radius').value = data.themeData?.radius || "14";
-
-    } catch (e) { console.error("Telemetry loading failure: ", e); }
+    document.getElementById('statExp').innerText = (data.experienceData || []).length;
+    document.getElementById('statProj').innerText = projectsArray.length;
   }
 
-  // أحداث الحفظ والمزامنة
-  document.getElementById('saveHero').addEventListener('click', async () => {
-    const msg = document.getElementById('heroMsg'); msg.className = 'status-msg'; msg.innerText = 'جاري الحفظ...'; msg.style.display = 'block';
-    try {
-      await setDoc(doc(db, "portfolio", "content"), {
-        aboutData: { profileImg: document.getElementById('f_profile_img').value },
-        heroEn: { eyebrow: document.getElementById('f_hero_eyebrow_en').value, title1: document.getElementById('f_hero_title1_en').value, lead: document.getElementById('f_hero_lead_en').value },
-        aboutEn: { title: document.getElementById('f_about_title_en').value, p1: document.getElementById('f_about_p1_en').value },
-        heroAr: { eyebrow: document.getElementById('f_hero_eyebrow_ar').value, title1: document.getElementById('f_hero_title1_ar').value, lead: document.getElementById('f_hero_lead_ar').value },
-        aboutAr: { title: document.getElementById('f_about_title_ar').value, p1: document.getElementById('f_about_p1_ar').value }
-      }, { merge: true });
-      msg.className = 'status-msg ok'; msg.innerText = 'تم حفظ ومزامنة نصوص الهوية والصورة لايف بنجاح!';
-    } catch (e) { msg.className = 'status-msg err'; msg.innerText = e.message; }
-  });
-
-  document.getElementById('saveExperience').addEventListener('click', async () => {
-    const msg = document.getElementById('experienceMsg'); msg.className = 'status-msg'; msg.innerText = 'جاري المزامنة...'; msg.style.display = 'block';
-    try {
-      const parsed = JSON.parse(document.getElementById('json_experience').value);
-      await setDoc(doc(db, "portfolio", "content"), { experienceData: parsed }, { merge: true });
-      msg.className = 'status-msg ok'; msg.innerText = 'تم تحديث سجل الخبرات المهنية في قاعدة البيانات!'; loadDataFromFirebase();
-    } catch (e) { msg.className = 'status-msg err'; msg.innerText = 'JSON مكسور: ' + e.message; }
-  });
-
-  document.getElementById('saveProjects').addEventListener('click', async () => {
-    const msg = document.getElementById('projectsMsg'); msg.className = 'status-msg'; msg.innerText = 'جاري التحديث...'; msg.style.display = 'block';
-    try {
-      const parsed = JSON.parse(document.getElementById('json_projects').value);
-      await setDoc(doc(db, "portfolio", "content"), { projectsData: parsed }, { merge: true });
-      msg.className = 'status-msg ok'; msg.innerText = 'تم مزامنة استوديو المشاريع بنجاح!'; loadDataFromFirebase();
-    } catch (e) { msg.className = 'status-msg err'; msg.innerText = 'JSON غير سليم: ' + e.message; }
-  });
-
-  document.getElementById('saveSkills').addEventListener('click', async () => {
-    const msg = document.getElementById('skillsMsg'); msg.className = 'status-msg'; msg.innerText = 'جاري التحديث...'; msg.style.display = 'block';
-    try {
-      const parsed = JSON.parse(document.getElementById('json_skillCats').value);
-      await setDoc(doc(db, "portfolio", "content"), { skillCatsData: parsed }, { merge: true });
-      msg.className = 'status-msg ok'; msg.innerText = 'تم تحديث مصفوفة المهارات بنجاح!'; loadDataFromFirebase();
-    } catch (e) { msg.className = 'status-msg err'; msg.innerText = 'خطأ في الأقواس: ' + e.message; }
-  });
-
-  document.getElementById('saveCerts').addEventListener('click', async () => {
-    const msg = document.getElementById('certsMsg'); msg.className = 'status-msg'; msg.innerText = 'جاري الحفظ...'; msg.style.display = 'block';
-    try {
-      const parsedElaraby = JSON.parse(document.getElementById('list_certsElaraby').value);
-      const parsedAlmentor = JSON.parse(document.getElementById('list_certsAlmentor').value);
-      await setDoc(doc(db, "portfolio", "content"), { certsElarabyData: parsedElaraby, certsAlmentorData: parsedAlmentor }, { merge: true });
-      msg.className = 'status-msg ok'; msg.innerText = 'تم تحديث سجل الشهادات والكورسات بنجاح!'; loadDataFromFirebase();
-    } catch (e) { msg.className = 'status-msg err'; msg.innerText = 'JSON خطأ: ' + e.message; }
-  });
-
-  document.getElementById('saveContact').addEventListener('click', async () => {
-    const msg = document.getElementById('contactMsg'); msg.className = 'status-msg'; msg.innerText = 'جاري الحفظ لايف...'; msg.style.display = 'block';
-    try {
-      const contactInfo = {
-        email: document.getElementById('f_contact_email').value,
-        phone: document.getElementById('f_contact_phone').value,
-        location: document.getElementById('f_contact_location').value
-      };
-      await setDoc(doc(db, "portfolio", "content"), { contactData: contactInfo }, { merge: true });
-      msg.className = 'status-msg ok'; msg.innerText = 'تم تحديث قنوات وبوابات الاتصال بنجاح!'; loadDataFromFirebase();
-    } catch (e) { msg.className = 'status-msg err'; msg.innerText = e.message; }
-  });
-
+  // --- Theme Undo & Defaults ---
+  function applyThemeToInputs(theme) {
+    document.getElementById('c_gold').value = theme.gold;
+    document.getElementById('c_teal').value = theme.teal;
+    document.getElementById('c_bg').value = theme.bg;
+    document.getElementById('c_surface').value = theme.surface;
+    document.getElementById('c_radius').value = theme.radius;
+  }
   document.getElementById('saveTheme').addEventListener('click', async () => {
-    const msg = document.getElementById('themeMsg'); msg.className = 'status-msg'; msg.innerText = 'جاري التحديث الشامل...'; msg.style.display = 'block';
-    try {
-      const themeConfig = { 
-        mode: document.getElementById('f_theme_mode').value,
-        gold: document.getElementById('c_gold').value, 
-        teal: document.getElementById('c_teal').value,
-        radius: document.getElementById('c_radius').value
-      };
-      await setDoc(doc(db, "portfolio", "content"), { themeData: themeConfig }, { merge: true });
-      msg.className = 'status-msg ok'; msg.innerText = 'تم تطبيق وحفظ الثيم الشامل بنجاح!'; loadDataFromFirebase();
-    } catch (e) { msg.className = 'status-msg err'; msg.innerText = e.message; }
+    const t = { gold: document.getElementById('c_gold').value, teal: document.getElementById('c_teal').value, bg: document.getElementById('c_bg').value, surface: document.getElementById('c_surface').value, radius: document.getElementById('c_radius').value };
+    themeHistory.push(t);
+    await setDoc(doc(db, "portfolio", "content"), { themeData: t }, { merge: true });
+    alert("تم تطبيق المظهر بنجاح! سيتم تحديث الموقع فوراً.");
+  });
+  document.getElementById('undoThemeBtn').addEventListener('click', async () => {
+    if(themeHistory.length > 1) {
+      themeHistory.pop(); // remove current
+      const prev = themeHistory[themeHistory.length - 1];
+      applyThemeToInputs(prev);
+      await setDoc(doc(db, "portfolio", "content"), { themeData: prev }, { merge: true });
+      alert("تم التراجع وتطبيق الإعداد السابق.");
+    } else alert("لا يوجد تغييرات سابقة للرجوع إليها.");
+  });
+  document.getElementById('resetThemeBtn').addEventListener('click', async () => {
+    if(confirm("هل أنت متأكد من استعادة الألوان الافتراضية للتصميم؟")) {
+      applyThemeToInputs(defaultTheme);
+      themeHistory.push(defaultTheme);
+      await setDoc(doc(db, "portfolio", "content"), { themeData: defaultTheme }, { merge: true });
+      alert("تمت استعادة المظهر الافتراضي.");
+    }
+  });
+
+  // --- Smart CV Parser ---
+  document.getElementById('cvFileDrop').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if(!file || file.type !== "application/pdf") return;
+    const status = document.getElementById('parseStatus');
+    status.className = 'status-msg ok'; status.innerText = "جاري القراءة والتحليل الذكي...";
+    
+    const fileReader = new FileReader();
+    fileReader.onload = function() {
+      pdfjsLib.getDocument(new Uint8Array(this.result)).promise.then(pdf => {
+        let promises = [];
+        for (let j = 1; j <= pdf.numPages; j++) { promises.push(pdf.getPage(j).then(p => p.getTextContent().then(t => t.items.map(s => s.str).join(' ')))); }
+        Promise.all(promises).then(texts => {
+          const fullText = texts.join('\n');
+          status.style.display = 'none';
+          
+          // Smart Extraction
+          const emailMatch = fullText.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
+          const phoneMatch = fullText.match(/(\+20|0)?1[0125]\d{8}/);
+          
+          document.getElementById('smartReviewUI').style.display = 'block';
+          document.getElementById('cv_email_ext').innerText = emailMatch ? emailMatch[0] : 'غير موجود';
+          document.getElementById('cv_phone_ext').innerText = phoneMatch ? phoneMatch[0] : 'غير موجود';
+          
+          // Heuristic section split for Experience
+          const lines = fullText.split('\n');
+          let expBlock = ""; let inExp = false;
+          for(let line of lines) {
+             let up = line.toUpperCase();
+             if(up.includes("EXPERIENCE") || up.includes("WORK HISTORY")) { inExp = true; continue; }
+             if(inExp && (up.includes("EDUCATION") || up.includes("SKILLS"))) { inExp = false; }
+             if(inExp) expBlock += line + "\n";
+          }
+          document.getElementById('cv_exp_ext').value = expBlock.trim() || "لم يتم التعرف على قسم الخبرات آلياً.";
+        });
+      });
+    };
+    fileReader.readAsArrayBuffer(file);
+  });
+  document.getElementById('applyCvDataBtn').addEventListener('click', () => {
+    const e = document.getElementById('cv_email_ext').innerText;
+    const p = document.getElementById('cv_phone_ext').innerText;
+    if(e !== 'غير موجود') document.getElementById('f_contact_email').value = e;
+    if(p !== 'غير موجود') document.getElementById('f_contact_phone').value = p;
+    alert("تم اعتماد بيانات الاتصال بنجاح. تذكر ضغط حفظ في قسم الاتصال.");
+  });
+
+  // --- Visual Projects Builder ---
+  function renderProjectsUI() {
+    const list = document.getElementById('projectListUI');
+    list.innerHTML = projectsArray.map((p, idx) => `
+      <div class="proj-builder-item">
+        <div class="actions">
+          <button class="btn btn-ghost btn-icon" onclick="removeProj(${idx})"><i class="fa-solid fa-trash" style="color:#e07a7a;"></i></button>
+        </div>
+        <div class="field-inline"><label>عنوان المشروع</label><input type="text" value="${p.title}" oninput="updateProj(${idx}, 'title', this.value)"></div>
+        <div class="field-inline"><label>الوصف المختصر</label><textarea oninput="updateProj(${idx}, 'desc', this.value)">${p.desc}</textarea></div>
+        <div class="proj-grid-2">
+           <div class="field-inline"><label>رابط المشروع (URL)</label><input type="text" dir="ltr" value="${p.url || ''}" oninput="updateProj(${idx}, 'url', this.value)"></div>
+           <div class="field-inline"><label>الوسوم (مفصولة بفاصلة)</label><input type="text" value="${(p.tags||[]).join(', ')}" oninput="updateProj(${idx}, 'tags', this.value.split(',').map(x=>x.trim()))"></div>
+        </div>
+        <div class="field-inline">
+          <label>صورة المشروع</label>
+          <input type="file" onchange="uploadProjImage(this, ${idx})" accept="image/*">
+          ${p.image ? `<img src="${p.image}" style="max-height:80px; margin-top:10px; border-radius:8px;">` : ''}
+        </div>
+      </div>
+    `).join('');
+  }
+  window.updateProj = (idx, key, val) => { projectsArray[idx][key] = val; };
+  window.removeProj = (idx) => { if(confirm('حذف المشروع؟')){ projectsArray.splice(idx, 1); renderProjectsUI(); } };
+  window.uploadProjImage = async (input, idx) => {
+    if(input.files[0]) {
+      input.previousElementSibling.innerText = "جاري الرفع...";
+      const url = await uploadToCloudinary(input.files[0]);
+      projectsArray[idx].image = url; renderProjectsUI();
+    }
+  };
+  document.getElementById('addProjectBtn').addEventListener('click', () => {
+    projectsArray.push({ title: "مشروع جديد", desc: "", tags: [], status: "Active", url: "", image: "" });
+    renderProjectsUI();
+  });
+  document.getElementById('saveProjectsData').addEventListener('click', async () => {
+    await setDoc(doc(db, "portfolio", "content"), { projectsData: projectsArray }, { merge: true });
+    alert('تم حفظ المشاريع وتزامنها مع الواجهة!');
+  });
+
+  // --- Basic Savers ---
+  document.getElementById('saveHero').addEventListener('click', async () => {
+    await setDoc(doc(db, "portfolio", "content"), {
+      aboutData: { profileImg: document.getElementById('f_profile_img').value },
+      heroEn: { eyebrow: document.getElementById('f_hero_eyebrow_en').value, title1: document.getElementById('f_hero_title1_en').value, lead: document.getElementById('f_hero_lead_en').value },
+      heroAr: { eyebrow: document.getElementById('f_hero_eyebrow_ar').value, title1: document.getElementById('f_hero_title1_ar').value, lead: document.getElementById('f_hero_lead_ar').value }
+    }, { merge: true }); alert('تم الحفظ!');
+  });
+  document.getElementById('saveContact').addEventListener('click', async () => {
+    await setDoc(doc(db, "portfolio", "content"), {
+      contactData: { email: document.getElementById('f_contact_email').value, phone: document.getElementById('f_contact_phone').value, location: document.getElementById('f_contact_location').value }
+    }, { merge: true }); alert('تم الحفظ!');
+  });
+  document.getElementById('saveExperience').addEventListener('click', async () => {
+    await setDoc(doc(db, "portfolio", "content"), { experienceData: JSON.parse(document.getElementById('json_experience').value) }, { merge: true }); alert('تم الحفظ!');
+  });
+  document.getElementById('saveSkills').addEventListener('click', async () => {
+    await setDoc(doc(db, "portfolio", "content"), { skillCatsData: JSON.parse(document.getElementById('json_skillCats').value) }, { merge: true }); alert('تم الحفظ!');
   });
 </script>
 </body>
