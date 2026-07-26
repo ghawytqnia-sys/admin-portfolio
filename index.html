@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>استوديو الإدارة — نظام إدارة المحتوى الذكي</title>
+<title>استوديو الإدارة — نظام إدارة المحتوى الذكي (CMS Studio)</title>
 <meta name="robots" content="noindex, nofollow">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -25,9 +25,9 @@ a{color:inherit; text-decoration:none;}
 h1,h2,h3,h4{font-family:var(--font-display); font-weight:700;}
 button, input, textarea, select{font-family:inherit;}
 
-/* ---- LOGIN SCREEN ---- */
+/* ---- LOGIN ---- */
 #loginScreen{min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px; background:radial-gradient(circle at 50% 50%, #121B2E 0%, #0B1220 100%);}
-.login-card{width:100%; max-width:400px; background:var(--bg-2); border:1px solid var(--border); border-radius:16px; padding:40px 30px; box-shadow:0 20px 50px rgba(0,0,0,0.5); text-align:center;}
+.login-card{width:100%; max-width:420px; background:var(--bg-2); border:1px solid var(--border); border-radius:16px; padding:40px 30px; box-shadow:0 20px 50px rgba(0,0,0,0.5); text-align:center;}
 .login-card h1{font-size:24px; margin-bottom:8px; display:flex; align-items:center; justify-content:center; gap:12px;}
 .login-card p{color:var(--text-dim); font-size:14px; margin-bottom:28px;}
 .field{margin-bottom:18px; text-align:right;}
@@ -36,7 +36,7 @@ button, input, textarea, select{font-family:inherit;}
 .field input:focus{outline:none; border-color:var(--gold);}
 
 /* ---- BUTTONS ---- */
-.btn{display:inline-flex; align-items:center; gap:8px; padding:12px 22px; border-radius:9px; font-weight:600; font-size:14px; border:1px solid transparent; cursor:pointer; transition:.25s ease; white-space:nowrap;}
+.btn{display:inline-flex; align-items:center; gap:8px; padding:11px 20px; border-radius:9px; font-weight:600; font-size:13.5px; border:1px solid transparent; cursor:pointer; transition:.25s ease; white-space:nowrap;}
 .btn-primary{background:linear-gradient(135deg,var(--gold),var(--gold-l)); color:#181008; justify-content:center; box-shadow:0 8px 20px -6px rgba(192,139,61,0.4);}
 .btn-primary:hover{opacity:.95; transform:translateY(-1px);}
 .btn-ghost{border-color:var(--border); background:var(--surface); color:var(--text);}
@@ -45,18 +45,18 @@ button, input, textarea, select{font-family:inherit;}
 .btn-danger:hover{background:rgba(220,90,90,0.16); border-color:#e07a7a;}
 
 /* ---- MAIN STRUCTURE ---- */
-#app{display:none; min-height:100vh; grid-template-columns:1fr 260px;}
+#app{display:none; min-height:100vh; grid-template-columns:1fr 270px;}
 #app.show{display:grid;}
 .sidebar{background:var(--bg-2); border-left:1px solid var(--border); padding:26px 16px; display:flex; flex-direction:column; gap:4px; position:sticky; top:0; height:100vh; overflow-y:auto;}
 .brand{font-family:var(--font-display); font-weight:800; font-size:19px; padding:8px 12px 24px; display:flex; align-items:center; gap:10px; color:#fff;}
 .brand .dot{width:9px; height:9px; border-radius:50%; background:var(--gold); box-shadow:0 0 10px var(--gold);}
-.nav-item{display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:9px; font-size:14px; color:var(--text-dim); cursor:pointer; transition:.2s ease; font-weight:500;}
+.nav-item{display:flex; align-items:center; gap:12px; padding:11px 14px; border-radius:9px; font-size:13.5px; color:var(--text-dim); cursor:pointer; transition:.2s ease; font-weight:500;}
 .nav-item i{width:20px; text-align:center; font-size:15px;}
 .nav-item:hover{background:var(--surface); color:var(--text);}
 .nav-item.active{background:rgba(192,139,61,.14); color:var(--gold-l); font-weight:600;}
 .sidebar-foot{margin-top:auto; padding-top:16px; border-top:1px solid var(--border);}
 
-.main{padding:40px 50px; max-width:1100px; width:100%; margin:0 auto;}
+.main{padding:40px 50px; max-width:1150px; width:100%; margin:0 auto;}
 .main-head{display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:32px; border-bottom:1px solid var(--border); padding-bottom:20px;}
 .main-head h2{font-size:26px; font-weight:700;}
 .main-head p{color:var(--text-dim); font-size:14px; margin-top:4px;}
@@ -118,10 +118,13 @@ input:checked + .slider:before{transform:translateX(20px);}
 /* ---- MODAL FOR CV REVIEW ---- */
 .modal-overlay{position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:10000; display:none; align-items:center; justify-content:center; padding:20px;}
 .modal-overlay.open{display:flex;}
-.modal-box{background:var(--bg-2); border:1px solid var(--border); border-radius:16px; max-width:800px; width:100%; max-height:85vh; overflow-y:auto; padding:30px; box-shadow:0 20px 60px rgba(0,0,0,0.6);}
+.modal-box{background:var(--bg-2); border:1px solid var(--border); border-radius:16px; max-width:850px; width:100%; max-height:85vh; overflow-y:auto; padding:30px; box-shadow:0 20px 60px rgba(0,0,0,0.6);}
 .modal-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom:1px solid var(--border); padding-bottom:14px;}
 .modal-head h3{font-size:18px; color:var(--gold-l);}
 .close-modal{cursor:pointer; font-size:20px; color:var(--text-dim);}
+.confidence-badge{font-size:11px; font-weight:700; padding:3px 8px; border-radius:100px; text-transform:uppercase;}
+.conf-high{background:rgba(31,138,112,0.2); color:var(--teal-l); border:1px solid var(--teal);}
+.conf-mid{background:rgba(192,139,61,0.2); color:var(--gold-l); border:1px solid var(--gold);}
 
 .topbar-mobile{display:none; background:var(--bg-2); padding:14px 20px; border-bottom:1px solid var(--border); align-items:center; justify-content:space-between; position:sticky; top:0; z-index:1000; width:100%;}
 
@@ -163,14 +166,16 @@ input:checked + .slider:before{transform:translateX(20px);}
   <aside class="sidebar" id="sidebar">
     <div class="brand"><span class="dot"></span> استوديو التحكم</div>
     <div class="nav-item active" data-panel="overview"><i class="fa-solid fa-gauge"></i> الإحصائيات العامة</div>
-    <div class="nav-item" data-panel="parser"><i class="fa-solid fa-wand-magic-sparkles"></i> سحب البيانات (CV)</div>
+    <div class="nav-item" data-panel="parser"><i class="fa-solid fa-wand-magic-sparkles"></i> سحب البيانات (CV Parser)</div>
     <div class="nav-item" data-panel="hero"><i class="fa-solid fa-bullseye"></i> الواجهة والتعريف</div>
     <div class="nav-item" data-panel="experience"><i class="fa-solid fa-briefcase"></i> الخبرات المهنية</div>
     <div class="nav-item" data-panel="projects"><i class="fa-solid fa-diagram-project"></i> استوديو المشاريع</div>
     <div class="nav-item" data-panel="skills"><i class="fa-solid fa-layer-group"></i> المهارات والتقييم</div>
     <div class="nav-item" data-panel="certs"><i class="fa-solid fa-certificate"></i> الشهادات والكورسات</div>
+    <div class="nav-item" data-panel="sections"><i class="fa-solid fa-eye"></i> ترتيب وإخفاء الأقسام</div>
     <div class="nav-item" data-panel="contact"><i class="fa-solid fa-address-book"></i> وسائل الاتصال</div>
     <div class="nav-item" data-panel="theme"><i class="fa-solid fa-palette"></i> المظهر الشامل (Theme)</div>
+    <div class="nav-item" data-panel="media"><i class="fa-solid fa-images"></i> معرض الوسائط (Media)</div>
     <div class="sidebar-foot">
       <a href="index.html" target="_blank" class="nav-item"><i class="fa-solid fa-arrow-up-right-from-square"></i> عرض الموقع</a>
       <div class="nav-item" id="logoutBtn" style="color:#e07a7a;"><i class="fa-solid fa-right-from-bracket"></i> إنهاء الجلسة</div>
@@ -204,21 +209,32 @@ input:checked + .slider:before{transform:translateX(20px);}
 
     <!-- Parser Panel -->
     <section class="panel" id="panel-parser">
-      <div class="main-head"><div><h2>معالج المستندات الذكي</h2><p>ارفع ملف الـ CV الخاص بك (PDF أو DOCX) ليقوم النظام بتحليله وتصنيفه تلقائياً.</p></div></div>
-      <div class="card">
-        <h3><i class="fa-solid fa-file-invoice"></i> سحب البيانات الذكي (AI CV Classifier)</h3>
-        <div class="upload-box">
-          <i class="fa-solid fa-file-pdf" style="color:var(--gold-l)"></i>
-          <label for="cvFileDrop">اضغط هنا لرفع ملف السيرة الذاتية (PDF أو DOCX)</label>
-          <input type="file" id="cvFileDrop" accept=".pdf,.docx">
+      <div class="main-head"><div><h2>معالج المستندات الذكي ثنائي اللغة (Bilingual CV Parser)</h2><p>ارفع ملف السيرة الذاتية (PDF أو DOCX) للغتين العربية والإنجليزية بشكل مستقل.</p></div></div>
+      
+      <div class="lang-box-grid">
+        <div class="card" style="margin-bottom:0;">
+          <h3><i class="fa-solid fa-flag-usa"></i> English CV Document</h3>
+          <div class="upload-box">
+            <i class="fa-solid fa-file-pdf" style="color:var(--gold-l)"></i>
+            <label for="cvFileDropEn">Upload English Resume (PDF / DOCX)</label>
+            <input type="file" id="cvFileDropEn" accept=".pdf,.docx">
+          </div>
+          <div class="field-inline"><textarea id="extractedCvTextEn" placeholder="Extracted English text will appear here..." style="min-height:120px;"></textarea></div>
+          <button class="btn btn-primary" id="analyzeCvBtnEn" style="width:100%;"><i class="fa-solid fa-microchip"></i> Parse English CV</button>
         </div>
-        <div id="parseStatus" class="status-msg"></div>
-        <div class="field-inline" style="margin-top:20px;">
-          <label>النص المستخرج من المستند:</label>
-          <textarea id="extractedCvText" style="min-height:160px;" placeholder="سيظهر النص المستخلص بالكامل هنا..."></textarea>
+
+        <div class="card" style="margin-bottom:0;">
+          <h3><i class="fa-solid fa-flag"></i> ملف السيرة الذاتية بالعربية</h3>
+          <div class="upload-box">
+            <i class="fa-solid fa-file-pdf" style="color:var(--gold-l)"></i>
+            <label for="cvFileDropAr">رفع السيرة الذاتية بالعربية (PDF / DOCX)</label>
+            <input type="file" id="cvFileDropAr" accept=".pdf,.docx">
+          </div>
+          <div class="field-inline"><textarea id="extractedCvTextAr" placeholder="سيظهر النص العربي المستخرج هنا..." style="min-height:120px;"></textarea></div>
+          <button class="btn btn-primary" id="analyzeCvBtnAr" style="width:100%;"><i class="fa-solid fa-microchip"></i> تحليل السيرة الذاتية العربية</button>
         </div>
-        <button class="btn btn-primary" id="analyzeCvBtn"><i class="fa-solid fa-microchip"></i> تحليل وتصنيف البيانات واستعراضها</button>
       </div>
+      <div id="parseStatus" class="status-msg"></div>
     </section>
 
     <!-- Hero & About Panel -->
@@ -276,7 +292,7 @@ input:checked + .slider:before{transform:translateX(20px);}
 
     <!-- Projects Panel -->
     <section class="panel" id="panel-projects">
-      <div class="main-head"><div><h2>استوديو إدارة المشاريع</h2><p>إضافة، تعديل، وحذف المشاريع البرمجية وصورها.</p></div></div>
+      <div class="main-head"><div><h2>استوديو إدارة المشاريع (Projects Studio)</h2><p>إضافة، تعديل، وحذف المشاريع البرمجية وصورها.</p></div></div>
       
       <div class="card">
         <h3><i class="fa-solid fa-cloud-arrow-up"></i> رفع صور المشاريع (Cloudinary)</h3>
@@ -323,6 +339,22 @@ input:checked + .slider:before{transform:translateX(20px);}
       </div>
     </section>
 
+    <!-- Sections Visibility Manager -->
+    <section class="panel" id="panel-sections">
+      <div class="main-head"><div><h2>إدارة ظهور الأقسام (Sections Manager)</h2><p>التحكم الإشعاعي بظهور وإخفاء كل قسم بالموقع.</p></div></div>
+      <div class="card">
+        <div class="switch-row"><div class="lbl">قسم الواجهة الرئيسية (Hero Section)</div><label class="switch"><input type="checkbox" id="sec_hero" checked><span class="slider"></span></label></div>
+        <div class="switch-row"><div class="lbl">قسم نبذة عني (About Section)</div><label class="switch"><input type="checkbox" id="sec_about" checked><span class="slider"></span></label></div>
+        <div class="switch-row"><div class="lbl">قسم الخبرات المهنية (Experience Section)</div><label class="switch"><input type="checkbox" id="sec_experience" checked><span class="slider"></span></label></div>
+        <div class="switch-row"><div class="lbl">قسم المشاريع (Projects Section)</div><label class="switch"><input type="checkbox" id="sec_projects" checked><span class="slider"></span></label></div>
+        <div class="switch-row"><div class="lbl">قسم المهارات (Skills Section)</div><label class="switch"><input type="checkbox" id="sec_skills" checked><span class="slider"></span></label></div>
+        <div class="switch-row"><div class="lbl">قسم التعليم والشهادات (Education Section)</div><label class="switch"><input type="checkbox" id="sec_education" checked><span class="slider"></span></label></div>
+        <div class="switch-row"><div class="lbl">قسم التواصل (Contact Section)</div><label class="switch"><input type="checkbox" id="sec_contact" checked><span class="slider"></span></label></div>
+        <div class="row-actions" style="margin-top:20px;"><button class="btn btn-primary" id="saveSections"><i class="fa-solid fa-floppy-disk"></i> حفظ رؤية الأقسام</button></div>
+        <p class="status-msg" id="sectionsMsg"></p>
+      </div>
+    </section>
+
     <!-- Contact Panel -->
     <section class="panel" id="panel-contact">
       <div class="main-head"><div><h2>بيانات وسائل الاتصال</h2><p>تحديث أرقام الهواتف والموقع الجغرافي.</p></div></div>
@@ -338,21 +370,8 @@ input:checked + .slider:before{transform:translateX(20px);}
 
     <!-- Theme Panel -->
     <section class="panel" id="panel-theme">
-      <div class="main-head"><div><h2>التحكم الشامل في المظهر والأقسام (Theme Engine)</h2><p>تغيير الثيم الافتراضي، الألوان، الخطوط، التحكم بظهور الأقسام، والانحناءات.</p></div></div>
-      
+      <div class="main-head"><div><h2>التحكم الشامل في المظهر (Theme Engine)</h2><p>تغيير الثيم الافتراضي، الألوان، الخطوط، والانحناءات.</p></div></div>
       <div class="card">
-        <h3><i class="fa-solid fa-eye"></i> إظهار وإخفاء أجزاء الموقع (Section Visibility)</h3>
-        <div class="switch-row"><div class="lbl">قسم الواجهة الرئيسية (Hero Section)</div><label class="switch"><input type="checkbox" id="sec_hero" checked><span class="slider"></span></label></div>
-        <div class="switch-row"><div class="lbl">قسم نبذة عني (About Section)</div><label class="switch"><input type="checkbox" id="sec_about" checked><span class="slider"></span></label></div>
-        <div class="switch-row"><div class="lbl">قسم الخبرات المهنية (Experience Section)</div><label class="switch"><input type="checkbox" id="sec_experience" checked><span class="slider"></span></label></div>
-        <div class="switch-row"><div class="lbl">قسم المشاريع (Projects Section)</div><label class="switch"><input type="checkbox" id="sec_projects" checked><span class="slider"></span></label></div>
-        <div class="switch-row"><div class="lbl">قسم المهارات (Skills Section)</div><label class="switch"><input type="checkbox" id="sec_skills" checked><span class="slider"></span></label></div>
-        <div class="switch-row"><div class="lbl">قسم التعليم والشهادات (Education Section)</div><label class="switch"><input type="checkbox" id="sec_education" checked><span class="slider"></span></label></div>
-        <div class="switch-row"><div class="lbl">قسم التواصل (Contact Section)</div><label class="switch"><input type="checkbox" id="sec_contact" checked><span class="slider"></span></label></div>
-      </div>
-
-      <div class="card">
-        <h3><i class="fa-solid fa-palette"></i> تخصيص الألوان والخطوط</h3>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:20px;">
           <div class="field-inline">
             <label><i class="fa-solid fa-circle-half-stroke"></i> الوضع الافتراضي (Mode)</label>
@@ -386,6 +405,23 @@ input:checked + .slider:before{transform:translateX(20px);}
         <p class="status-msg" id="themeMsg"></p>
       </div>
     </section>
+
+    <!-- Media Panel -->
+    <section class="panel" id="panel-media">
+      <div class="main-head"><div><h2>معرض الوسائط والروابط (Media Library)</h2><p>رفع وإدارة كافة الصور والوسائط المستخدمة في الموقع.</p></div></div>
+      <div class="card">
+        <h3><i class="fa-solid fa-cloud-arrow-up"></i> رفع صورة جديدة</h3>
+        <div class="upload-box">
+          <label for="mediaLibraryFile">اضغط هنا لرفع أي صورة واستخراج رابطها في Cloudinary</label>
+          <input type="file" id="mediaLibraryFile" accept="image/*">
+          <div class="preview-container" id="mediaPreviewWrap">
+            <img src="" id="mediaPreviewImg">
+            <span class="btn btn-ghost" id="copyMediaUrlBtn">نسخ الرابط المباشر</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
   </main>
 </div>
 
@@ -393,29 +429,29 @@ input:checked + .slider:before{transform:translateX(20px);}
 <div class="modal-overlay" id="parsedCvModal">
   <div class="modal-box">
     <div class="modal-head">
-      <h3><i class="fa-solid fa-magnifying-glass"></i> مراجعة البيانات المستخرجة من الـ CV</h3>
+      <h3><i class="fa-solid fa-magnifying-glass"></i> مراجعة البيانات المستخرجة من السيرة الذاتية</h3>
       <span class="close-modal" id="closeCvModal">&times;</span>
     </div>
     <div id="cvModalBody">
-      <p style="color:var(--text-dim); margin-bottom:16px;">قام النظام بتحليل السيرة الذاتية وتنسيقها. يمكنك مراجعتها واختيار آلية الدمج مع قاعدة البيانات.</p>
+      <p style="color:var(--text-dim); margin-bottom:16px;">قام المعالج بتحليل المستند وتصنيفه. يمكنك المراجعة قبل الاعتماد والتحديث.</p>
       
-      <div class="field-inline"><label>الاسم الكامل:</label><input id="cv_parsed_name"></div>
-      <div class="field-inline"><label>المسمى الوظيفي:</label><input id="cv_parsed_title"></div>
-      <div class="field-inline"><label>البريد الإلكتروني:</label><input id="cv_parsed_email"></div>
-      <div class="field-inline"><label>رقم الهاتف:</label><input id="cv_parsed_phone"></div>
-      <div class="field-inline"><label>الملخص المهني:</label><textarea id="cv_parsed_summary"></textarea></div>
+      <div class="field-inline"><label>الاسم الكامل:</label><input id="cv_parsed_name"><span class="confidence-badge conf-high">High Confidence</span></div>
+      <div class="field-inline"><label>المسمى الوظيفي:</label><input id="cv_parsed_title"><span class="confidence-badge conf-high">High Confidence</span></div>
+      <div class="field-inline"><label>البريد الإلكتروني:</label><input id="cv_parsed_email"><span class="confidence-badge conf-high">High Confidence</span></div>
+      <div class="field-inline"><label>رقم الهاتف:</label><input id="cv_parsed_phone"><span class="confidence-badge conf-high">High Confidence</span></div>
+      <div class="field-inline"><label>الملخص المهني / Bio:</label><textarea id="cv_parsed_summary"></textarea><span class="confidence-badge conf-mid">Medium Confidence</span></div>
 
       <div class="field-inline" style="margin-top:20px;">
-        <label>طريقة الدمج مع البيانات الحالية:</label>
+        <label>إستراتيجية الدمج (Merge Strategy):</label>
         <select id="cv_merge_strategy">
-          <option value="append">إضافة البيانات المستخرجة إلى القائمة الحالية (Append)</option>
-          <option value="replace">استبدال البيانات القديمة بالكامل (Replace)</option>
+          <option value="append">دمج وإضافة البيانات للبيانات الحالية (Append)</option>
+          <option value="replace">استبدال البيانات القديمة (Replace)</option>
         </select>
       </div>
 
       <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:24px;">
         <button class="btn btn-ghost" id="cancelCvImport">إلغاء</button>
-        <button class="btn btn-primary" id="confirmCvImport"><i class="fa-solid fa-check"></i> تأكيد الحفظ بقاعدة البيانات</button>
+        <button class="btn btn-primary" id="confirmCvImport"><i class="fa-solid fa-check"></i> تأكيد الحفظ والتطبيق لايف</button>
       </div>
     </div>
   </div>
@@ -501,15 +537,16 @@ input:checked + .slider:before{transform:translateX(20px);}
         document.getElementById(previewImgId).src = cloudData.secure_url;
         if(hiddenInputId) document.getElementById(hiddenInputId).value = cloudData.secure_url;
         btn.innerText = "نسخ الرابط";
-        btn.onclick = () => { navigator.clipboard.writeText(cloudData.secure_url); alert("تم نسخ الرابط!"); };
+        btn.onclick = () => { navigator.clipboard.writeText(cloudData.secure_url); alert("تم نسخ الرابط إلى الحافظة!"); };
       } else { alert("يرجى التأكد من إنشاء Unsigned Preset باسم portfolio_preset في Cloudinary"); btn.innerText = "فشل الرفع"; }
     } catch(e) { console.error("Upload failure: ", e); }
   }
 
   document.getElementById('uploadProfileImg').addEventListener('change', function() { handleMediaUpload(this, 'previewProfileWrap', 'previewProfileImg', 'f_profile_img', 'copyProfileUrlBtn'); });
   document.getElementById('uploadProjectImg').addEventListener('change', function() { handleMediaUpload(this, 'previewProjectWrap', 'previewProjectImg', null, 'copyProjectUrlBtn'); });
+  document.getElementById('mediaLibraryFile').addEventListener('change', function() { handleMediaUpload(this, 'mediaPreviewWrap', 'mediaPreviewImg', null, 'copyMediaUrlBtn'); });
 
-  // Fetch Data from Firebase Firestore
+  // Load Data from Firebase Firestore
   async function loadDataFromFirebase() {
     try {
       const docRef = doc(db, "portfolio", "content");
@@ -589,7 +626,7 @@ input:checked + .slider:before{transform:translateX(20px);}
     const statusMsg = document.getElementById('fetchStatusMsg');
     statusMsg.className = 'status-msg'; statusMsg.innerText = 'جاري جلب البيانات...'; statusMsg.style.display = 'block';
     await loadDataFromFirebase();
-    statusMsg.className = 'status-msg ok'; statusMsg.innerText = 'تم جلب أحدث بيانات وتحديث الحقول!';
+    statusMsg.className = 'status-msg ok'; statusMsg.innerText = 'تم جلب أحدث بيانات وتحديث كافة الحقول!';
     setTimeout(()=> statusMsg.style.display = 'none', 3000);
   });
 
@@ -625,12 +662,13 @@ input:checked + .slider:before{transform:translateX(20px);}
     }
   });
 
-  // CV PARSER (PDF + DOCX)
+  // BILINGUAL CV PARSER ENGINE
   let parsedCvData = {};
-  document.getElementById('cvFileDrop').addEventListener('change', function(e) {
-    const file = e.target.files[0];
+  let currentTargetLang = "en";
+
+  function parseFileContent(file, textOutputId) {
     const status = document.getElementById('parseStatus');
-    const output = document.getElementById('extractedCvText');
+    const output = document.getElementById(textOutputId);
     if(!file) return;
 
     status.className = 'status-msg ok'; status.innerText = "جاري قراءة واستخراج النصوص من المستند..."; status.style.display = "block";
@@ -665,13 +703,15 @@ input:checked + .slider:before{transform:translateX(20px);}
     } else {
       status.className = 'status-msg err'; status.innerText = "يرجى رفع صيغة PDF أو DOCX فقط.";
     }
-  });
+  }
 
-  // AI CLASSIFIER FOR CV TEXT
-  document.getElementById('analyzeCvBtn').addEventListener('click', () => {
-    const text = document.getElementById('extractedCvText').value;
+  document.getElementById('cvFileDropEn').addEventListener('change', function(e) { parseFileContent(e.target.files[0], 'extractedCvTextEn'); });
+  document.getElementById('cvFileDropAr').addEventListener('change', function(e) { parseFileContent(e.target.files[0], 'extractedCvTextAr'); });
+
+  function analyzeTextAndShowModal(text, lang) {
     if(!text.trim()){ alert("يرجى رفع ملف أو لصق النص المستخرج أولاً!"); return; }
 
+    currentTargetLang = lang;
     const emailMatch = text.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
     const phoneMatch = text.match(/(\+?\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4,6}/);
     const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
@@ -691,7 +731,10 @@ input:checked + .slider:before{transform:translateX(20px);}
     document.getElementById('cv_parsed_summary').value = parsedCvData.summary;
 
     document.getElementById('parsedCvModal').classList.add('open');
-  });
+  }
+
+  document.getElementById('analyzeCvBtnEn').addEventListener('click', () => { analyzeTextAndShowModal(document.getElementById('extractedCvTextEn').value, 'en'); });
+  document.getElementById('analyzeCvBtnAr').addEventListener('click', () => { analyzeTextAndShowModal(document.getElementById('extractedCvTextAr').value, 'ar'); });
 
   document.getElementById('closeCvModal').addEventListener('click', () => document.getElementById('parsedCvModal').classList.remove('open'));
   document.getElementById('cancelCvImport').addEventListener('click', () => document.getElementById('parsedCvModal').classList.remove('open'));
@@ -702,10 +745,17 @@ input:checked + .slider:before{transform:translateX(20px);}
       const phone = document.getElementById('cv_parsed_phone').value;
       const summary = document.getElementById('cv_parsed_summary').value;
 
-      await setDoc(doc(db, "portfolio", "content"), {
-        contactData: { email, phone, location: "Cairo, Egypt" },
-        heroEn: { lead: summary }
-      }, { merge: true });
+      const updateData = {
+        contactData: { email, phone }
+      };
+
+      if(currentTargetLang === 'en') {
+        updateData.heroEn = { lead: summary };
+      } else {
+        updateData.heroAr = { lead: summary };
+      }
+
+      await setDoc(doc(db, "portfolio", "content"), updateData, { merge: true });
 
       alert("تمت إضافة المخرجات المستخرجة لحقول الاتصال والواجهة بنجاح!");
       document.getElementById('parsedCvModal').classList.remove('open');
@@ -763,6 +813,23 @@ input:checked + .slider:before{transform:translateX(20px);}
       await setDoc(doc(db, "portfolio", "content"), { certsElarabyData: parsedElaraby, certsAlmentorData: parsedAlmentor }, { merge: true });
       msg.className = 'status-msg ok'; msg.innerText = 'تم التحديث بنجاح!'; loadDataFromFirebase();
     } catch (e) { msg.className = 'status-msg err'; msg.innerText = 'JSON غير سليم: ' + e.message; }
+  });
+
+  document.getElementById('saveSections').addEventListener('click', async () => {
+    const msg = document.getElementById('sectionsMsg'); msg.className = 'status-msg'; msg.innerText = 'جاري حفظ ظهور الأقسام...'; msg.style.display = 'block';
+    try {
+      const sectionVisibility = {
+        hero: document.getElementById('sec_hero').checked,
+        about: document.getElementById('sec_about').checked,
+        experience: document.getElementById('sec_experience').checked,
+        projects: document.getElementById('sec_projects').checked,
+        skills: document.getElementById('sec_skills').checked,
+        education: document.getElementById('sec_education').checked,
+        contact: document.getElementById('sec_contact').checked
+      };
+      await setDoc(doc(db, "portfolio", "content"), { themeData: { sectionVisibility } }, { merge: true });
+      msg.className = 'status-msg ok'; msg.innerText = 'تم تحديث الأقسام بنجاح!'; loadDataFromFirebase();
+    } catch (e) { msg.className = 'status-msg err'; msg.innerText = e.message; }
   });
 
   document.getElementById('saveContact').addEventListener('click', async () => {
