@@ -880,6 +880,127 @@ input:checked + .slider:before{transform:translateX(20px);}
       msg.className = 'status-msg ok'; msg.innerText = 'تم تطبيق وحفظ المظهر الشامل بنجاح!'; loadDataFromFirebase();
     } catch (e) { msg.className = 'status-msg err'; msg.innerText = e.message; }
   });
+  // دالة معالجة وتنظيف النصوص العربية وإعادة تحويل رموز الخطوط الشاذة إلى الحروف القياسية
+function cleanAndNormalizeArabicText(text) {
+  if (!text) return "";
+
+  // 1. تحويل الحروف العربية الملتصقة (Arabic Presentation Forms-A & B) إلى ترميز Unicode القياسي
+  let normalized = text.normalize("NFC");
+
+  // خريطة تحويل أشكال الحروف المركبة والغريبة إلى أصلها العربي
+  const arabicFormsMap = {
+    'ﺃ': 'أ', 'ﺄ': 'أ', 'ﺇ': 'إ', 'ﺈ': 'إ', 'ﺁ': 'آ', 'ﺂ': 'آ',
+    'ﺋ': 'ئ', 'ﺌ': 'ئ', 'ﺅ': 'ؤ', 'ﺆ': 'ؤ', 'ﺇ': 'إ',
+    'ﺑ': 'ب', 'ﺒ': 'ب', 'ﺐ': 'ب', 'ﺏ': 'ب',
+    'ﺗ': 'ت', 'ﺘ': 'ت', 'ﺖ': 'ت', 'ﺕ': 'ت',
+    'ﺛ': 'ث', 'ﺜ': 'ث', 'ﺚ': 'ث', 'ﺙ': 'ث',
+    'ﺟ': 'ج', 'ﺠ': 'ج', 'ﺞ': 'ج', 'ﺝ': 'ج',
+    'ﺣ': 'ح', 'ﺤ': 'ح', 'ﺢ': 'ح', 'ﺡ': 'ح',
+    'ﺧ': 'خ', 'ﺨ': 'خ', 'ﺦ': 'خ', 'ﺥ': 'خ',
+    'ﺩ': 'د', 'ﺪ': 'د', 'ﺫ': 'ذ', 'ﺬ': 'ذ',
+    'ﺭ': 'ر', 'ﺮ': 'ر', 'ﺯ': 'ز', 'ﺰ': 'ز',
+    'ﺳ': 'س', 'ﺴ': 'س', 'ﺲ': 'س', 'ﺱ': 'س',
+    'ﺷ': 'ش', 'ﺸ': 'ش', 'ﺶ': 'ش', 'ﺵ': 'ش',
+    'ﺻ': 'ص', 'ﺼ': 'ص', 'ﺺ': 'ص', 'ﺹ': 'ص',
+    'ﺿ': 'ض', 'ﻀ': 'ض', 'ﺾ': 'ض', 'ﺽ': 'ض',
+    'ﻃ': 'ط', 'ﻄ': 'ط', 'ﻂ': 'ط', 'ﻁ': 'ط',
+    'ﻇ': 'ظ', 'ﻈ': 'ظ', 'ﻆ': 'ظ', 'ﻅ': 'ظ',
+    'ﻋ': 'ع', 'ﻌ': 'ع', 'ﻊ': 'ع', 'ﻉ': 'ع',
+    'ﻏ': 'غ', 'ﻐ': 'غ', 'ﻎ': 'غ', 'ﻍ': 'غ',
+    'ﻓ': 'ف', 'ﻔ': 'ف', 'ﻒ': 'ف', 'ﻑ': 'ف',
+    'ﻗ': 'ق', 'ﻘ': 'ق', 'ﻖ': 'ق', 'ﻕ': 'ق',
+    'ﻛ': 'ك', 'ﻜ': 'ك', 'ﻚ': 'ك', 'ﻙ': 'ك',
+    'ﻟ': 'ل', 'ﻠ': 'ل', 'ﻞ': 'ل', 'ﻝ': 'ل',
+    'ﻣ': 'م', 'ﻤ': 'م', 'ﻢ': 'م', 'ﻡ': 'م',
+    'ﻧ': 'ن', 'ﻨ': 'ن', 'ﻦ': 'ن', 'ﻥ': 'ن',
+    'ﻫ': 'ه', 'ﻬ': 'ه', 'ﻪ': 'ه', 'ﻩ': 'ه',
+    'ﻭ': 'و', 'ﻮ': 'و', 'ﻱ': 'ي', 'ﻴ': 'ي', 'ﻲ': 'ي', 'ﻯ': 'ى', 'ﻰ': 'ى',
+    'ﻻ': 'لا', 'ﻼ': 'لا', 'ﻷ': 'لأ', 'ﻸ': 'لأ', 'ﻹ': 'لإ', 'ﻺ': 'لإ', 'ﻵ': 'لآ', 'ﻶ': 'لآ'
+  };
+
+  // استبدال أشكال العرض العشوائية
+  normalized = normalized.replace(/[\uFB50-\uFDFF\uFE70-\uFEFC]/g, function(ch) {
+    return arabicFormsMap[ch] || ch;
+  });
+
+  // 2. إزالة رموز التحكّم الشاذة والرموز اللاتينية غير المفهومة الناتجة عن خطأ التشفير (مثل ï, ﮺, OSᴰ)
+  normalized = normalized.replace(/[ïº»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ]/g, '');
+
+  // 3. إزالة التشكيل وحركات المـد الزائدة (التطويل ـ)
+  normalized = normalized.replace(/[\u064B-\u0652]/g, ""); // التشكيل
+  normalized = normalized.replace(/ـ+/g, ""); // التطويل
+
+  // 4. ضبط المسافات المكررة
+  normalized = normalized.replace(/[ \t]+/g, " ").trim();
+
+  return normalized;
+}
+
+// محرك قراءة الملفات المحدث مع تفعيل خرائط CMaps
+function parseFileContent(file, textOutputId) {
+  const status = document.getElementById('parseStatus');
+  const output = document.getElementById(textOutputId);
+  if(!file) return;
+
+  status.className = 'status-msg ok'; 
+  status.innerText = "جاري قراءة وتحليل نصوص المستند وتفكيك الترميز..."; 
+  status.style.display = "block";
+
+  if(file.type === "application/pdf") {
+    const fileReader = new FileReader();
+    fileReader.onload = function() {
+      const typedarray = new Uint8Array(this.result);
+      
+      // إضافة CMapUrl لتمكين قراءة الخطوط العربية والشرقية من ملفات الـ PDF
+      const loadingTask = pdfjsLib.getDocument({
+        data: typedarray,
+        cMapUrl: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/cmaps/',
+        cMapPacked: true
+      });
+
+      loadingTask.promise.then(function(pdf) {
+        let countPromises = [];
+        for (let j = 1; j <= pdf.numPages; j++) {
+          countPromises.push(
+            pdf.getPage(j).then(page => 
+              page.getTextContent().then(text => 
+                text.items.map(s => s.str).join(' ')
+              )
+            )
+          );
+        }
+        Promise.all(countPromises).then(pageTexts => {
+          const rawExtracted = pageTexts.join('\n');
+          // تطبيق المعالجة والتنظيف للنص المستخرج
+          const cleanedText = cleanAndNormalizeArabicText(rawExtracted);
+          output.value = cleanedText; 
+          status.innerText = "تم سحب ونظافة نصوص ملف الـ PDF بنجاح!";
+        });
+      }).catch(err => {
+        status.className = 'status-msg err';
+        status.innerText = "خطأ أثناء تفكيك الـ PDF: " + err.message;
+      });
+    };
+    fileReader.readAsArrayBuffer(file);
+  } else if (file.name.endsWith('.docx')) {
+    const fileReader = new FileReader();
+    fileReader.onload = function(evt) {
+      mammoth.extractRawText({ arrayBuffer: evt.target.result })
+        .then(function(result) {
+          output.value = cleanAndNormalizeArabicText(result.value);
+          status.innerText = "تم سحب نصوص ملف Word (DOCX) بنجاح!";
+        })
+        .catch(function(err) { 
+          status.className = 'status-msg err'; 
+          status.innerText = "خطأ في قراءة ملف Word: " + err.message; 
+        });
+    };
+    fileReader.readAsArrayBuffer(file);
+  } else {
+    status.className = 'status-msg err'; 
+    status.innerText = "يرجى رفع صيغة PDF أو DOCX فقط.";
+  }
+}
 </script>
 </body>
 </html>
