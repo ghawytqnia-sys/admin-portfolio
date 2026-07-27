@@ -66,7 +66,7 @@ button, input, textarea, select { font-family: inherit; }
 .nav-item.active { background: rgba(192,139,61,.14); color: var(--gold-l); font-weight: 600; }
 .sidebar-foot { margin-top: auto; padding-top: 16px; border-top: 1px solid var(--border); }
 
-/* Language Switcher Bar */
+/* شريط التبديل بين اللغتين (Context Switcher) */
 #adminLangSwitcher {
   position: sticky; top: 0; background: rgba(18, 27, 46, 0.95); backdrop-filter: blur(10px);
   padding: 16px 20px; z-index: 2000; display: flex; align-items: center; justify-content: center; 
@@ -615,7 +615,7 @@ window.triggerAllRenders = function() {
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
   import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-  import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
   const CLOUDINARY_CLOUD_NAME = "dxkxuajgf"; 
   const CLOUDINARY_UPLOAD_PRESET = "portfolio_preset";
@@ -752,138 +752,103 @@ window.triggerAllRenders = function() {
     }
   }
 
+  let syncUnsubscribeGlobal = null;
+  let syncUnsubscribeEn = null;
+  let syncUnsubscribeAr = null;
+  window.isAdminSaving = false;
+
   async function loadDataFromFirebase() {
     const msg = document.getElementById('fetchStatusMsg');
-    msg.style.display = 'block'; msg.className = 'status-msg'; msg.innerText = 'جاري المزامنة مع الخادم وتجهيز النماذج...';
+    msg.style.display = 'block'; msg.className = 'status-msg'; msg.innerText = 'جاري إعداد المزامنة الحية مع الخادم وتجهيز النماذج...';
 
     try {
       await runMigrationIfNeeded();
 
-      const gSnap = await getDoc(doc(db, "portfolio", "global"));
-      const enSnap = await getDoc(doc(db, "portfolio", "en"));
-      const arSnap = await getDoc(doc(db, "portfolio", "ar"));
+      if(syncUnsubscribeGlobal) syncUnsubscribeGlobal();
+      if(syncUnsubscribeEn) syncUnsubscribeEn();
+      if(syncUnsubscribeAr) syncUnsubscribeAr();
 
-      const gData = gSnap.exists() ? gSnap.data() : {};
-      const enData = enSnap.exists() ? enSnap.data() : {};
-      const arData = arSnap.exists() ? arSnap.data() : {};
       const localData = getInitialData();
 
-      // 1. الدمج المحمي للبيانات العامة (Global Data)
-      window.appState.global = {
-        mediaLibrary: gData.mediaLibrary || [],
-        themeData: gData.themeData || {},
-        aboutData: {
-          profileImg: gData.aboutData?.profileImg || FALLBACK_TEMPLATE.profileImg
-        },
-        contactData: {
-          cvLink: gData.contactData?.cvLink || FALLBACK_TEMPLATE.cvLink,
-          email: gData.contactData?.email || FALLBACK_TEMPLATE.contact.email,
-          phone: gData.contactData?.phone || FALLBACK_TEMPLATE.contact.phone
-        }
-      };
+      syncUnsubscribeGlobal = onSnapshot(doc(db, "portfolio", "global"), (docSnap) => {
+        if (window.isAdminSaving) return;
+        const gData = docSnap.exists() ? docSnap.data() : {};
+        window.appState.global = {
+          mediaLibrary: gData.mediaLibrary || [],
+          themeData: gData.themeData || {},
+          aboutData: { profileImg: gData.aboutData?.profileImg || FALLBACK_TEMPLATE.profileImg },
+          contactData: { cvLink: gData.contactData?.cvLink || FALLBACK_TEMPLATE.cvLink, email: gData.contactData?.email || FALLBACK_TEMPLATE.contact.email, phone: gData.contactData?.phone || FALLBACK_TEMPLATE.contact.phone }
+        };
+        updateDashboardCounters();
+        if(window.activeLang) window.populateForms();
+      });
 
-      // 2. الدمج المحمي للنسخة الإنجليزية (English Context)
-      window.appState.en = {
-        hero: {
-          brandName: enData.hero?.brandName || FALLBACK_TEMPLATE.en.brandName,
-          eyebrow: enData.hero?.eyebrow || FALLBACK_TEMPLATE.en.eyebrow,
-          title1: enData.hero?.title1 || FALLBACK_TEMPLATE.en.title,
-          lead: enData.hero?.lead || FALLBACK_TEMPLATE.en.lead
-        },
-        typed: (enData.typed && enData.typed.length) ? enData.typed : FALLBACK_TEMPLATE.en.typed,
-        chips: (enData.chips && enData.chips.length) ? enData.chips : FALLBACK_TEMPLATE.en.chips,
-        stats: (enData.stats && enData.stats.length) ? enData.stats : FALLBACK_TEMPLATE.en.stats,
-        about: {
-          title: enData.about?.title || FALLBACK_TEMPLATE.en.aboutTitle,
-          p1: enData.about?.p1 || FALLBACK_TEMPLATE.en.aboutP1
-        },
-        facts: (enData.facts && enData.facts.length) ? enData.facts : FALLBACK_TEMPLATE.en.aboutFacts,
-        arc: (enData.arc && enData.arc.length) ? enData.arc : FALLBACK_TEMPLATE.en.aboutArc,
-        education: {
-          degreeTitle: enData.education?.degreeTitle || FALLBACK_TEMPLATE.en.eduTitle,
-          degreeMeta: enData.education?.degreeMeta || FALLBACK_TEMPLATE.en.eduMeta,
-          icdlTitle: enData.education?.icdlTitle || FALLBACK_TEMPLATE.en.certTitle,
-          icdlMeta: enData.education?.icdlMeta || FALLBACK_TEMPLATE.en.certMeta
-        },
-        contact: {
-          location: enData.contact?.location || FALLBACK_TEMPLATE.contact.location
-        },
-        experience: (enData.experience && Array.isArray(enData.experience) && enData.experience.length > 0) 
-          ? enData.experience 
-          : (localData.en?.experience || HARDCODED_FALLBACK_SITE_DATA.en.experience),
-        projects: (enData.projects && Array.isArray(enData.projects) && enData.projects.length > 0) 
-          ? enData.projects 
-          : (localData.en?.projects || HARDCODED_FALLBACK_SITE_DATA.en.projects),
-        skillCats: (enData.skillCats && Array.isArray(enData.skillCats) && enData.skillCats.length > 0) 
-          ? enData.skillCats 
-          : (localData.en?.skillCats || HARDCODED_FALLBACK_SITE_DATA.en.skillCats),
-        certsElaraby: (enData.certsElaraby && Array.isArray(enData.certsElaraby) && enData.certsElaraby.length > 0) 
-          ? enData.certsElaraby 
-          : (localData.en?.certsElaraby || HARDCODED_FALLBACK_SITE_DATA.en.certsElaraby),
-        certsAlmentor: (enData.certsAlmentor && Array.isArray(enData.certsAlmentor) && enData.certsAlmentor.length > 0) 
-          ? enData.certsAlmentor 
-          : (localData.en?.certsAlmentor || HARDCODED_FALLBACK_SITE_DATA.en.certsAlmentor)
-      };
+      syncUnsubscribeEn = onSnapshot(doc(db, "portfolio", "en"), (docSnap) => {
+        if (window.isAdminSaving) return;
+        const enData = docSnap.exists() ? docSnap.data() : {};
+        window.appState.en = {
+          hero: { brandName: enData.hero?.brandName || FALLBACK_TEMPLATE.en.brandName, eyebrow: enData.hero?.eyebrow || FALLBACK_TEMPLATE.en.eyebrow, title1: enData.hero?.title1 || FALLBACK_TEMPLATE.en.title, lead: enData.hero?.lead || FALLBACK_TEMPLATE.en.lead },
+          typed: (enData.typed && enData.typed.length) ? enData.typed : FALLBACK_TEMPLATE.en.typed,
+          chips: (enData.chips && enData.chips.length) ? enData.chips : FALLBACK_TEMPLATE.en.chips,
+          stats: (enData.stats && enData.stats.length) ? enData.stats : FALLBACK_TEMPLATE.en.stats,
+          about: { title: enData.about?.title || FALLBACK_TEMPLATE.en.aboutTitle, p1: enData.about?.p1 || FALLBACK_TEMPLATE.en.aboutP1 },
+          facts: (enData.facts && enData.facts.length) ? enData.facts : FALLBACK_TEMPLATE.en.aboutFacts,
+          arc: (enData.arc && enData.arc.length) ? enData.arc : FALLBACK_TEMPLATE.en.aboutArc,
+          education: { degreeTitle: enData.education?.degreeTitle || FALLBACK_TEMPLATE.en.eduTitle, degreeMeta: enData.education?.degreeMeta || FALLBACK_TEMPLATE.en.eduMeta, icdlTitle: enData.education?.icdlTitle || FALLBACK_TEMPLATE.en.certTitle, icdlMeta: enData.education?.icdlMeta || FALLBACK_TEMPLATE.en.certMeta },
+          contact: { location: enData.contact?.location || FALLBACK_TEMPLATE.contact.location },
+          experience: (enData.experience && Array.isArray(enData.experience) && enData.experience.length > 0) ? enData.experience : (localData.en?.experience || HARDCODED_FALLBACK_SITE_DATA.en.experience),
+          projects: (enData.projects && Array.isArray(enData.projects) && enData.projects.length > 0) ? enData.projects : (localData.en?.projects || HARDCODED_FALLBACK_SITE_DATA.en.projects),
+          skillCats: (enData.skillCats && Array.isArray(enData.skillCats) && enData.skillCats.length > 0) ? enData.skillCats : (localData.en?.skillCats || HARDCODED_FALLBACK_SITE_DATA.en.skillCats),
+          certsElaraby: (enData.certsElaraby && Array.isArray(enData.certsElaraby) && enData.certsElaraby.length > 0) ? enData.certsElaraby : (localData.en?.certsElaraby || HARDCODED_FALLBACK_SITE_DATA.en.certsElaraby),
+          certsAlmentor: (enData.certsAlmentor && Array.isArray(enData.certsAlmentor) && enData.certsAlmentor.length > 0) ? enData.certsAlmentor : (localData.en?.certsAlmentor || HARDCODED_FALLBACK_SITE_DATA.en.certsAlmentor)
+        };
+        updateDashboardCounters();
+        if(window.activeLang === 'en') window.populateForms();
+      });
 
-      // 3. الدمج المحمي للنسخة العربية (Arabic Context)
-      window.appState.ar = {
-        hero: {
-          brandName: arData.hero?.brandName || FALLBACK_TEMPLATE.ar.brandName,
-          eyebrow: arData.hero?.eyebrow || FALLBACK_TEMPLATE.ar.eyebrow,
-          title1: arData.hero?.title1 || FALLBACK_TEMPLATE.ar.title,
-          lead: arData.hero?.lead || FALLBACK_TEMPLATE.ar.lead
-        },
-        typed: (arData.typed && arData.typed.length) ? arData.typed : FALLBACK_TEMPLATE.ar.typed,
-        chips: (arData.chips && arData.chips.length) ? arData.chips : FALLBACK_TEMPLATE.ar.chips,
-        stats: (arData.stats && arData.stats.length) ? arData.stats : FALLBACK_TEMPLATE.ar.stats,
-        about: {
-          title: arData.about?.title || FALLBACK_TEMPLATE.ar.aboutTitle,
-          p1: arData.about?.p1 || FALLBACK_TEMPLATE.ar.aboutP1
-        },
-        facts: (arData.facts && arData.facts.length) ? arData.facts : FALLBACK_TEMPLATE.ar.aboutFacts,
-        arc: (arData.arc && arData.arc.length) ? arData.arc : FALLBACK_TEMPLATE.ar.aboutArc,
-        education: {
-          degreeTitle: arData.education?.degreeTitle || FALLBACK_TEMPLATE.ar.eduTitle,
-          degreeMeta: arData.education?.degreeMeta || FALLBACK_TEMPLATE.ar.eduMeta,
-          icdlTitle: arData.education?.icdlTitle || FALLBACK_TEMPLATE.ar.certTitle,
-          icdlMeta: arData.education?.icdlMeta || FALLBACK_TEMPLATE.ar.certMeta
-        },
-        contact: {
-          location: arData.contact?.location || FALLBACK_TEMPLATE.contact.locationAr
-        },
-        experience: (arData.experience && Array.isArray(arData.experience) && arData.experience.length > 0) 
-          ? arData.experience 
-          : (localData.ar?.experience || localData.en?.experience || HARDCODED_FALLBACK_SITE_DATA.en.experience),
-        projects: (arData.projects && Array.isArray(arData.projects) && arData.projects.length > 0) 
-          ? arData.projects 
-          : (localData.ar?.projects || localData.en?.projects || HARDCODED_FALLBACK_SITE_DATA.en.projects),
-        skillCats: (arData.skillCats && Array.isArray(arData.skillCats) && arData.skillCats.length > 0) 
-          ? arData.skillCats 
-          : (localData.ar?.skillCats || localData.en?.skillCats || HARDCODED_FALLBACK_SITE_DATA.en.skillCats),
-        certsElaraby: (arData.certsElaraby && Array.isArray(arData.certsElaraby) && arData.certsElaraby.length > 0) 
-          ? arData.certsElaraby 
-          : (localData.ar?.certsElaraby || localData.en?.certsElaraby || HARDCODED_FALLBACK_SITE_DATA.en.certsElaraby),
-        certsAlmentor: (arData.certsAlmentor && Array.isArray(arData.certsAlmentor) && arData.certsAlmentor.length > 0) 
-          ? arData.certsAlmentor 
-          : (localData.ar?.certsAlmentor || localData.en?.certsAlmentor || HARDCODED_FALLBACK_SITE_DATA.en.certsAlmentor)
-      };
-
-      // تحديث إحصائيات لوحة التحكم
-      document.getElementById('statExp').innerText = window.appState.en.experience?.length || 0;
-      document.getElementById('statProj').innerText = window.appState.en.projects?.length || 0;
-      document.getElementById('statSkill').innerText = window.appState.en.skillCats?.length || 0;
-      document.getElementById('statMedia').innerText = window.appState.global.mediaLibrary?.length || 0;
+      syncUnsubscribeAr = onSnapshot(doc(db, "portfolio", "ar"), (docSnap) => {
+        if (window.isAdminSaving) return;
+        const arData = docSnap.exists() ? docSnap.data() : {};
+        window.appState.ar = {
+          hero: { brandName: arData.hero?.brandName || FALLBACK_TEMPLATE.ar.brandName, eyebrow: arData.hero?.eyebrow || FALLBACK_TEMPLATE.ar.eyebrow, title1: arData.hero?.title1 || FALLBACK_TEMPLATE.ar.title, lead: arData.hero?.lead || FALLBACK_TEMPLATE.ar.lead },
+          typed: (arData.typed && arData.typed.length) ? arData.typed : FALLBACK_TEMPLATE.ar.typed,
+          chips: (arData.chips && arData.chips.length) ? arData.chips : FALLBACK_TEMPLATE.ar.chips,
+          stats: (arData.stats && arData.stats.length) ? arData.stats : FALLBACK_TEMPLATE.ar.stats,
+          about: { title: arData.about?.title || FALLBACK_TEMPLATE.ar.aboutTitle, p1: arData.about?.p1 || FALLBACK_TEMPLATE.ar.aboutP1 },
+          facts: (arData.facts && arData.facts.length) ? arData.facts : FALLBACK_TEMPLATE.ar.aboutFacts,
+          arc: (arData.arc && arData.arc.length) ? arData.arc : FALLBACK_TEMPLATE.ar.aboutArc,
+          education: { degreeTitle: arData.education?.degreeTitle || FALLBACK_TEMPLATE.ar.eduTitle, degreeMeta: arData.education?.degreeMeta || FALLBACK_TEMPLATE.ar.eduMeta, icdlTitle: arData.education?.icdlTitle || FALLBACK_TEMPLATE.ar.certTitle, icdlMeta: arData.education?.icdlMeta || FALLBACK_TEMPLATE.ar.certMeta },
+          contact: { location: arData.contact?.location || FALLBACK_TEMPLATE.contact.locationAr },
+          experience: (arData.experience && Array.isArray(arData.experience) && arData.experience.length > 0) ? arData.experience : (localData.ar?.experience || localData.en?.experience || HARDCODED_FALLBACK_SITE_DATA.en.experience),
+          projects: (arData.projects && Array.isArray(arData.projects) && arData.projects.length > 0) ? arData.projects : (localData.ar?.projects || localData.en?.projects || HARDCODED_FALLBACK_SITE_DATA.en.projects),
+          skillCats: (arData.skillCats && Array.isArray(arData.skillCats) && arData.skillCats.length > 0) ? arData.skillCats : (localData.ar?.skillCats || localData.en?.skillCats || HARDCODED_FALLBACK_SITE_DATA.en.skillCats),
+          certsElaraby: (arData.certsElaraby && Array.isArray(arData.certsElaraby) && arData.certsElaraby.length > 0) ? arData.certsElaraby : (localData.ar?.certsElaraby || localData.en?.certsElaraby || HARDCODED_FALLBACK_SITE_DATA.en.certsElaraby),
+          certsAlmentor: (arData.certsAlmentor && Array.isArray(arData.certsAlmentor) && arData.certsAlmentor.length > 0) ? arData.certsAlmentor : (localData.ar?.certsAlmentor || localData.en?.certsAlmentor || HARDCODED_FALLBACK_SITE_DATA.en.certsAlmentor)
+        };
+        updateDashboardCounters();
+        if(window.activeLang === 'ar') window.populateForms();
+      });
 
       window.switchLang(window.activeLang || 'en');
       msg.className='status-msg ok'; msg.innerText='تمت المزامنة وجلب كافة البيانات بنجاح!'; 
       setTimeout(()=>msg.style.display='none',3000);
     } catch(e) {
       console.error(e); 
-      msg.className = 'status-msg err'; msg.innerText = 'حدث خطأ أثناء الجلب: ' + e.message; 
+      msg.className = 'status-msg err'; msg.innerText = 'حدث خطأ أثناء إعداد المزامنة: ' + e.message; 
     }
   }
 
-  document.getElementById('forceFetchBtn').addEventListener('click', loadDataFromFirebase);
+  function updateDashboardCounters() {
+    document.getElementById('statExp').innerText = window.appState.en.experience?.length || 0;
+    document.getElementById('statProj').innerText = window.appState.en.projects?.length || 0;
+    document.getElementById('statSkill').innerText = window.appState.en.skillCats?.length || 0;
+    document.getElementById('statMedia').innerText = window.appState.global.mediaLibrary?.length || 0;
+  }
+
+  document.getElementById('forceFetchBtn').addEventListener('click', () => {
+    window.isAdminSaving = false;
+    loadDataFromFirebase();
+  });
 
   // زر استرداد البيانات للطوارئ (Emergency Restore)
   document.getElementById('restoreDataBtn').addEventListener('click', () => {
@@ -940,6 +905,7 @@ window.triggerAllRenders = function() {
     msg.className='status-msg ok'; msg.innerText=`يتم الآن الحفظ لبيئة [${window.activeLang.toUpperCase()}] ...`; msg.style.display='block';
     
     try {
+      window.isAdminSaving = true;
       const payload = {};
       if(section === 'hero') {
         payload.hero = { brandName: getValSafe('f_brand'), eyebrow: getValSafe('f_eyebrow'), title1: getValSafe('f_title1'), lead: getValSafe('f_lead') };
@@ -964,12 +930,14 @@ window.triggerAllRenders = function() {
       msg.innerText = window.activeLang === 'ar' ? 'تم حفظ النسخة العربية بنجاح!' : 'English context saved successfully!';
       setTimeout(()=>msg.style.display='none', 4000);
     } catch(e) { msg.className='status-msg err'; msg.innerText = 'Error: ' + e.message; }
+    finally { setTimeout(() => { window.isAdminSaving = false; }, 1500); }
   }
 
   window.saveGlobalContact = async function() {
     const msg = document.getElementById('contactMsg');
     msg.className='status-msg ok'; msg.innerText='جاري الحفظ...'; msg.style.display='block';
     try {
+      window.isAdminSaving = true;
       // Localized location part
       await setDoc(doc(db, "portfolio", window.activeLang), { contact: { location: getValSafe('f_contact_location') } }, { merge: true });
       // Global part
@@ -981,12 +949,14 @@ window.triggerAllRenders = function() {
       msg.innerText='تم الحفظ للإعدادات العامة وتحديث الموقع الجغرافي بنجاح!';
       setTimeout(()=>msg.style.display='none', 3000);
     } catch (e) { msg.className='status-msg err'; msg.innerText='فشل الحفظ: ' + e.message; }
+    finally { setTimeout(() => { window.isAdminSaving = false; }, 1500); }
   }
 
   window.saveGlobalDataOnly = async function(msgId) {
     const m = msgId ? document.getElementById(msgId) : null;
     if(m) { m.className='status-msg ok'; m.style.display='block'; m.innerText='جاري الحفظ (Global)...'; }
     try {
+      window.isAdminSaving = true;
       const payload = { mediaLibrary: window.appState.global.mediaLibrary };
       
       const sectionVisibility = {};
@@ -1007,6 +977,8 @@ window.triggerAllRenders = function() {
       if(m) { m.innerText = 'تم حفظ الإعدادات العامة بنجاح!'; setTimeout(()=>m.style.display='none', 4000); }
     } catch(e) {
       if(m) { m.className='status-msg err'; m.innerText='فشل الحفظ: ' + e.message; }
+    } finally {
+      setTimeout(() => { window.isAdminSaving = false; }, 1500);
     }
   }
 
@@ -1027,7 +999,6 @@ window.triggerAllRenders = function() {
     });
   });
 
-  // Mobile Menu Toggle Fix
   document.getElementById('menuToggle').addEventListener('click', (e) => { 
     e.stopPropagation(); 
     document.getElementById('sidebar').classList.toggle('open'); 
