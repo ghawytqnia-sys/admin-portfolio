@@ -6,10 +6,12 @@
 <title>استوديو الإدارة — نظام إدارة المحتوى الذكي (CMS Studio)</title>
 <meta name="robots" content="noindex, nofollow">
 
+<!-- Google Fonts & Icons -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700&family=Alexandria:wght@400;500;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
+<!-- PDF & Word Parsers -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
 
@@ -93,13 +95,15 @@ button, input, textarea, select { font-family: inherit; }
 .field-inline input:focus, .field-inline textarea:focus, .field-inline select:focus { outline: none; border-color: var(--teal-l); }
 .field-inline textarea { min-height: 90px; resize: vertical; line-height: 1.5; }
 
+.api-key-box { background: rgba(192, 139, 61, 0.08); border: 1px solid rgba(192, 139, 61, 0.3); padding: 16px; border-radius: 10px; margin-bottom: 24px; }
+.api-key-box label { font-weight: 700; color: var(--gold-l); }
+.api-key-box input { background: var(--bg); border: 1px solid var(--border); margin-top: 8px; }
+
 /* ============ الرفع والمعرض ============ */
 .upload-box { border: 2px dashed var(--border); padding: 24px; border-radius: 10px; text-align: center; background: rgba(0,0,0,0.15); transition: all 0.3s; margin-bottom: 16px; }
 .upload-box:hover { border-color: var(--gold); background: rgba(192,139,61,0.02); }
 .upload-box input[type="file"] { display: none; }
 .upload-box label { cursor: pointer; display: block; font-size: 14px; color: var(--text); font-weight: 600; }
-.preview-container { margin-top: 12px; display: none; align-items: center; justify-content: center; gap: 10px; }
-.preview-container img { max-height: 80px; border-radius: 8px; border: 1px solid var(--border); }
 
 .media-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 16px; margin-top: 16px; }
 .media-item { position: relative; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); aspect-ratio: 1; }
@@ -134,7 +138,6 @@ input:checked + .slider:before { transform: translateX(20px); }
 .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 10000; display: none; align-items: center; justify-content: center; padding: 20px; }
 .modal-overlay.open { display: flex; }
 .modal-box { background: var(--bg-2); border: 1px solid var(--border); border-radius: 16px; max-width: 850px; width: 100%; max-height: 85vh; overflow-y: auto; padding: 30px; box-shadow: 0 20px 60px rgba(0,0,0,0.6); }
-
 .confidence-badge { font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 100px; text-transform: uppercase; margin-top: 4px; display: inline-block; background: rgba(31,138,112,0.2); color: var(--teal-l); border: 1px solid var(--teal); }
 
 .topbar-mobile { display: none; background: var(--bg-2); padding: 14px 20px; border-bottom: 1px solid var(--border); align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 1000; width: 100%; }
@@ -165,7 +168,7 @@ window.removeProp = function(arr, idx, renderFunc) { window.appState[arr].splice
 window.addProp = function(arr, defaultObj, renderFunc) { window.appState[arr].push(defaultObj); window[renderFunc](); };
 window.updateSimpleArray = function(arr, idx, val) { window.appState[arr][idx] = val; };
 
-// مصنع بناء المصفوفات البسيطة (للكلمات المتحركة والشهادات المستمرة)
+// مصنع بناء المصفوفات البسيطة
 function renderSimpleArray(containerId, arrName, renderFuncName) {
   const container = document.getElementById(containerId);
   if(!container) return;
@@ -181,7 +184,7 @@ window.renderTypedAr = () => renderSimpleArray('hero-typed-ar', 'heroTypedAr', '
 window.renderCertsElaraby = () => renderSimpleArray('certs-elaraby', 'certsElaraby', 'renderCertsElaraby');
 window.renderCertsAlmentor = () => renderSimpleArray('certs-almentor', 'certsAlmentor', 'renderCertsAlmentor');
 
-// مصنع بناء مصفوفات الكائنات (للأرقام الإحصائية، الرقائق، الحقائق، المسار المهني)
+// مصنع بناء مصفوفات الكائنات
 function renderGenericObjArray(containerId, arrName, fields, renderFuncName) {
   const container = document.getElementById(containerId);
   if(!container) return;
@@ -203,9 +206,7 @@ window.renderAboutFactsAr = () => renderGenericObjArray('about-facts-ar', 'about
 window.renderAboutArcEn = () => renderGenericObjArray('about-arc-en', 'aboutArcEn', [{key:'title', type:'text', placeholder:'Arc Title'}, {key:'desc', type:'text', placeholder:'Description text'}], 'renderAboutArcEn');
 window.renderAboutArcAr = () => renderGenericObjArray('about-arc-ar', 'aboutArcAr', [{key:'title', type:'text', placeholder:'العنوان الزمني'}, {key:'desc', type:'text', placeholder:'الوصف'}], 'renderAboutArcAr');
 
-// ==========================================
-// بناء النماذج المعقدة (الخبرات والمشاريع والمهارات)
-// ==========================================
+// بناء نماذج الخبرات والمشاريع والمهارات
 window.renderExperienceEditor = () => {
   document.getElementById('experience-editor').innerHTML = window.appState.experience.map((item, idx) => `
     <div class="list-editor-item">
@@ -264,16 +265,13 @@ window.renderSkillsEditor = () => {
   `).join('') + `<button class="btn btn-ghost" onclick="addProp('skillCats', {name:'', icon:'', skills:[]}, 'renderSkillsEditor')"><i class="fa-solid fa-plus"></i> إضافة قسم رئيسي جديد</button>`;
 }
 
-// ==========================================
-// معرض الوسائط (Media Gallery UI)
-// ==========================================
 window.deleteMedia = function(idx) {
-  if(confirm("هل أنت متأكد من حذف هذه الصورة؟ (لن تُحذف من سيرفر Cloudinary ولكن ستختفي من لوحة التحكم لتنظيف المعرض)")) {
+  if(confirm("هل أنت متأكد من حذف هذه الصورة من المعرض هنا؟")) {
     window.appState.mediaLibrary.splice(idx, 1);
     window.renderMediaGallery();
   }
 };
-window.copyMedia = function(url) { navigator.clipboard.writeText(url); alert("تم نسخ الرابط! يمكنك الآن لصقه في أي حقل صورة."); };
+window.copyMedia = function(url) { navigator.clipboard.writeText(url); alert("تم نسخ الرابط!"); };
 window.renderMediaGallery = () => {
   document.getElementById('media-grid-container').innerHTML = window.appState.mediaLibrary.map((url, idx) => `
     <div class="media-item">
@@ -302,10 +300,10 @@ window.triggerAllRenders = function() {
 <div id="loginScreen">
   <div class="login-card">
     <h1><i class="fa-solid fa-shield-halved" style="color:var(--gold-l)"></i> استوديو التحكم</h1>
-    <p>قم بتسجيل الدخول لإدارة نظام البورتوفوليو الشامل بشكل آمن.</p>
+    <p>قم بتسجيل الدخول لإدارة البورتوفوليو بجميع تفاصيله.</p>
     <div class="field"><label>البريد الإلكتروني</label><input type="email" id="loginUser" placeholder="admin@example.com"></div>
     <div class="field"><label>كلمة المرور السريّة</label><input type="password" id="loginPass" placeholder="••••••••"></div>
-    <button class="btn btn-primary" id="loginBtn" style="width:100%"><i class="fa-solid fa-right-to-bracket"></i> تسجيل الدخول وآمن النظام</button>
+    <button class="btn btn-primary" id="loginBtn" style="width:100%"><i class="fa-solid fa-right-to-bracket"></i> الدخول للنظام</button>
     <p class="status-msg" id="loginMsg"></p>
   </div>
 </div>
@@ -319,7 +317,7 @@ window.triggerAllRenders = function() {
   <aside class="sidebar" id="sidebar">
     <div class="brand"><span class="dot"></span> استوديو التحكم</div>
     <div class="nav-item active" data-panel="overview"><i class="fa-solid fa-gauge"></i> الإحصائيات والمزامنة</div>
-    <div class="nav-item" data-panel="parser"><i class="fa-solid fa-wand-magic-sparkles"></i> المعالج الذكي للـ CV</div>
+    <div class="nav-item" data-panel="parser"><i class="fa-solid fa-robot"></i> المعالج بالذكاء الاصطناعي</div>
     <div class="nav-item" data-panel="hero"><i class="fa-solid fa-bullseye"></i> الواجهة ونبذة عني</div>
     <div class="nav-item" data-panel="experience"><i class="fa-solid fa-briefcase"></i> مسار الخبرات</div>
     <div class="nav-item" data-panel="projects"><i class="fa-solid fa-diagram-project"></i> استوديو المشاريع</div>
@@ -346,7 +344,7 @@ window.triggerAllRenders = function() {
 
     <!-- Overview Panel -->
     <section class="panel active" id="panel-overview">
-      <div class="main-head"><div><h2>لوحة التحكم المركزية</h2><p>تزامن حي ومباشر مع خوادم Firebase Firestore.</p></div></div>
+      <div class="main-head"><div><h2>لوحة التحكم المركزية</h2><p>تزامن حي ومباشر مع خوادم Firebase.</p></div></div>
       <div class="stat-cards">
         <div class="stat-mini"><b id="statExp">0</b><span>خبرات مسجلة</span></div>
         <div class="stat-mini"><b id="statProj">0</b><span>مشاريع معروضة</span></div>
@@ -356,9 +354,20 @@ window.triggerAllRenders = function() {
       <p class="status-msg" id="fetchStatusMsg"></p>
     </section>
 
-    <!-- Parser Panel -->
+    <!-- Parser (AI) Panel -->
     <section class="panel" id="panel-parser">
-      <div class="main-head"><div><h2>معالج السير الذاتية الذكي بالذكاء الاصطناعي (CV Parser)</h2><p>ارفع ملف السيرة الذاتية (PDF أو DOCX) لاستخراج الأقسام بذكاء وتقسيمها، مما يسهل نسخها للناديج الديناميكية.</p></div></div>
+      <div class="main-head">
+        <div><h2>الاستخراج والتسكين التلقائي بالذكاء الاصطناعي (AI CV Auto-Filler)</h2>
+        <p>ارفع ملف السيرة الذاتية ليقوم الذكاء الاصطناعي (Gemini) بقراءته، استخراج البيانات، وتسكينها تلقائياً في نماذج لوحة التحكم.</p></div>
+      </div>
+      
+      <!-- إعداد مفتاح API -->
+      <div class="api-key-box">
+        <label><i class="fa-solid fa-key"></i> مفتاح الاتصال بـ Gemini API (مطلوب للذكاء الاصطناعي)</label>
+        <p style="font-size:12px; color:var(--text-dim); margin-top:4px;">يمكنك الحصول عليه مجاناً من Google AI Studio.</p>
+        <input type="text" id="gemini_api_key" placeholder="AIzaSy..." class="field-inline" style="width:100%; padding:10px; border-radius:6px; margin-bottom:0;" dir="ltr">
+      </div>
+
       <div class="lang-box-grid">
         <div class="card" style="margin-bottom:0;">
           <h3><i class="fa-solid fa-flag-usa"></i> English CV Parser</h3>
@@ -367,7 +376,7 @@ window.triggerAllRenders = function() {
             <label for="cvFileDropEn">Upload English Resume (PDF/DOCX)</label>
             <input type="file" id="cvFileDropEn" accept=".pdf,.docx">
           </div>
-          <button class="btn btn-primary" id="analyzeCvBtnEn" style="width:100%;"><i class="fa-solid fa-microchip"></i> Parse English CV</button>
+          <button class="btn btn-primary" id="analyzeCvBtnEn" style="width:100%;"><i class="fa-solid fa-microchip"></i> قراءة وتسكين البيانات (EN)</button>
         </div>
         <div class="card" style="margin-bottom:0;">
           <h3><i class="fa-solid fa-flag"></i> المعالج العربي للـ CV</h3>
@@ -376,7 +385,7 @@ window.triggerAllRenders = function() {
             <label for="cvFileDropAr">رفع السيرة الذاتية بالعربية (PDF/DOCX)</label>
             <input type="file" id="cvFileDropAr" accept=".pdf,.docx">
           </div>
-          <button class="btn btn-primary" id="analyzeCvBtnAr" style="width:100%;"><i class="fa-solid fa-microchip"></i> تحليل المعطيات العربية</button>
+          <button class="btn btn-primary" id="analyzeCvBtnAr" style="width:100%;"><i class="fa-solid fa-microchip"></i> قراءة وتسكين البيانات (AR)</button>
         </div>
       </div>
       <div id="parseStatus" class="status-msg"></div>
@@ -384,13 +393,13 @@ window.triggerAllRenders = function() {
 
     <!-- Hero & About Panel -->
     <section class="panel" id="panel-hero">
-      <div class="main-head"><div><h2>قسم الواجهة ونبذة عني (Hero & About Form Builders)</h2><p>إدارة وتخصيص النصوص والمصفوفات الديناميكية الخاصة بالافتتاحية والتعريف الشخصي.</p></div></div>
+      <div class="main-head"><div><h2>الواجهة والنبذة (شامل تحديث الاسم)</h2><p>إدارة وتخصيص النصوص الخاصة بالافتتاحية والتعريف الشخصي، بما في ذلك اسمك الشعار.</p></div></div>
       
       <div class="card">
-        <h3><i class="fa-solid fa-image"></i> إعدادات الواجهة والصورة الرئيسية</h3>
+        <h3><i class="fa-solid fa-image"></i> الإعدادات العامة والصورة الرئيسية</h3>
         <div class="lang-box-grid">
           <div class="field-inline"><label>رابط الصورة الشخصية (انسخه من معرض الوسائط)</label><input id="f_profile_img" dir="ltr" style="text-align:left;"></div>
-          <div class="field-inline"><label>رابط تحميل الـ CV (رابط Google Drive أو ملف PDF)</label><input id="f_cv_link" dir="ltr" style="text-align:left;"></div>
+          <div class="field-inline"><label>رابط تحميل الـ CV (رابط Drive أو PDF)</label><input id="f_cv_link" dir="ltr" style="text-align:left;"></div>
         </div>
       </div>
 
@@ -398,6 +407,7 @@ window.triggerAllRenders = function() {
         <!-- English Column -->
         <div class="lang-partition">
           <h4><i class="fa-solid fa-flag-usa"></i> English Section Config</h4>
+          <div class="field-inline"><label>Your Brand Name (Header Name)</label><input id="f_brand_en" placeholder="e.g. AbdElMoneim Sultan"></div>
           <div class="field-inline"><label>Hero Eyebrow (e.g. Sales Executive)</label><input id="f_hero_eyebrow_en"></div>
           <div class="field-inline"><label>Headline Title</label><input id="f_hero_title1_en"></div>
           <div class="field-inline"><label>Lead Paragraph</label><textarea id="f_hero_lead_en" rows="3"></textarea></div>
@@ -414,6 +424,7 @@ window.triggerAllRenders = function() {
         <!-- Arabic Column -->
         <div class="lang-partition rtl-dir">
           <h4><i class="fa-solid fa-flag"></i> القسم العربي الشامل</h4>
+          <div class="field-inline"><label>اسمك أو الشعار (Brand Name)</label><input id="f_brand_ar" placeholder="مثال: عبدالمنعم سلطان"></div>
           <div class="field-inline"><label>الوسم العلوي (Eyebrow)</label><input id="f_hero_eyebrow_ar"></div>
           <div class="field-inline"><label>العنوان الرئيسي للواجهة</label><input id="f_hero_title1_ar"></div>
           <div class="field-inline"><label>الفقرة الافتتاحية</label><textarea id="f_hero_lead_ar" rows="3"></textarea></div>
@@ -433,7 +444,7 @@ window.triggerAllRenders = function() {
 
     <!-- Experience Panel -->
     <section class="panel" id="panel-experience">
-      <div class="main-head"><div><h2>الخبرات المهنية (Experience Form Builder)</h2><p>نظام ديناميكي لإضافة، تعديل، وترتيب الخبرات السابقة الخاصة بك.</p></div></div>
+      <div class="main-head"><div><h2>الخبرات المهنية (Experience Form Builder)</h2><p>يتم تسكين هذه الحقول تلقائياً في حال استخدام الذكاء الاصطناعي لتحليل سيرتك.</p></div></div>
       <div class="card" id="experience-editor" style="padding:16px;"></div>
       <button class="btn btn-primary" id="saveExperience"><i class="fa-solid fa-floppy-disk"></i> حفظ ونشر الخبرات</button>
       <p class="status-msg" id="experienceMsg"></p>
@@ -441,7 +452,7 @@ window.triggerAllRenders = function() {
 
     <!-- Projects Panel -->
     <section class="panel" id="panel-projects">
-      <div class="main-head"><div><h2>استوديو المشاريع (Projects Builder)</h2><p>أضف مشاريعك البرمجية، استخدم صوراً من معرض الوسائط، وحدد حالة المشروع والوسوم.</p></div></div>
+      <div class="main-head"><div><h2>استوديو المشاريع (Projects Builder)</h2></div></div>
       <div class="card" id="projects-editor" style="padding:16px;"></div>
       <button class="btn btn-primary" id="saveProjects"><i class="fa-solid fa-floppy-disk"></i> حفظ ونشر المشاريع</button>
       <p class="status-msg" id="projectsMsg"></p>
@@ -449,7 +460,7 @@ window.triggerAllRenders = function() {
 
     <!-- Skills Panel -->
     <section class="panel" id="panel-skills">
-      <div class="main-head"><div><h2>المهارات والتقييم (Skills Matrix)</h2><p>بناء وهيكلة مهاراتك بشكل شجري. ستنعكس هذه المهارات تلقائياً في مخطط الرادار والأشرطة.</p></div></div>
+      <div class="main-head"><div><h2>المهارات والتقييم (Skills Matrix)</h2></div></div>
       <div class="card" id="skills-editor" style="padding:16px;"></div>
       <button class="btn btn-primary" id="saveSkills"><i class="fa-solid fa-floppy-disk"></i> حفظ ونشر المهارات</button>
       <p class="status-msg" id="skillsMsg"></p>
@@ -457,7 +468,7 @@ window.triggerAllRenders = function() {
 
     <!-- Education Panel -->
     <section class="panel" id="panel-education">
-      <div class="main-head"><div><h2>التعليم الأساسي (Education Config)</h2><p>تعديل بيانات الدرجة العلمية (الكلية) والشهادات التأسيسية الأساسية (مثل ICDL).</p></div></div>
+      <div class="main-head"><div><h2>التعليم الأساسي (Education Config)</h2></div></div>
       <div class="card">
         <div class="lang-box-grid">
           <div class="lang-partition">
@@ -482,16 +493,10 @@ window.triggerAllRenders = function() {
 
     <!-- Certs Lists Panel -->
     <section class="panel" id="panel-certs">
-      <div class="main-head"><div><h2>الكورسات والشهادات المستمرة</h2><p>تحديث قوائم الكورسات المعتمدة المأخوذة من المنصات الإلكترونية.</p></div></div>
+      <div class="main-head"><div><h2>الكورسات والشهادات المستمرة</h2></div></div>
       <div class="lang-box-grid">
-        <div class="card">
-          <h3>كورسات منصة العربي (Elaraby)</h3>
-          <div id="certs-elaraby"></div>
-        </div>
-        <div class="card">
-          <h3>كورسات منصة المنتور (Almentor)</h3>
-          <div id="certs-almentor"></div>
-        </div>
+        <div class="card"><h3>كورسات منصة العربي (Elaraby)</h3><div id="certs-elaraby"></div></div>
+        <div class="card"><h3>كورسات منصة المنتور (Almentor)</h3><div id="certs-almentor"></div></div>
       </div>
       <button class="btn btn-primary" id="saveCerts"><i class="fa-solid fa-floppy-disk"></i> تحديث الشهادات</button>
       <p class="status-msg" id="certsMsg"></p>
@@ -499,7 +504,7 @@ window.triggerAllRenders = function() {
 
     <!-- Sections Visibility Manager -->
     <section class="panel" id="panel-sections">
-      <div class="main-head"><div><h2>إدارة ظهور الأقسام (Sections Visibility Manager)</h2><p>التحكم الكامل في عرض أو إخفاء أي قسم من أقسام الموقع.</p></div></div>
+      <div class="main-head"><div><h2>إدارة ظهور الأقسام (Visibility Manager)</h2></div></div>
       <div class="card">
         <div class="switch-row"><div class="lbl">الواجهة الرئيسية (Hero Section)</div><label class="switch"><input type="checkbox" id="sec_home" checked><span class="slider"></span></label></div>
         <div class="switch-row"><div class="lbl">نبذة عني (About)</div><label class="switch"><input type="checkbox" id="sec_about" checked><span class="slider"></span></label></div>
@@ -515,7 +520,7 @@ window.triggerAllRenders = function() {
 
     <!-- Contact Panel -->
     <section class="panel" id="panel-contact">
-      <div class="main-head"><div><h2>بيانات وسائل الاتصال</h2><p>تحديث الإيميل، رقم الواتساب، والموقع الجغرافي.</p></div></div>
+      <div class="main-head"><div><h2>بيانات وسائل الاتصال</h2></div></div>
       <div class="card">
         <div class="field-inline"><label>البريد الإلكتروني المباشر</label><input id="f_contact_email" dir="ltr" style="text-align:left;"></div>
         <div class="field-inline"><label>رقم الهاتف / الواتساب (بالصيغة الدولية)</label><input id="f_contact_phone" dir="ltr" style="text-align:left;" placeholder="+20 111 455 0112"></div>
@@ -528,35 +533,16 @@ window.triggerAllRenders = function() {
 
     <!-- Theme Panel -->
     <section class="panel" id="panel-theme">
-      <div class="main-head"><div><h2>التحكم الشامل في المظهر (Theme Engine)</h2><p>تخصيص الألوان، الخطوط، الانحناءات، ونظام الألوان للموقع بالكامل.</p></div></div>
+      <div class="main-head"><div><h2>التحكم الشامل في المظهر (Theme Engine)</h2></div></div>
       <div class="card">
         <div class="lang-box-grid">
-          <div class="field-inline">
-            <label>الوضع الافتراضي (Mode)</label>
-            <select id="f_theme_mode"><option value="dark">مظلم (Dark Mode)</option><option value="light">مضيء (Light Mode)</option></select>
-          </div>
-          <div class="field-inline">
-            <label>نوع الخط (Font Family)</label>
-            <select id="f_theme_font">
-              <option value="'Cairo', sans-serif">Cairo (الافتراضي)</option>
-              <option value="'Tajawal', sans-serif">Tajawal</option>
-              <option value="'Alexandria', sans-serif">Alexandria</option>
-              <option value="'Poppins', sans-serif">Poppins / Inter</option>
-            </select>
-          </div>
+          <div class="field-inline"><label>الوضع الافتراضي (Mode)</label><select id="f_theme_mode"><option value="dark">مظلم (Dark)</option><option value="light">مضيء (Light)</option></select></div>
+          <div class="field-inline"><label>نوع الخط (Font)</label><select id="f_theme_font"><option value="'Cairo', sans-serif">Cairo</option><option value="'Tajawal', sans-serif">Tajawal</option><option value="'Alexandria', sans-serif">Alexandria</option><option value="'Poppins', sans-serif">Poppins / Inter</option></select></div>
         </div>
-        
         <div class="switch-row"><div class="lbl">اللون الأساسي الذهبي (Primary Gold)</div><input type="color" id="c_gold" value="#C08B3D" style="height:34px; border-radius:6px; cursor:pointer;"></div>
-        <div class="switch-row"><div class="lbl">اللون الذهبي الفاتح للتوهج (Gold Light)</div><input type="color" id="c_gold_l" value="#E3B36B" style="height:34px; border-radius:6px; cursor:pointer;"></div>
         <div class="switch-row"><div class="lbl">اللون الثانوي التيركواز (Secondary Teal)</div><input type="color" id="c_teal" value="#1F8A70" style="height:34px; border-radius:6px; cursor:pointer;"></div>
-        <div class="switch-row"><div class="lbl">اللون التيركواز الفاتح (Teal Light)</div><input type="color" id="c_teal_l" value="#38C9A6" style="height:34px; border-radius:6px; cursor:pointer;"></div>
         <div class="switch-row"><div class="lbl">لون خلفية الموقع (Background Color)</div><input type="color" id="c_bg" value="#0B1220" style="height:34px; border-radius:6px; cursor:pointer;"></div>
         <div class="switch-row"><div class="lbl">لون الكروت والأسطح (Surface Color)</div><input type="color" id="c_surface" value="#121B2E" style="height:34px; border-radius:6px; cursor:pointer;"></div>
-        
-        <div class="field-inline" style="margin-top:24px;">
-          <label>درجة انحناء الحواف (Border Radius - بالبكسل)</label>
-          <input type="number" id="c_radius" value="14" style="direction:ltr; text-align:left;">
-        </div>
       </div>
       <button class="btn btn-primary" id="saveTheme"><i class="fa-solid fa-floppy-disk"></i> تطبيق وحفظ المظهر الشامل</button>
       <p class="status-msg" id="themeMsg"></p>
@@ -564,45 +550,29 @@ window.triggerAllRenders = function() {
 
     <!-- Media Library Panel -->
     <section class="panel" id="panel-media">
-      <div class="main-head"><div><h2>معرض الوسائط والروابط (Media Library)</h2><p>الصور التي يتم رفعها هنا تذهب مباشرة إلى Cloudinary وتتم مزامنة روابطها مع Firestore لتسهيل استخدامها في المشاريع والصورة الشخصية.</p></div></div>
+      <div class="main-head"><div><h2>معرض الوسائط والروابط (Media Library)</h2></div></div>
       <div class="card">
         <div class="upload-box" style="margin-bottom:24px;">
-          <label for="mediaLibraryFile">
-            <i class="fa-solid fa-cloud-arrow-up" style="font-size:38px; color:var(--gold-l); margin-bottom:12px; display:block;"></i>
-            اضغط هنا لرفع صورة جديدة لمعرضك (ستحفظ بشكل دائم)
-          </label>
+          <label for="mediaLibraryFile"><i class="fa-solid fa-cloud-arrow-up" style="font-size:38px; color:var(--gold-l); margin-bottom:12px; display:block;"></i> اضغط هنا لرفع صورة جديدة لمعرضك (ستحفظ بشكل دائم)</label>
           <input type="file" id="mediaLibraryFile" accept="image/*">
         </div>
         <h4 style="margin-bottom:16px; border-bottom:1px solid var(--border); padding-bottom:12px; color:var(--gold-l);">معرض الصور المخزنة السابقة:</h4>
-        <div class="media-grid" id="media-grid-container">
-          <!-- الصور تظهر هنا ديناميكياً -->
-        </div>
+        <div class="media-grid" id="media-grid-container"></div>
       </div>
     </section>
-
   </main>
 </div>
 
-<!-- Modal for CV Parsed Content Extraction -->
+<!-- Modal for Regex Fallback Extract -->
 <div class="modal-overlay" id="parsedCvModal">
   <div class="modal-box">
-    <h3 style="margin-bottom:20px; border-bottom:1px solid var(--border); padding-bottom:14px; color:var(--gold-l);"><i class="fa-solid fa-wand-magic-sparkles"></i> مراجعة المقاطع المستخرجة بواسطة المعالج</h3>
-    <p style="color:var(--text-dim); margin-bottom:16px;">قام المعالج (بناءً على التعبيرات النمطية Regex) بتفكيك المستند. يمكنك نسخ الأجزاء المفيدة من هنا ولصقها يدوياً في النماذج (Form Builders) للحصول على أقصى دقة.</p>
-    
-    <div class="lang-box-grid" style="margin-bottom:10px;">
-      <div class="field-inline"><label>البريد الإلكتروني المكتشف:</label><input id="cv_parsed_email" dir="ltr" style="text-align:left;"><span class="confidence-badge">مطابقة عالية</span></div>
-      <div class="field-inline"><label>رقم الهاتف المكتشف:</label><input id="cv_parsed_phone" dir="ltr" style="text-align:left;"></div>
+    <h3 style="margin-bottom:20px; border-bottom:1px solid var(--border); padding-bottom:14px; color:var(--gold-l);"><i class="fa-solid fa-circle-info"></i> الاستخراج اليدوي (بدون API)</h3>
+    <p style="color:var(--text-dim); margin-bottom:16px;">لم يتم وضع مفتاح Gemini API. لذلك قمنا بتفكيك النص مبدئياً، يمكنك نسخه يدوياً إلى لوحة التحكم.</p>
+    <div style="border-top:1px dashed var(--border); padding-top:16px;">
+      <div class="field-inline"><label>النص الكامل المستخرج:</label><textarea id="cv_parsed_raw" readonly style="min-height:200px; font-size:13px; direction:ltr; text-align:left; background:var(--bg);"></textarea></div>
     </div>
-    
-    <div style="border-top:1px dashed var(--border); padding-top:16px; margin-top:10px;">
-      <div class="field-inline"><label>مقطع (Experience / الخبرات المكتشفة):</label><textarea id="cv_parsed_exp" readonly style="min-height:120px; font-size:13px; direction:ltr; text-align:left; background:var(--bg); border-color:var(--gold);"></textarea></div>
-      <div class="field-inline"><label>مقطع (Education / التعليم):</label><textarea id="cv_parsed_edu" readonly style="min-height:100px; font-size:13px; direction:ltr; text-align:left; background:var(--bg);"></textarea></div>
-      <div class="field-inline"><label>مقطع (Skills / المهارات):</label><textarea id="cv_parsed_skills" readonly style="min-height:100px; font-size:13px; direction:ltr; text-align:left; background:var(--bg);"></textarea></div>
-    </div>
-
     <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:24px;">
-      <button class="btn btn-ghost" onclick="document.getElementById('parsedCvModal').classList.remove('open');">إغلاق وتجاهل</button>
-      <button class="btn btn-primary" id="confirmCvContactImport"><i class="fa-solid fa-check"></i> نقل أرقام الاتصال لنموذج التواصل</button>
+      <button class="btn btn-primary" onclick="document.getElementById('parsedCvModal').classList.remove('open');">فهمت، إغلاق</button>
     </div>
   </div>
 </div>
@@ -612,12 +582,12 @@ window.triggerAllRenders = function() {
   import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
   import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-  // Cloudinary Config
+  // إعدادات Cloudinary لرفع الصور
   const CLOUDINARY_CLOUD_NAME = "dxkxuajgf"; 
   const CLOUDINARY_UPLOAD_PRESET = "portfolio_preset";
   const CLOUDINARY_URL = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
 
-  // Firebase Config
+  // إعدادات Firebase
   const firebaseConfig = {
     apiKey: "AIzaSyAMLeRa5BeV6YQf7rqLx0JQd3fb_LhbeSU", 
     authDomain: "portfolio-2933c.firebaseapp.com",
@@ -634,6 +604,11 @@ window.triggerAllRenders = function() {
   const appShell = document.getElementById('app');
   const loginScreen = document.getElementById('loginScreen');
 
+  // استرجاع وحفظ مفتاح Gemini API
+  const geminiKeyInput = document.getElementById('gemini_api_key');
+  if(localStorage.getItem('portfolio_gemini_key')) geminiKeyInput.value = localStorage.getItem('portfolio_gemini_key');
+  geminiKeyInput.addEventListener('change', (e) => localStorage.setItem('portfolio_gemini_key', e.target.value));
+
   // --- التبديل بين قوائم الـ Sidebar ---
   document.querySelectorAll('.sidebar .nav-item[data-panel]').forEach(item => {
     item.addEventListener('click', () => {
@@ -648,7 +623,7 @@ window.triggerAllRenders = function() {
   document.getElementById('menuToggle').addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('sidebar').classList.toggle('open'); });
   document.addEventListener('click', () => { document.getElementById('sidebar').classList.remove('open'); });
 
-  // --- حالة تسجيل الدخول والمصادقة ---
+  // --- نظام المصادقة Firebase ---
   onAuthStateChanged(auth, (user) => {
     if (user) { 
       loginScreen.style.display = 'none'; 
@@ -667,7 +642,7 @@ window.triggerAllRenders = function() {
     btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري التحقق...';
     signInWithEmailAndPassword(auth, email, pass).catch((error) => { 
       alert("خطأ في تسجيل الدخول: " + error.message); 
-      btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> تسجيل الدخول وآمن النظام'; 
+      btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> الدخول للنظام'; 
     });
   });
 
@@ -693,43 +668,109 @@ window.triggerAllRenders = function() {
         window.appState.mediaLibrary.push(cloudData.secure_url);
         window.renderMediaGallery();
         await setDoc(doc(db, "portfolio", "content"), { mediaLibrary: window.appState.mediaLibrary }, { merge: true });
-        alert("تم رفع الصورة وإضافتها للمعرض بنجاح!");
-      } else {
-        alert("فشل الرفع: تأكد من إعدادات الـ Upload Preset في Cloudinary.");
+        alert("تم رفع الصورة بنجاح!");
       }
-    } catch(e) { 
-      console.error(e); 
-      alert("خطأ في الاتصال بالخادم أثناء الرفع."); 
-    }
+    } catch(e) { console.error(e); alert("خطأ أثناء الرفع."); }
     this.previousElementSibling.innerHTML = oldLabel;
   });
 
   // ==========================================
-  // معالج استخراج نصوص السيرة الذاتية (CV Parser Regex Engine)
+  // محرك الذكاء الاصطناعي (Gemini API Integration) للتسكين التلقائي
   // ==========================================
-  function extractSectionsByRegex(text) {
-    const expRegex = /(experience|الخبرات|الخبرة المهنية|work history)[\s\S]*?(education|التعليم|skills|المهارات|projects|المشاريع|$)/i;
-    const eduRegex = /(education|التعليم|المؤهلات)[\s\S]*?(skills|المهارات|projects|المشاريع|experience|الخبرات|$)/i;
-    const skillsRegex = /(skills|المهارات)[\s\S]*?(education|التعليم|projects|المشاريع|experience|الخبرات|$)/i;
+  async function processWithAI(rawText, lang, statusId) {
+    const apiKey = document.getElementById('gemini_api_key').value.trim();
+    const status = document.getElementById(statusId);
+
+    // إذا لم يضع المستخدم مفتاح AI، نلجأ للطريقة التقليدية (Fallback Modal)
+    if(!apiKey) {
+      document.getElementById('cv_parsed_raw').value = rawText;
+      document.getElementById('parsedCvModal').classList.add('open');
+      status.style.display = 'none';
+      return;
+    }
+
+    status.innerText = 'يتم الآن تحليل وفهم البيانات بواسطة الذكاء الاصطناعي... يرجى الانتظار.';
     
-    return {
-      exp: (text.match(expRegex) || ['', 'لم يتم العثور على قسم واضح للخبرات.'])[0].substring(0, 1500),
-      edu: (text.match(eduRegex) || ['', 'لم يتم العثور على قسم واضح للتعليم.'])[0].substring(0, 800),
-      skills: (text.match(skillsRegex) || ['', 'لم يتم العثور على قسم واضح للمهارات.'])[0].substring(0, 800)
-    };
+    // الأوامر الصارمة للـ AI لإرجاع JSON نظيف فقط
+    const prompt = `You are an expert CV parsing assistant. Extract data from the following CV text.
+    Return ONLY a raw JSON object exactly matching this schema. Do not wrap it in markdown code blocks.
+    Translate or adapt the content into ${lang === 'ar' ? 'Arabic' : 'English'} where appropriate.
+    
+    SCHEMA:
+    {
+      "brandName": "First and Last Name",
+      "contact": { "email": "", "phone": "" },
+      "experience": [ { "role": "", "company": "", "period": "", "bullets": ["Task 1", "Task 2"] } ],
+      "education": { "degreeTitle": "", "degreeMeta": "" },
+      "skillCats": [ { "name": "e.g. Technical Skills", "icon": "fa-code", "skills": [ { "label": "Skill Name", "value": 85 } ] } ]
+    }
+    
+    CV TEXT TO ANALYZE:
+    ${rawText}`;
+
+    try {
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: { responseMimeType: "application/json" } // Force JSON response type
+        })
+      });
+
+      if(!response.ok) throw new Error("API Key غير صحيح أو تم تجاوز الحد المسموح للاستخدام.");
+
+      const data = await response.json();
+      const parsedData = JSON.parse(data.candidates[0].content.parts[0].text);
+
+      // تسكين البيانات في النماذج (Auto-Populate App State)
+      if(parsedData.experience && parsedData.experience.length) window.appState.experience = parsedData.experience;
+      if(parsedData.skillCats && parsedData.skillCats.length) window.appState.skillCats = parsedData.skillCats;
+      
+      if(parsedData.contact) {
+         if(parsedData.contact.email) document.getElementById('f_contact_email').value = parsedData.contact.email;
+         if(parsedData.contact.phone) document.getElementById('f_contact_phone').value = parsedData.contact.phone;
+      }
+      
+      if(parsedData.education) {
+         if(lang === 'ar') {
+            if(parsedData.education.degreeTitle) document.getElementById('f_edu_deg_title_ar').value = parsedData.education.degreeTitle;
+            if(parsedData.education.degreeMeta) document.getElementById('f_edu_deg_meta_ar').value = parsedData.education.degreeMeta;
+         } else {
+            if(parsedData.education.degreeTitle) document.getElementById('f_edu_deg_title_en').value = parsedData.education.degreeTitle;
+            if(parsedData.education.degreeMeta) document.getElementById('f_edu_deg_meta_en').value = parsedData.education.degreeMeta;
+         }
+      }
+
+      if(parsedData.brandName) {
+        if(lang === 'ar') document.getElementById('f_brand_ar').value = parsedData.brandName;
+        else document.getElementById('f_brand_en').value = parsedData.brandName;
+      }
+
+      // تحديث الواجهة
+      window.triggerAllRenders();
+      status.className = 'status-msg ok';
+      status.innerText = "نجاح! تم استخراج البيانات بذكاء وتسكينها في حقول لوحة التحكم. قم بمراجعتها ثم اضغط (حفظ).";
+      setTimeout(() => status.style.display = 'none', 6000);
+
+    } catch (e) {
+      console.error(e);
+      status.className = 'status-msg err';
+      status.innerText = "فشل الذكاء الاصطناعي: " + e.message;
+    }
   }
 
-  function processFileExtract(lang, file, statusId) {
+  // --- استخراج النص الخام من الملف ثم تمريره للـ AI ---
+  function handleCVUpload(lang, file, statusId) {
     if(!file) return alert("الرجاء تحديد ملف (PDF/DOCX) أولاً.");
     const status = document.getElementById(statusId);
-    status.style.display = 'block'; status.className = 'status-msg ok'; status.innerText = 'جاري تحليل المستند...';
+    status.style.display = 'block'; status.className = 'status-msg ok'; status.innerText = 'جاري استخراج النصوص من المستند...';
 
     const reader = new FileReader();
     reader.onload = (e) => {
       if(file.name.endsWith('.docx')) {
         mammoth.extractRawText({ arrayBuffer: e.target.result }).then(res => {
-          showModalExtraction(res.value);
-          status.style.display = 'none';
+          processWithAI(res.value, lang, statusId);
         }).catch(err => { status.className = 'status-msg err'; status.innerText = "خطأ: " + err.message; });
       } else {
         pdfjsLib.getDocument({ data: new Uint8Array(e.target.result) }).promise.then(pdf => {
@@ -738,8 +779,7 @@ window.triggerAllRenders = function() {
             pages.push(pdf.getPage(j).then(p => p.getTextContent().then(t => t.items.map(s => s.str).join(' '))));
           }
           Promise.all(pages).then(texts => {
-            showModalExtraction(texts.join('\n'));
-            status.style.display = 'none';
+            processWithAI(texts.join('\n'), lang, statusId);
           });
         }).catch(err => { status.className = 'status-msg err'; status.innerText = "فشل في قراءة الـ PDF: تأكد أن الملف غير محمي."; });
       }
@@ -747,34 +787,8 @@ window.triggerAllRenders = function() {
     reader.readAsArrayBuffer(file);
   }
 
-  document.getElementById('analyzeCvBtnEn').addEventListener('click', () => processFileExtract('en', document.getElementById('cvFileDropEn').files[0], 'parseStatus'));
-  document.getElementById('analyzeCvBtnAr').addEventListener('click', () => processFileExtract('ar', document.getElementById('cvFileDropAr').files[0], 'parseStatus'));
-
-  function showModalExtraction(text) {
-    const emailMatch = text.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
-    const phoneMatch = text.match(/(\+?\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4,6}/);
-    
-    document.getElementById('cv_parsed_email').value = emailMatch ? emailMatch[0] : "";
-    document.getElementById('cv_parsed_phone').value = phoneMatch ? phoneMatch[0] : "";
-    
-    const sections = extractSectionsByRegex(text);
-    document.getElementById('cv_parsed_exp').value = sections.exp;
-    document.getElementById('cv_parsed_edu').value = sections.edu;
-    document.getElementById('cv_parsed_skills').value = sections.skills;
-    
-    document.getElementById('parsedCvModal').classList.add('open');
-  }
-
-  document.getElementById('confirmCvContactImport').addEventListener('click', () => {
-    const em = document.getElementById('cv_parsed_email').value;
-    const ph = document.getElementById('cv_parsed_phone').value;
-    if(em || ph) {
-      if(em) document.getElementById('f_contact_email').value = em;
-      if(ph) document.getElementById('f_contact_phone').value = ph;
-      alert("تم استيراد أرقام الاتصال لنموذج التواصل بنجاح! لا تنس الضغط على زر (حفظ الاتصال) هناك.");
-    }
-    document.getElementById('parsedCvModal').classList.remove('open');
-  });
+  document.getElementById('analyzeCvBtnEn').addEventListener('click', () => handleCVUpload('en', document.getElementById('cvFileDropEn').files[0], 'parseStatus'));
+  document.getElementById('analyzeCvBtnAr').addEventListener('click', () => handleCVUpload('ar', document.getElementById('cvFileDropAr').files[0], 'parseStatus'));
 
 
   // ==========================================
@@ -789,7 +803,7 @@ window.triggerAllRenders = function() {
       const data = docSnap.exists() ? docSnap.data() : {};
       const st = window.appState;
 
-      // 1. Profile & Contact
+      // Profile & Contact
       document.getElementById('f_profile_img').value = data.aboutData?.profileImg || "";
       document.getElementById('f_cv_link').value = data.contactData?.cvLink || "";
       document.getElementById('f_contact_email').value = data.contactData?.email || "";
@@ -797,7 +811,8 @@ window.triggerAllRenders = function() {
       document.getElementById('f_contact_location').value = data.contactData?.location || "";
       document.getElementById('f_contact_location_ar').value = data.contactData?.locationAr || "";
 
-      // 2. Hero & About EN
+      // Hero & About EN
+      document.getElementById('f_brand_en').value = data.heroEn?.brandName || "";
       document.getElementById('f_hero_eyebrow_en').value = data.heroEn?.eyebrow || "";
       document.getElementById('f_hero_title1_en').value = data.heroEn?.title1 || "";
       document.getElementById('f_hero_lead_en').value = data.heroEn?.lead || "";
@@ -809,7 +824,8 @@ window.triggerAllRenders = function() {
       st.aboutFactsEn = data.aboutEn?.facts || [];
       st.aboutArcEn = data.aboutEn?.arc || [];
 
-      // 3. Hero & About AR
+      // Hero & About AR
+      document.getElementById('f_brand_ar').value = data.heroAr?.brandName || "";
       document.getElementById('f_hero_eyebrow_ar').value = data.heroAr?.eyebrow || "";
       document.getElementById('f_hero_title1_ar').value = data.heroAr?.title1 || "";
       document.getElementById('f_hero_lead_ar').value = data.heroAr?.lead || "";
@@ -821,7 +837,7 @@ window.triggerAllRenders = function() {
       st.aboutFactsAr = data.aboutAr?.facts || [];
       st.aboutArcAr = data.aboutAr?.arc || [];
 
-      // 4. Education (EN & AR)
+      // Education
       document.getElementById('f_edu_deg_title_en').value = data.educationEn?.degreeTitle || "";
       document.getElementById('f_edu_deg_meta_en').value = data.educationEn?.degreeMeta || "";
       document.getElementById('f_edu_cert_title_en').value = data.educationEn?.icdlTitle || "";
@@ -831,7 +847,7 @@ window.triggerAllRenders = function() {
       document.getElementById('f_edu_cert_title_ar').value = data.educationAr?.icdlTitle || "";
       document.getElementById('f_edu_cert_meta_ar').value = data.educationAr?.icdlMeta || "";
 
-      // 5. Complex Arrays (Form Builders)
+      // Matrices
       st.experience = data.experienceData || [];
       st.projects = data.projectsData || [];
       st.skillCats = data.skillCatsData || [];
@@ -839,32 +855,28 @@ window.triggerAllRenders = function() {
       st.certsAlmentor = data.certsAlmentorData || [];
       st.mediaLibrary = data.mediaLibrary || [];
 
-      // 6. Theme Config
+      // Theme
       const t = data.themeData || {};
       document.getElementById('f_theme_mode').value = t.mode || "dark";
       document.getElementById('f_theme_font').value = t.font || "'Cairo', sans-serif";
       document.getElementById('c_gold').value = t.gold || "#C08B3D";
-      document.getElementById('c_gold_l').value = t.goldLight || "#E3B36B";
       document.getElementById('c_teal').value = t.teal || "#1F8A70";
-      document.getElementById('c_teal_l').value = t.tealLight || "#38C9A6";
       document.getElementById('c_bg').value = t.bg || "#0B1220";
       document.getElementById('c_surface').value = t.surface || "#121B2E";
-      document.getElementById('c_radius').value = t.radius || "14";
-
-      // 7. Sections Visibility
+      
       const v = t.sectionVisibility || {};
       ['home','about','experience','projects','skills','education','contact'].forEach(id => {
         const el = document.getElementById('sec_'+id);
-        if(el) el.checked = v[id] !== false; // Default true
+        if(el) el.checked = v[id] !== false; 
       });
 
-      // UPDATE STATS COUNTERS
+      // Update Counters
       document.getElementById('statExp').innerText = st.experience.length;
       document.getElementById('statProj').innerText = st.projects.length;
       document.getElementById('statSkill').innerText = st.skillCats.length;
       document.getElementById('statMedia').innerText = st.mediaLibrary.length;
 
-      // RE-RENDER ALL DOM BUILDERS
+      // Re-render UI
       window.triggerAllRenders();
       
       msg.className = 'status-msg ok'; msg.innerText = 'تم الجلب والتحديث بنجاح!';
@@ -877,7 +889,6 @@ window.triggerAllRenders = function() {
   }
 
   document.getElementById('forceFetchBtn').addEventListener('click', loadDataFromFirebase);
-
 
   // ==========================================
   // محرك الحفظ والدفع لقاعدة البيانات (Firestore Save Handlers)
@@ -894,11 +905,13 @@ window.triggerAllRenders = function() {
     }
   }
 
+  // Save Hero/About & Brand Name
   document.getElementById('saveHero').addEventListener('click', () => {
     saveDoc({
       aboutData: { profileImg: document.getElementById('f_profile_img').value },
       contactData: { cvLink: document.getElementById('f_cv_link').value },
       heroEn: { 
+        brandName: document.getElementById('f_brand_en').value,
         eyebrow: document.getElementById('f_hero_eyebrow_en').value, 
         title1: document.getElementById('f_hero_title1_en').value, 
         lead: document.getElementById('f_hero_lead_en').value, 
@@ -907,6 +920,7 @@ window.triggerAllRenders = function() {
         stats: window.appState.heroStatsEn 
       },
       heroAr: { 
+        brandName: document.getElementById('f_brand_ar').value,
         eyebrow: document.getElementById('f_hero_eyebrow_ar').value, 
         title1: document.getElementById('f_hero_title1_ar').value, 
         lead: document.getElementById('f_hero_lead_ar').value, 
@@ -914,55 +928,26 @@ window.triggerAllRenders = function() {
         chips: window.appState.heroChipsAr, 
         stats: window.appState.heroStatsAr 
       },
-      aboutEn: { 
-        title: document.getElementById('f_about_title_en').value, 
-        p1: document.getElementById('f_about_p1_en').value, 
-        facts: window.appState.aboutFactsEn, 
-        arc: window.appState.aboutArcEn 
-      },
-      aboutAr: { 
-        title: document.getElementById('f_about_title_ar').value, 
-        p1: document.getElementById('f_about_p1_ar').value, 
-        facts: window.appState.aboutFactsAr, 
-        arc: window.appState.aboutArcAr 
-      }
+      aboutEn: { title: document.getElementById('f_about_title_en').value, p1: document.getElementById('f_about_p1_en').value, facts: window.appState.aboutFactsEn, arc: window.appState.aboutArcEn },
+      aboutAr: { title: document.getElementById('f_about_title_ar').value, p1: document.getElementById('f_about_p1_ar').value, facts: window.appState.aboutFactsAr, arc: window.appState.aboutArcAr }
     }, 'heroMsg');
   });
 
   document.getElementById('saveExperience').addEventListener('click', () => saveDoc({ experienceData: window.appState.experience }, 'experienceMsg'));
-  
   document.getElementById('saveProjects').addEventListener('click', () => saveDoc({ projectsData: window.appState.projects }, 'projectsMsg'));
-  
   document.getElementById('saveSkills').addEventListener('click', () => saveDoc({ skillCatsData: window.appState.skillCats }, 'skillsMsg'));
   
   document.getElementById('saveEducation').addEventListener('click', () => {
     saveDoc({
-      educationEn: { 
-        degreeTitle: document.getElementById('f_edu_deg_title_en').value, 
-        degreeMeta: document.getElementById('f_edu_deg_meta_en').value, 
-        icdlTitle: document.getElementById('f_edu_cert_title_en').value, 
-        icdlMeta: document.getElementById('f_edu_cert_meta_en').value 
-      },
-      educationAr: { 
-        degreeTitle: document.getElementById('f_edu_deg_title_ar').value, 
-        degreeMeta: document.getElementById('f_edu_deg_meta_ar').value, 
-        icdlTitle: document.getElementById('f_edu_cert_title_ar').value, 
-        icdlMeta: document.getElementById('f_edu_cert_meta_ar').value 
-      }
+      educationEn: { degreeTitle: document.getElementById('f_edu_deg_title_en').value, degreeMeta: document.getElementById('f_edu_deg_meta_en').value, icdlTitle: document.getElementById('f_edu_cert_title_en').value, icdlMeta: document.getElementById('f_edu_cert_meta_en').value },
+      educationAr: { degreeTitle: document.getElementById('f_edu_deg_title_ar').value, degreeMeta: document.getElementById('f_edu_deg_meta_ar').value, icdlTitle: document.getElementById('f_edu_cert_title_ar').value, icdlMeta: document.getElementById('f_edu_cert_meta_ar').value }
     }, 'educationMsg');
   });
 
   document.getElementById('saveCerts').addEventListener('click', () => saveDoc({ certsElarabyData: window.appState.certsElaraby, certsAlmentorData: window.appState.certsAlmentor }, 'certsMsg'));
 
   document.getElementById('saveContact').addEventListener('click', () => {
-    saveDoc({ 
-      contactData: { 
-        email: document.getElementById('f_contact_email').value, 
-        phone: document.getElementById('f_contact_phone').value, 
-        location: document.getElementById('f_contact_location').value, 
-        locationAr: document.getElementById('f_contact_location_ar').value 
-      } 
-    }, 'contactMsg');
+    saveDoc({ contactData: { email: document.getElementById('f_contact_email').value, phone: document.getElementById('f_contact_phone').value, location: document.getElementById('f_contact_location').value, locationAr: document.getElementById('f_contact_location_ar').value } }, 'contactMsg');
   });
 
   document.getElementById('saveSections').addEventListener('click', () => {
@@ -974,25 +959,19 @@ window.triggerAllRenders = function() {
   });
 
   document.getElementById('saveTheme').addEventListener('click', async () => {
-    // 1. Get current theme (so we don't wipe out sectionVisibility)
     const docRef = doc(db, "portfolio", "content");
     const docSnap = await getDoc(docRef);
     const existingTheme = docSnap.exists() && docSnap.data().themeData ? docSnap.data().themeData : {};
     
-    // 2. Overwrite only visual configs
     existingTheme.mode = document.getElementById('f_theme_mode').value;
     existingTheme.font = document.getElementById('f_theme_font').value;
     existingTheme.gold = document.getElementById('c_gold').value;
-    existingTheme.goldLight = document.getElementById('c_gold_l').value;
     existingTheme.teal = document.getElementById('c_teal').value;
-    existingTheme.tealLight = document.getElementById('c_teal_l').value;
     existingTheme.bg = document.getElementById('c_bg').value;
     existingTheme.surface = document.getElementById('c_surface').value;
-    existingTheme.radius = document.getElementById('c_radius').value;
     
     saveDoc({ themeData: existingTheme }, 'themeMsg');
   });
-
 </script>
 </body>
 </html>
