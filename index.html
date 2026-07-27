@@ -15,7 +15,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
 
-<!-- استدعاء ملف البيانات المحلي كمصدر أولي (Fallback Data) -->
+<!-- استدعاء ملف البيانات المحلي كمصدر أولي للطوارئ -->
 <script src="data.js"></script>
 
 <style>
@@ -130,13 +130,11 @@ window.appState = {
   aboutFactsEn: [], aboutFactsAr: [], aboutArcEn: [], aboutArcAr: []
 };
 
-// وظائف التعديل المشتركة
 window.updateProp = function(arr, idx, field, val) { window.appState[arr][idx][field] = field === 'value' ? parseInt(val||0) : val; };
 window.removeProp = function(arr, idx, renderFunc) { window.appState[arr].splice(idx, 1); window[renderFunc](); };
 window.addProp = function(arr, defaultObj, renderFunc) { window.appState[arr].push(defaultObj); window[renderFunc](); };
 window.updateSimpleArray = function(arr, idx, val) { window.appState[arr][idx] = val; };
 
-// مصنع بناء المصفوفات البسيطة
 function renderSimpleArray(containerId, arrName, renderFuncName) {
   const container = document.getElementById(containerId);
   if(!container) return;
@@ -152,7 +150,6 @@ window.renderTypedAr = () => renderSimpleArray('hero-typed-ar', 'heroTypedAr', '
 window.renderCertsElaraby = () => renderSimpleArray('certs-elaraby', 'certsElaraby', 'renderCertsElaraby');
 window.renderCertsAlmentor = () => renderSimpleArray('certs-almentor', 'certsAlmentor', 'renderCertsAlmentor');
 
-// مصنع بناء مصفوفات الكائنات
 function renderGenericObjArray(containerId, arrName, fields, renderFuncName) {
   const container = document.getElementById(containerId);
   if(!container) return;
@@ -164,7 +161,6 @@ function renderGenericObjArray(containerId, arrName, fields, renderFuncName) {
   `).join('') + `<button class="btn btn-ghost btn-small" style="margin-top:4px;" onclick="addProp('${arrName}', {${fields.map(f=>`${f.key}:''`).join(',')}}, '${renderFuncName}')"><i class="fa-solid fa-plus"></i> إضافة عنصر</button>`;
 }
 
-// الدوال المرتبطة بالمصنع
 window.renderHeroStatsEn = () => renderGenericObjArray('hero-stats-en', 'heroStatsEn', [{key:'value', type:'number', flex:'0 0 80px', placeholder:'Value'}, {key:'label', type:'text', placeholder:'Label'}], 'renderHeroStatsEn');
 window.renderHeroStatsAr = () => renderGenericObjArray('hero-stats-ar', 'heroStatsAr', [{key:'value', type:'number', flex:'0 0 80px', placeholder:'القيمة'}, {key:'label', type:'text', placeholder:'العنوان'}], 'renderHeroStatsAr');
 window.renderHeroChipsEn = () => renderGenericObjArray('hero-chips-en', 'heroChipsEn', [{key:'icon', type:'text', flex:'0 0 120px', placeholder:'fa-robot'}, {key:'label', type:'text', placeholder:'Chip Label'}], 'renderHeroChipsEn');
@@ -285,7 +281,7 @@ window.triggerAllRenders = function() {
   <aside class="sidebar" id="sidebar">
     <div class="brand"><span class="dot"></span> استوديو التحكم</div>
     <div class="nav-item active" data-panel="overview"><i class="fa-solid fa-gauge"></i> الإحصائيات والمزامنة</div>
-    <div class="nav-item" data-panel="parser"><i class="fa-solid fa-robot"></i> المعالج والمستخرج الذكي</div>
+    <div class="nav-item" data-panel="parser"><i class="fa-solid fa-robot"></i> المستخرج (AI & Local)</div>
     <div class="nav-item" data-panel="hero"><i class="fa-solid fa-bullseye"></i> الواجهة ونبذة عني</div>
     <div class="nav-item" data-panel="experience"><i class="fa-solid fa-briefcase"></i> مسار الخبرات</div>
     <div class="nav-item" data-panel="projects"><i class="fa-solid fa-diagram-project"></i> استوديو المشاريع</div>
@@ -306,13 +302,13 @@ window.triggerAllRenders = function() {
   <main class="main">
     <div style="display:flex; justify-content:flex-end; gap:12px; margin-bottom:24px; flex-wrap:wrap;">
       <button class="btn btn-ghost" id="forceFetchBtn" style="border-color:var(--teal-l); color:var(--teal-l);">
-        <i class="fa-solid fa-cloud-arrow-down"></i> جلب وتحديث البيانات
+        <i class="fa-solid fa-cloud-arrow-down"></i> جلب وتحديث البيانات (مزامنة)
       </button>
     </div>
 
     <!-- Overview Panel -->
     <section class="panel active" id="panel-overview">
-      <div class="main-head"><div><h2>لوحة التحكم المركزية</h2><p>تزامن حي ومباشر مع قاعدة البيانات.</p></div></div>
+      <div class="main-head"><div><h2>لوحة التحكم المركزية</h2><p>تزامن حي ومباشر مع قاعدة البيانات مع تفعيل نظام الطوارئ للملف المحلي.</p></div></div>
       <div class="stat-cards">
         <div class="stat-mini"><b id="statExp">0</b><span>خبرات مسجلة</span></div>
         <div class="stat-mini"><b id="statProj">0</b><span>مشاريع معروضة</span></div>
@@ -325,14 +321,13 @@ window.triggerAllRenders = function() {
     <!-- Parser (AI & Fallback) Panel -->
     <section class="panel" id="panel-parser">
       <div class="main-head">
-        <div><h2>المستخرج الذكي (AI & Smart Regex Parsing)</h2>
-        <p>قم برفع ملف السيرة الذاتية الخاص بك. سيحاول النظام استخراج البيانات بواسطة الذكاء الاصطناعي لتسكينها تلقائياً. وإن فشل الذكاء الاصطناعي (أو لم تضع مفتاح API)، سيقوم النظام بتحليل النص وعرضه لك لتنسخه في المكان المناسب.</p></div>
+        <div><h2>المستخرج الذكي والمحلي (AI & Local Extractor)</h2>
+        <p>قم برفع ملف السيرة الذاتية (PDF/DOCX). سيحاول النظام استخراج البيانات بواسطة AI لتسكينها، وإذا فشل أو لم تضع مفتاحاً، سيقوم بقراءتها محلياً لتنسخ منها ما تريد.</p></div>
       </div>
       
-      <!-- إعداد مفتاح API -->
       <div class="api-key-box">
         <label><i class="fa-solid fa-key"></i> مفتاح الاتصال بـ Gemini API (اختياري)</label>
-        <p style="font-size:12px; color:var(--text-dim); margin-top:4px;">احصل عليه مجاناً من Google AI Studio للحصول على تسكين تلقائي بالكامل.</p>
+        <p style="font-size:12px; color:var(--text-dim); margin-top:4px;">احصل عليه مجاناً من Google AI Studio.</p>
         <input type="text" id="gemini_api_key" placeholder="AIzaSy..." class="field-inline" style="width:100%; padding:10px; border-radius:6px; margin-bottom:0;" dir="ltr">
       </div>
 
@@ -361,7 +356,7 @@ window.triggerAllRenders = function() {
 
     <!-- Hero & About Panel -->
     <section class="panel" id="panel-hero">
-      <div class="main-head"><div><h2>الواجهة والنبذة (شامل تحديث الاسم)</h2><p>إدارة وتخصيص النصوص الخاصة بالافتتاحية والتعريف الشخصي، بما في ذلك اسمك الشعار.</p></div></div>
+      <div class="main-head"><div><h2>الواجهة والنبذة</h2><p>إدارة وتخصيص النصوص واسمك وتفاصيل الواجهة.</p></div></div>
       
       <div class="card">
         <h3><i class="fa-solid fa-image"></i> الإعدادات العامة والصورة الرئيسية</h3>
@@ -372,7 +367,6 @@ window.triggerAllRenders = function() {
       </div>
 
       <div class="lang-box-grid">
-        <!-- English Column -->
         <div class="lang-partition">
           <h4><i class="fa-solid fa-flag-usa"></i> English Section Config</h4>
           <div class="field-inline"><label>Your Brand Name (Header Name)</label><input id="f_brand_en" placeholder="e.g. AbdElMoneim Sultan"></div>
@@ -389,7 +383,6 @@ window.triggerAllRenders = function() {
           <div class="field-inline"><label>Career Arc Timeline</label><div id="about-arc-en"></div></div>
         </div>
 
-        <!-- Arabic Column -->
         <div class="lang-partition rtl-dir">
           <h4><i class="fa-solid fa-flag"></i> القسم العربي الشامل</h4>
           <div class="field-inline"><label>اسمك أو الشعار (Brand Name)</label><input id="f_brand_ar" placeholder="مثال: عبدالمنعم سلطان"></div>
@@ -412,7 +405,7 @@ window.triggerAllRenders = function() {
 
     <!-- Experience Panel -->
     <section class="panel" id="panel-experience">
-      <div class="main-head"><div><h2>الخبرات المهنية (Experience Form Builder)</h2><p>نظام ديناميكي لإضافة وتعديل الخبرات.</p></div></div>
+      <div class="main-head"><div><h2>الخبرات المهنية (Experience Form Builder)</h2></div></div>
       <div class="card" id="experience-editor" style="padding:16px;"></div>
       <button class="btn btn-primary" id="saveExperience"><i class="fa-solid fa-floppy-disk"></i> حفظ ونشر الخبرات</button>
       <p class="status-msg" id="experienceMsg"></p>
@@ -513,10 +506,7 @@ window.triggerAllRenders = function() {
         <div class="switch-row"><div class="lbl">اللون التيركواز الفاتح (Teal Light)</div><input type="color" id="c_teal_l" value="#38C9A6" style="height:34px; border-radius:6px; cursor:pointer;"></div>
         <div class="switch-row"><div class="lbl">لون خلفية الموقع (Background Color)</div><input type="color" id="c_bg" value="#0B1220" style="height:34px; border-radius:6px; cursor:pointer;"></div>
         <div class="switch-row"><div class="lbl">لون الكروت والأسطح (Surface Color)</div><input type="color" id="c_surface" value="#121B2E" style="height:34px; border-radius:6px; cursor:pointer;"></div>
-        <div class="field-inline" style="margin-top:24px;">
-          <label>درجة انحناء الحواف (Border Radius - بالبكسل)</label>
-          <input type="number" id="c_radius" value="14" style="direction:ltr; text-align:left;">
-        </div>
+        <div class="field-inline" style="margin-top:24px;"><label>درجة انحناء الحواف (Border Radius - بالبكسل)</label><input type="number" id="c_radius" value="14" style="direction:ltr; text-align:left;"></div>
       </div>
       <button class="btn btn-primary" id="saveTheme"><i class="fa-solid fa-floppy-disk"></i> تطبيق وحفظ المظهر الشامل</button>
       <p class="status-msg" id="themeMsg"></p>
@@ -541,7 +531,7 @@ window.triggerAllRenders = function() {
 <div class="modal-overlay" id="parsedCvModal">
   <div class="modal-box">
     <h3 style="margin-bottom:20px; border-bottom:1px solid var(--border); padding-bottom:14px; color:var(--gold-l);"><i class="fa-solid fa-wand-magic-sparkles"></i> المعالج المحلي للسيرة الذاتية (Local Extractor)</h3>
-    <p style="color:var(--text-dim); margin-bottom:16px;">لم يتم استخدام مفتاح AI أو انتهت صلاحيته. قام النظام محلياً بقراءة وتفكيك الملف بدقة عالية. يمكنك نسخ الأجزاء المستخرجة ونقلها للحقول الخاصة بها.</p>
+    <p style="color:var(--text-dim); margin-bottom:16px;">(إما أنه لا يوجد مفتاح للذكاء الاصطناعي أو انتهت صلاحيته). قام النظام الآن بمحاولة قراءة وتفكيك الملف بشكل محلي تماماً. يمكنك نسخ الأجزاء المستخرجة ونقلها للحقول المخصصة لها في النماذج.</p>
     
     <div class="lang-box-grid" style="margin-bottom:10px;">
       <div class="field-inline"><label>البريد الإلكتروني المكتشف:</label><input id="cv_parsed_email" dir="ltr" style="text-align:left;"></div>
@@ -566,12 +556,10 @@ window.triggerAllRenders = function() {
   import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
   import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-  // إعدادات Cloudinary لرفع الصور
   const CLOUDINARY_CLOUD_NAME = "dxkxuajgf"; 
   const CLOUDINARY_UPLOAD_PRESET = "portfolio_preset";
   const CLOUDINARY_URL = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
 
-  // إعدادات Firebase
   const firebaseConfig = {
     apiKey: "AIzaSyAMLeRa5BeV6YQf7rqLx0JQd3fb_LhbeSU", 
     authDomain: "portfolio-2933c.firebaseapp.com",
@@ -588,12 +576,10 @@ window.triggerAllRenders = function() {
   const appShell = document.getElementById('app');
   const loginScreen = document.getElementById('loginScreen');
 
-  // استرجاع وحفظ مفتاح Gemini API
   const geminiKeyInput = document.getElementById('gemini_api_key');
   if(localStorage.getItem('portfolio_gemini_key')) geminiKeyInput.value = localStorage.getItem('portfolio_gemini_key');
   geminiKeyInput.addEventListener('change', (e) => localStorage.setItem('portfolio_gemini_key', e.target.value));
 
-  // نظام التنقل (Tabs)
   document.querySelectorAll('.sidebar .nav-item[data-panel]').forEach(item => {
     item.addEventListener('click', () => {
       document.querySelectorAll('.sidebar .nav-item').forEach(i => i.classList.remove('active'));
@@ -607,7 +593,6 @@ window.triggerAllRenders = function() {
   document.getElementById('menuToggle').addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('sidebar').classList.toggle('open'); });
   document.addEventListener('click', () => { document.getElementById('sidebar').classList.remove('open'); });
 
-  // نظام المصادقة Firebase
   onAuthStateChanged(auth, (user) => {
     if (user) { 
       loginScreen.style.display = 'none'; 
@@ -633,7 +618,7 @@ window.triggerAllRenders = function() {
   document.getElementById('logoutBtn').addEventListener('click', () => signOut(auth));
 
   // ==========================================
-  // محرك رفع الصور إلى Cloudinary
+  // Cloudinary Upload
   // ==========================================
   document.getElementById('mediaLibraryFile').addEventListener('change', async function() {
     const file = this.files[0];
@@ -663,8 +648,9 @@ window.triggerAllRenders = function() {
     this.previousElementSibling.innerHTML = oldLabel;
   });
 
+
   // ==========================================
-  // المعالج المحلي واستخراج البيانات Local Extract & AI (تحديث نظام الطوارئ Fallback)
+  // المعالج المحلي (Local Fallback Parser)
   // ==========================================
   function extractSectionsByRegex(text) {
     const cleanText = text.replace(/\n\s*\n/g, '\n');
@@ -672,9 +658,9 @@ window.triggerAllRenders = function() {
     const eduRegex = /(Education|التعليم|المؤهلات|Academic)[\s\S]*?(Skills|المهارات|Projects|المشاريع|Experience|الخبرات|$)/i;
     const skillsRegex = /(Skills|المهارات|Technical Skills|Core Competencies)[\s\S]*?(Education|التعليم|Projects|المشاريع|Experience|الخبرات|$)/i;
     
-    let exp = (cleanText.match(expRegex) || ['', 'لم يتم العثور على قسم خبرات واضح.'])[0];
-    let edu = (cleanText.match(eduRegex) || ['', 'لم يتم العثور على قسم تعليم واضح.'])[0];
-    let skills = (cleanText.match(skillsRegex) || ['', 'لم يتم العثور على قسم مهارات واضح.'])[0];
+    let exp = (cleanText.match(expRegex) || ['', 'لم يتم العثور بوضوح على هذا القسم.'])[0];
+    let edu = (cleanText.match(eduRegex) || ['', 'لم يتم العثور بوضوح على هذا القسم.'])[0];
+    let skills = (cleanText.match(skillsRegex) || ['', 'لم يتم العثور بوضوح على هذا القسم.'])[0];
     
     return { exp: exp.substring(0, 2000), edu: edu.substring(0, 1000), skills: skills.substring(0, 1000) };
   }
@@ -683,29 +669,31 @@ window.triggerAllRenders = function() {
     const emailMatch = rawText.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
     const phoneMatch = rawText.match(/(\+?\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4,6}/);
     
-    document.getElementById('cv_parsed_email').value = emailMatch ? emailMatch[0] : "";
-    document.getElementById('cv_parsed_phone').value = phoneMatch ? phoneMatch[0] : "";
+    setValSafe('cv_parsed_email', emailMatch ? emailMatch[0] : "");
+    setValSafe('cv_parsed_phone', phoneMatch ? phoneMatch[0] : "");
     
     const sections = extractSectionsByRegex(rawText);
-    document.getElementById('cv_parsed_exp').value = sections.exp;
-    document.getElementById('cv_parsed_edu').value = sections.edu;
-    document.getElementById('cv_parsed_skills').value = sections.skills;
+    setValSafe('cv_parsed_exp', sections.exp);
+    setValSafe('cv_parsed_edu', sections.edu);
+    setValSafe('cv_parsed_skills', sections.skills);
     
     document.getElementById('parsedCvModal').classList.add('open');
     if(statusEl) statusEl.style.display = 'none';
   }
 
+  // ==========================================
+  // معالج الذكاء الاصطناعي (AI Processor)
+  // ==========================================
   async function processWithAI(rawText, lang, statusId) {
     const apiKey = document.getElementById('gemini_api_key').value.trim();
     const status = document.getElementById(statusId);
 
-    // إذا لم يضع المستخدم مفتاح AI، نلجأ فوراً للطريقة اليدوية المحلية المتقدمة
     if(!apiKey) {
       fallbackLocalParsing(rawText, status);
       return;
     }
 
-    status.innerText = 'يتم الآن تحليل وفهم البيانات بواسطة الذكاء الاصطناعي... يرجى الانتظار.';
+    status.innerText = 'يتم الآن تحليل وفهم البيانات بواسطة الذكاء الاصطناعي... يرجى الانتظار (قد يستغرق 10 ثوانٍ).';
     
     const prompt = `You are an expert CV parsing assistant. Extract data from the following CV text.
     Return ONLY a raw JSON object exactly matching this schema. Do not wrap it in markdown code blocks.
@@ -730,12 +718,12 @@ window.triggerAllRenders = function() {
         body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }], generationConfig: { responseMimeType: "application/json" } })
       });
 
-      if(!response.ok) throw new Error("API Key is restricted or expired.");
+      if(!response.ok) throw new Error("API Key is restricted or invalid.");
 
       const data = await response.json();
       const parsedData = JSON.parse(data.candidates[0].content.parts[0].text);
 
-      // التسكين التلقائي
+      // التسكين
       if(parsedData.experience && parsedData.experience.length) window.appState.experience = parsedData.experience;
       if(parsedData.skillCats && parsedData.skillCats.length) window.appState.skillCats = parsedData.skillCats;
       
@@ -761,12 +749,12 @@ window.triggerAllRenders = function() {
 
       window.triggerAllRenders();
       status.className = 'status-msg ok';
-      status.innerText = "نجاح! تم استخراج البيانات بذكاء وتسكينها في الحقول. قم بمراجعتها ثم اضغط (حفظ).";
-      setTimeout(() => status.style.display = 'none', 6000);
+      status.innerText = "نجاح! تم استخراج البيانات بذكاء وتسكينها. قم بمراجعتها ثم اضغط (حفظ ونشر) لتفعيلها على الموقع.";
+      setTimeout(() => status.style.display = 'none', 8000);
 
     } catch (e) {
-      console.warn("AI Parsing failed, falling back to local:", e);
-      fallbackLocalParsing(rawText, status); // التحويل الفوري للمعالج المحلي بدلاً من تعطل النظام
+      console.warn("AI Parsing failed, falling back to local extractor:", e);
+      fallbackLocalParsing(rawText, status);
     }
   }
 
@@ -780,13 +768,13 @@ window.triggerAllRenders = function() {
       if(file.name.endsWith('.docx')) {
         mammoth.extractRawText({ arrayBuffer: e.target.result }).then(res => {
           processWithAI(res.value, lang, statusId);
-        }).catch(err => { status.className = 'status-msg err'; status.innerText = "خطأ في قراءة ملف وورد: " + err.message; });
+        }).catch(err => { status.className = 'status-msg err'; status.innerText = "خطأ في قراءة الـ Word: " + err.message; });
       } else {
         pdfjsLib.getDocument({ data: new Uint8Array(e.target.result) }).promise.then(pdf => {
           let pages = [];
           for(let j=1; j<=pdf.numPages; j++) { pages.push(pdf.getPage(j).then(p => p.getTextContent().then(t => t.items.map(s => s.str).join(' ')))); }
           Promise.all(pages).then(texts => processWithAI(texts.join('\n'), lang, statusId));
-        }).catch(err => { status.className = 'status-msg err'; status.innerText = "فشل في قراءة الـ PDF: تأكد أن الملف غير محمي بكلمة مرور."; });
+        }).catch(err => { status.className = 'status-msg err'; status.innerText = "فشل في قراءة الـ PDF. تأكد أنه غير محمي برقم سري."; });
       }
     };
     reader.readAsArrayBuffer(file);
@@ -796,85 +784,109 @@ window.triggerAllRenders = function() {
   document.getElementById('analyzeCvBtnAr').addEventListener('click', () => handleCVUpload('ar', document.getElementById('cvFileDropAr').files[0], 'parseStatus'));
 
   document.getElementById('confirmCvContactImport').addEventListener('click', () => {
-    const em = document.getElementById('cv_parsed_email').value;
-    const ph = document.getElementById('cv_parsed_phone').value;
-    if(em) document.getElementById('f_contact_email').value = em;
-    if(ph) document.getElementById('f_contact_phone').value = ph;
+    const em = getValSafe('cv_parsed_email');
+    const ph = getValSafe('cv_parsed_phone');
+    if(em) setValSafe('f_contact_email', em);
+    if(ph) setValSafe('f_contact_phone', ph);
     alert("تم نقل أرقام الاتصال لنموذج التواصل بنجاح!");
     document.getElementById('parsedCvModal').classList.remove('open');
   });
 
   // ==========================================
-  // محرك جلب ومزامنة البيانات (استدعاء آمن يعتمد على ملف data.js كمصدر أولي في حال كانت القاعدة فارغة)
+  // محرك جلب البيانات الذكي (Data Fetcher with Offline Fallback)
   // ==========================================
-  const setValSafe = (id, val) => { const el = document.getElementById(id); if(el) el.value = val || ''; };
+  const setValSafe = (id, val) => { const el = document.getElementById(id); if(el) el.value = val || ''; return val; };
   const setCheckSafe = (id, val) => { const el = document.getElementById(id); if(el) el.checked = (val !== false); };
+  const getValSafe = (id) => { const el = document.getElementById(id); return el ? el.value : ''; };
+
+  // إعداد نصوص الواجهة والنبذة الافتراضية (في حال كانت Firebase فارغة أول مرة)
+  const FALLBACK_TEMPLATE = {
+    profileImg: "assets/portrait.jpg", cvLink: "assets/AbdElMoneim_Sultan_CV.pdf",
+    contact: { email: "abdosultan306@gmail.com", phone: "+20 111 455 0112", location: "Cairo, Egypt", locationAr: "القاهرة، مصر" },
+    en: {
+      brandName: "AbdElMoneim Sultan", eyebrow: "Sales Executive → Digital Product Builder", title: "Turning client trust into measurable growth.", lead: "A professional sales executive with experience across retail, logistics, and finance...",
+      typed: ["Sales Executive", "Client Relationship Manager", "AI Tools Explorer"], chips: [{icon: "fa-chart-line", label: "Sales Growth Focus"}, {icon: "fa-robot", label: "AI-Powered Builder"}],
+      stats: [{value: 4, label: "Years Experience"}, {value: 5, label: "Professional Roles"}, {value: 17, label: "Courses & Certificates"}],
+      aboutTitle: "A sales career built on trust...", aboutP1: "I'm a professional with over four years of experience...",
+      aboutFacts: [{label: "Based in", value: "Cairo, Egypt"}, {label: "Current Role", value: "Sales Executive"}], aboutArc: [{title: "Where it started", desc: "Finance fundamentals..."}],
+      eduTitle: "Bachelor of Commerce — Business Administration", eduMeta: "Graduated May 2016 · Grade: Good", certTitle: "ICDL Certified", certMeta: "Windows, Word, Excel, Internet"
+    },
+    ar: {
+      brandName: "عبدالمنعم سلطان", eyebrow: "تنفيذي مبيعات ← بناء منتجات رقمية", title: "أحوّل ثقة العملاء إلى نمو ملموس.", lead: "محترف مبيعات بخبرة تتجاوز 4 سنوات...",
+      typed: ["تنفيذي مبيعات", "مدير علاقات عملاء", "مستكشف ذكاء اصطناعي"], chips: [{icon: "fa-chart-line", label: "نمو المبيعات"}, {icon: "fa-robot", label: "بناء بالذكاء الاصطناعي"}],
+      stats: [{value: 4, label: "سنوات خبرة"}, {value: 5, label: "وظائف مهنية"}, {value: 17, label: "دورة وشهادة"}],
+      aboutTitle: "مسيرة مبيعات قائمة على الثقة...", aboutP1: "أنا محترف مبيعات ولدي خبرة تتجاوز 4 سنوات...",
+      aboutFacts: [{label: "المقر", value: "القاهرة، مصر"}, {label: "الوظيفة الحالية", value: "تنفيذي مبيعات"}], aboutArc: [{title: "نقطة البداية", desc: "أساسيات مالية..."}],
+      eduTitle: "بكالوريوس تجارة — إدارة أعمال", eduMeta: "التخرج 2016 · التقدير: جيد", certTitle: "شهادة ICDL", certMeta: "ويندوز، وورد، إكسل، إنترنت"
+    }
+  };
 
   async function loadDataFromFirebase() {
     const msg = document.getElementById('fetchStatusMsg');
-    msg.style.display = 'block'; msg.className = 'status-msg'; msg.innerText = 'جاري الجلب والمزامنة...';
+    msg.style.display = 'block'; msg.className = 'status-msg'; msg.innerText = 'جاري الجلب والتأكد من البيانات...';
     
     try {
       const docSnap = await getDoc(doc(db, "portfolio", "content"));
       const data = docSnap.exists() ? docSnap.data() : {};
-      const st = window.appState;
+      const isFirstRun = Object.keys(data).length === 0;
       
-      // جلب البيانات الافتراضية من data.js كمرجع بديل (Fallback)
-      const defaultSiteData = window.SITE_DATA || { en: {}, ar: {} };
+      const st = window.appState;
+      // المصفوفات الأساسية تأتي من data.js كمصدر احتياطي أول
+      const localSiteData = window.SITE_DATA || { en: {}, ar: {} };
 
-      // Profile & Contact
-      setValSafe('f_profile_img', data.aboutData?.profileImg);
-      setValSafe('f_cv_link', data.contactData?.cvLink);
-      setValSafe('f_contact_email', data.contactData?.email);
-      setValSafe('f_contact_phone', data.contactData?.phone);
-      setValSafe('f_contact_location', data.contactData?.location);
-      setValSafe('f_contact_location_ar', data.contactData?.locationAr);
+      // 1. Profile & Contact
+      setValSafe('f_profile_img', data.aboutData?.profileImg || FALLBACK_TEMPLATE.profileImg);
+      setValSafe('f_cv_link', data.contactData?.cvLink || FALLBACK_TEMPLATE.cvLink);
+      setValSafe('f_contact_email', data.contactData?.email || FALLBACK_TEMPLATE.contact.email);
+      setValSafe('f_contact_phone', data.contactData?.phone || FALLBACK_TEMPLATE.contact.phone);
+      setValSafe('f_contact_location', data.contactData?.location || FALLBACK_TEMPLATE.contact.location);
+      setValSafe('f_contact_location_ar', data.contactData?.locationAr || FALLBACK_TEMPLATE.contact.locationAr);
 
-      // Hero & About EN
-      setValSafe('f_brand_en', data.heroEn?.brandName);
-      setValSafe('f_hero_eyebrow_en', data.heroEn?.eyebrow);
-      setValSafe('f_hero_title1_en', data.heroEn?.title1);
-      setValSafe('f_hero_lead_en', data.heroEn?.lead);
-      st.heroTypedEn = data.heroEn?.typed || [];
-      st.heroChipsEn = data.heroEn?.chips || [];
-      st.heroStatsEn = data.heroEn?.stats || [];
-      setValSafe('f_about_title_en', data.aboutEn?.title);
-      setValSafe('f_about_p1_en', data.aboutEn?.p1);
-      st.aboutFactsEn = data.aboutEn?.facts || [];
-      st.aboutArcEn = data.aboutEn?.arc || [];
+      // 2. Hero & About EN
+      setValSafe('f_brand_en', data.heroEn?.brandName || FALLBACK_TEMPLATE.en.brandName);
+      setValSafe('f_hero_eyebrow_en', data.heroEn?.eyebrow || FALLBACK_TEMPLATE.en.eyebrow);
+      setValSafe('f_hero_title1_en', data.heroEn?.title1 || FALLBACK_TEMPLATE.en.title);
+      setValSafe('f_hero_lead_en', data.heroEn?.lead || FALLBACK_TEMPLATE.en.lead);
+      st.heroTypedEn = (data.heroEn?.typed?.length ? data.heroEn.typed : FALLBACK_TEMPLATE.en.typed);
+      st.heroChipsEn = (data.heroEn?.chips?.length ? data.heroEn.chips : FALLBACK_TEMPLATE.en.chips);
+      st.heroStatsEn = (data.heroEn?.stats?.length ? data.heroEn.stats : FALLBACK_TEMPLATE.en.stats);
+      setValSafe('f_about_title_en', data.aboutEn?.title || FALLBACK_TEMPLATE.en.aboutTitle);
+      setValSafe('f_about_p1_en', data.aboutEn?.p1 || FALLBACK_TEMPLATE.en.aboutP1);
+      st.aboutFactsEn = (data.aboutEn?.facts?.length ? data.aboutEn.facts : FALLBACK_TEMPLATE.en.aboutFacts);
+      st.aboutArcEn = (data.aboutEn?.arc?.length ? data.aboutEn.arc : FALLBACK_TEMPLATE.en.aboutArc);
 
-      // Hero & About AR
-      setValSafe('f_brand_ar', data.heroAr?.brandName);
-      setValSafe('f_hero_eyebrow_ar', data.heroAr?.eyebrow);
-      setValSafe('f_hero_title1_ar', data.heroAr?.title1);
-      setValSafe('f_hero_lead_ar', data.heroAr?.lead);
-      st.heroTypedAr = data.heroAr?.typed || [];
-      st.heroChipsAr = data.heroAr?.chips || [];
-      st.heroStatsAr = data.heroAr?.stats || [];
-      setValSafe('f_about_title_ar', data.aboutAr?.title);
-      setValSafe('f_about_p1_ar', data.aboutAr?.p1);
-      st.aboutFactsAr = data.aboutAr?.facts || [];
-      st.aboutArcAr = data.aboutAr?.arc || [];
+      // 3. Hero & About AR
+      setValSafe('f_brand_ar', data.heroAr?.brandName || FALLBACK_TEMPLATE.ar.brandName);
+      setValSafe('f_hero_eyebrow_ar', data.heroAr?.eyebrow || FALLBACK_TEMPLATE.ar.eyebrow);
+      setValSafe('f_hero_title1_ar', data.heroAr?.title1 || FALLBACK_TEMPLATE.ar.title);
+      setValSafe('f_hero_lead_ar', data.heroAr?.lead || FALLBACK_TEMPLATE.ar.lead);
+      st.heroTypedAr = (data.heroAr?.typed?.length ? data.heroAr.typed : FALLBACK_TEMPLATE.ar.typed);
+      st.heroChipsAr = (data.heroAr?.chips?.length ? data.heroAr.chips : FALLBACK_TEMPLATE.ar.chips);
+      st.heroStatsAr = (data.heroAr?.stats?.length ? data.heroAr.stats : FALLBACK_TEMPLATE.ar.stats);
+      setValSafe('f_about_title_ar', data.aboutAr?.title || FALLBACK_TEMPLATE.ar.aboutTitle);
+      setValSafe('f_about_p1_ar', data.aboutAr?.p1 || FALLBACK_TEMPLATE.ar.aboutP1);
+      st.aboutFactsAr = (data.aboutAr?.facts?.length ? data.aboutAr.facts : FALLBACK_TEMPLATE.ar.aboutFacts);
+      st.aboutArcAr = (data.aboutAr?.arc?.length ? data.aboutAr.arc : FALLBACK_TEMPLATE.ar.aboutArc);
 
-      // Education
-      setValSafe('f_edu_deg_title_en', data.educationEn?.degreeTitle);
-      setValSafe('f_edu_deg_meta_en', data.educationEn?.degreeMeta);
-      setValSafe('f_edu_cert_title_en', data.educationEn?.icdlTitle);
-      setValSafe('f_edu_cert_meta_en', data.educationEn?.icdlMeta);
-      setValSafe('f_edu_deg_title_ar', data.educationAr?.degreeTitle);
-      setValSafe('f_edu_deg_meta_ar', data.educationAr?.degreeMeta);
-      setValSafe('f_edu_cert_title_ar', data.educationAr?.icdlTitle);
-      setValSafe('f_edu_cert_meta_ar', data.educationAr?.icdlMeta);
+      // 4. Education
+      setValSafe('f_edu_deg_title_en', data.educationEn?.degreeTitle || FALLBACK_TEMPLATE.en.eduTitle);
+      setValSafe('f_edu_deg_meta_en', data.educationEn?.degreeMeta || FALLBACK_TEMPLATE.en.eduMeta);
+      setValSafe('f_edu_cert_title_en', data.educationEn?.icdlTitle || FALLBACK_TEMPLATE.en.certTitle);
+      setValSafe('f_edu_cert_meta_en', data.educationEn?.icdlMeta || FALLBACK_TEMPLATE.en.certMeta);
+      setValSafe('f_edu_deg_title_ar', data.educationAr?.degreeTitle || FALLBACK_TEMPLATE.ar.eduTitle);
+      setValSafe('f_edu_deg_meta_ar', data.educationAr?.degreeMeta || FALLBACK_TEMPLATE.ar.eduMeta);
+      setValSafe('f_edu_cert_title_ar', data.educationAr?.icdlTitle || FALLBACK_TEMPLATE.ar.certTitle);
+      setValSafe('f_edu_cert_meta_ar', data.educationAr?.icdlMeta || FALLBACK_TEMPLATE.ar.certMeta);
 
-      // المصفوفات المعقدة - إذا كانت القاعدة فارغة (مثل أول مرة تسجيل دخول)، اسحب من data.js
-      st.experience = (data.experienceData && data.experienceData.length) ? data.experienceData : (defaultSiteData.en.experience || []);
-      st.projects = (data.projectsData && data.projectsData.length) ? data.projectsData : (defaultSiteData.en.projects || []);
-      st.skillCats = (data.skillCatsData && data.skillCatsData.length) ? data.skillCatsData : (defaultSiteData.en.skillCats || []);
-      st.certsElaraby = (data.certsElarabyData && data.certsElarabyData.length) ? data.certsElarabyData : (defaultSiteData.en.certsElaraby || []);
-      st.certsAlmentor = (data.certsAlmentorData && data.certsAlmentorData.length) ? data.certsAlmentorData : (defaultSiteData.en.certsAlmentor || []);
+      // 5. المصفوفات المعقدة (تسحب من data.js إذا كانت Firebase فارغة)
+      st.experience = (data.experienceData?.length) ? data.experienceData : (localSiteData.en.experience || []);
+      st.projects = (data.projectsData?.length) ? data.projectsData : (localSiteData.en.projects || []);
+      st.skillCats = (data.skillCatsData?.length) ? data.skillCatsData : (localSiteData.en.skillCats || []);
+      st.certsElaraby = (data.certsElarabyData?.length) ? data.certsElarabyData : (localSiteData.en.certsElaraby || []);
+      st.certsAlmentor = (data.certsAlmentorData?.length) ? data.certsAlmentorData : (localSiteData.en.certsAlmentor || []);
       st.mediaLibrary = data.mediaLibrary || [];
 
-      // Theme
+      // 6. Theme Config
       const t = data.themeData || {};
       setValSafe('f_theme_mode', t.mode || "dark");
       setValSafe('f_theme_font', t.font || "'Cairo', sans-serif");
@@ -889,16 +901,20 @@ window.triggerAllRenders = function() {
       const v = t.sectionVisibility || {};
       ['home','about','experience','projects','skills','education','contact'].forEach(id => setCheckSafe('sec_'+id, v[id]));
 
-      // تحديث إحصائيات الصفحة الرئيسية للوحة التحكم
+      // 7. Update Dashboard Counters
       document.getElementById('statExp').innerText = st.experience.length;
       document.getElementById('statProj').innerText = st.projects.length;
       document.getElementById('statSkill').innerText = st.skillCats.length;
       document.getElementById('statMedia').innerText = st.mediaLibrary.length;
 
+      // 8. Re-render UI
       window.triggerAllRenders();
       
-      msg.className = 'status-msg ok'; msg.innerText = 'تم جلب وتعبئة البيانات بنجاح!';
-      setTimeout(() => msg.style.display = 'none', 3000);
+      msg.className = 'status-msg ok'; 
+      if(isFirstRun) msg.innerText = 'قاعدة البيانات فارغة، تم سحب البيانات الافتراضية بنجاح! عدل ما تشاء واضغط حفظ لرفعها.';
+      else msg.innerText = 'تم جلب وتعبئة بياناتك من الخادم بنجاح!';
+      
+      setTimeout(() => msg.style.display = 'none', 6000);
 
     } catch (e) { 
       console.error(e); 
@@ -909,10 +925,8 @@ window.triggerAllRenders = function() {
   document.getElementById('forceFetchBtn').addEventListener('click', loadDataFromFirebase);
 
   // ==========================================
-  // محرك الحفظ والدفع لقاعدة البيانات (Firestore Save Handlers)
+  // محرك الحفظ والدفع (Firestore Save Handlers)
   // ==========================================
-  const getValSafe = (id) => { const el = document.getElementById(id); return el ? el.value : ''; };
-
   async function saveDoc(payload, msgId) {
     const msg = document.getElementById(msgId); 
     msg.className='status-msg ok'; msg.innerText='جاري الحفظ والمزامنة...'; msg.style.display='block';
