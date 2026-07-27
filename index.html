@@ -15,7 +15,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
 
-<!-- استدعاء ملف البيانات المحلي كمصدر أولي للطوارئ -->
+<!-- استدعاء ملف البيانات المحلي -->
 <script src="data.js"></script>
 
 <style>
@@ -170,9 +170,10 @@ window.renderAboutFactsAr = () => renderGenericObjArray('about-facts-ar', 'about
 window.renderAboutArcEn = () => renderGenericObjArray('about-arc-en', 'aboutArcEn', [{key:'title', type:'text', placeholder:'Arc Title'}, {key:'desc', type:'text', placeholder:'Description text'}], 'renderAboutArcEn');
 window.renderAboutArcAr = () => renderGenericObjArray('about-arc-ar', 'aboutArcAr', [{key:'title', type:'text', placeholder:'العنوان الزمني'}, {key:'desc', type:'text', placeholder:'الوصف'}], 'renderAboutArcAr');
 
-// بناء نماذج الخبرات والمشاريع والمهارات
 window.renderExperienceEditor = () => {
-  document.getElementById('experience-editor').innerHTML = window.appState.experience.map((item, idx) => `
+  const container = document.getElementById('experience-editor');
+  if(!container) return;
+  container.innerHTML = window.appState.experience.map((item, idx) => `
     <div class="list-editor-item">
       <button class="btn btn-danger btn-small remove-btn" onclick="removeProp('experience', ${idx}, 'renderExperienceEditor')"><i class="fa-solid fa-trash"></i> حذف</button>
       <div class="field-inline"><label>Role / المسمى الوظيفي</label><input type="text" value="${item.role||''}" oninput="updateProp('experience', ${idx}, 'role', this.value)"></div>
@@ -185,7 +186,9 @@ window.renderExperienceEditor = () => {
 
 window.updateProjectTags = function(idx, val) { window.appState.projects[idx].tags = val.split(',').map(s=>s.trim()); };
 window.renderProjectsEditor = () => {
-  document.getElementById('projects-editor').innerHTML = window.appState.projects.map((item, idx) => `
+  const container = document.getElementById('projects-editor');
+  if(!container) return;
+  container.innerHTML = window.appState.projects.map((item, idx) => `
     <div class="list-editor-item">
       <button class="btn btn-danger btn-small remove-btn" onclick="removeProp('projects', ${idx}, 'renderProjectsEditor')"><i class="fa-solid fa-trash"></i> حذف</button>
       <div class="field-inline"><label>Project Title / عنوان المشروع</label><input type="text" value="${item.title||''}" oninput="updateProp('projects', ${idx}, 'title', this.value)"></div>
@@ -207,7 +210,9 @@ window.addSkillNode = function(catIdx) { window.appState.skillCats[catIdx].skill
 window.removeSkillNode = function(catIdx, skillIdx) { window.appState.skillCats[catIdx].skills.splice(skillIdx, 1); window.renderSkillsEditor(); };
 
 window.renderSkillsEditor = () => {
-  document.getElementById('skills-editor').innerHTML = window.appState.skillCats.map((cat, catIdx) => `
+  const container = document.getElementById('skills-editor');
+  if(!container) return;
+  container.innerHTML = window.appState.skillCats.map((cat, catIdx) => `
     <div class="list-editor-item">
       <button class="btn btn-danger btn-small remove-btn" onclick="removeProp('skillCats', ${catIdx}, 'renderSkillsEditor')"><i class="fa-solid fa-trash"></i> حذف القسم كاملاً</button>
       <div class="lang-box-grid" style="margin-bottom:0;">
@@ -237,7 +242,9 @@ window.deleteMedia = function(idx) {
 };
 window.copyMedia = function(url) { navigator.clipboard.writeText(url); alert("تم نسخ الرابط!"); };
 window.renderMediaGallery = () => {
-  document.getElementById('media-grid-container').innerHTML = window.appState.mediaLibrary.map((url, idx) => `
+  const container = document.getElementById('media-grid-container');
+  if(!container) return;
+  container.innerHTML = window.appState.mediaLibrary.map((url, idx) => `
     <div class="media-item">
       <img src="${url}">
       <div class="actions">
@@ -301,6 +308,9 @@ window.triggerAllRenders = function() {
 
   <main class="main">
     <div style="display:flex; justify-content:flex-end; gap:12px; margin-bottom:24px; flex-wrap:wrap;">
+      <button class="btn btn-ghost" id="restoreDataBtn" style="border-color:var(--gold-l); color:var(--gold-l);">
+        <i class="fa-solid fa-file-import"></i> استرداد البيانات من ملف data.js (للطوارئ)
+      </button>
       <button class="btn btn-ghost" id="forceFetchBtn" style="border-color:var(--teal-l); color:var(--teal-l);">
         <i class="fa-solid fa-cloud-arrow-down"></i> جلب وتحديث البيانات (مزامنة)
       </button>
@@ -322,7 +332,7 @@ window.triggerAllRenders = function() {
     <section class="panel" id="panel-parser">
       <div class="main-head">
         <div><h2>المستخرج الذكي والمحلي (AI & Local Extractor)</h2>
-        <p>قم برفع ملف السيرة الذاتية (PDF/DOCX). سيحاول النظام استخراج البيانات بواسطة AI لتسكينها، وإذا فشل أو لم تضع مفتاحاً، سيقوم بقراءتها محلياً لتنسخ منها ما تريد.</p></div>
+        <p>ارفع ملف السيرة الذاتية (PDF/DOCX). سيحاول النظام استخراج البيانات بواسطة AI، وإذا فشل أو لم تضع مفتاحاً، سيقوم بقراءتها محلياً لتنسخ منها ما تريد.</p></div>
       </div>
       
       <div class="api-key-box">
@@ -531,7 +541,7 @@ window.triggerAllRenders = function() {
 <div class="modal-overlay" id="parsedCvModal">
   <div class="modal-box">
     <h3 style="margin-bottom:20px; border-bottom:1px solid var(--border); padding-bottom:14px; color:var(--gold-l);"><i class="fa-solid fa-wand-magic-sparkles"></i> المعالج المحلي للسيرة الذاتية (Local Extractor)</h3>
-    <p style="color:var(--text-dim); margin-bottom:16px;">(إما أنه لا يوجد مفتاح للذكاء الاصطناعي أو انتهت صلاحيته). قام النظام الآن بمحاولة قراءة وتفكيك الملف بشكل محلي تماماً. يمكنك نسخ الأجزاء المستخرجة ونقلها للحقول المخصصة لها في النماذج.</p>
+    <p style="color:var(--text-dim); margin-bottom:16px;">قام النظام بقراءة وتفكيك الملف محلياً بدقة عالية. يمكنك نسخ الأجزاء المستخرجة ونقلها للحقول المخصصة لها في النماذج.</p>
     
     <div class="lang-box-grid" style="margin-bottom:10px;">
       <div class="field-inline"><label>البريد الإلكتروني المكتشف:</label><input id="cv_parsed_email" dir="ltr" style="text-align:left;"></div>
@@ -648,7 +658,6 @@ window.triggerAllRenders = function() {
     this.previousElementSibling.innerHTML = oldLabel;
   });
 
-
   // ==========================================
   // المعالج المحلي (Local Fallback Parser)
   // ==========================================
@@ -723,7 +732,6 @@ window.triggerAllRenders = function() {
       const data = await response.json();
       const parsedData = JSON.parse(data.candidates[0].content.parts[0].text);
 
-      // التسكين
       if(parsedData.experience && parsedData.experience.length) window.appState.experience = parsedData.experience;
       if(parsedData.skillCats && parsedData.skillCats.length) window.appState.skillCats = parsedData.skillCats;
       
@@ -793,13 +801,32 @@ window.triggerAllRenders = function() {
   });
 
   // ==========================================
-  // محرك جلب البيانات الذكي (Data Fetcher with Offline Fallback)
+  // قاعدة البيانات البديلة المضمنة مباشرة (HARDCODED FALLBACK TEMPLATE)
+  // تضمن عدم ظهور الكروت فارغة حتى لو تعذر جلب data.js
   // ==========================================
-  const setValSafe = (id, val) => { const el = document.getElementById(id); if(el) el.value = val || ''; return val; };
-  const setCheckSafe = (id, val) => { const el = document.getElementById(id); if(el) el.checked = (val !== false); };
-  const getValSafe = (id) => { const el = document.getElementById(id); return el ? el.value : ''; };
+  const HARDCODED_FALLBACK_SITE_DATA = {
+    en: {
+      experience: [
+        { role: "Sales Executive", company: "Elaraby Group", period: "2023 – Present", bullets: ["Managing client relationships and driving sales to achieve company targets.", "Providing tailored product solutions and ensuring a high level of customer satisfaction.", "Collaborating with internal teams to optimize sales operations and performance."] },
+        { role: "Sales Officer", company: "B.Tech", period: "June 2022 – 2023", bullets: ["Promoted company products and achieved consistent sales growth.", "Assisted customers in selecting suitable products based on their needs and preferences."] },
+        { role: "Assistant Warehouse Manager", company: "Al-Ansar Marketing", period: "February 2020 – February 2022", bullets: ["Supervised daily warehouse operations, ensuring inventory accuracy and timely order fulfillment.", "Coordinated with suppliers and logistics teams to streamline supply chain activities."] },
+        { role: "Data Entry Specialist", company: "Orascom Construction", period: "2018 – 2019", bullets: ["Entered and verified project-related data with high accuracy.", "Supported the reporting process for construction projects.", "Ensured data integrity and compliance with company standards."] },
+        { role: "Accountant", company: "Omega Advertising", period: "2017 – 2018", bullets: ["Prepared and maintained financial records in compliance with accounting principles.", "Collaborated with management to support financial decision-making."] }
+      ],
+      projects: [
+        { id: "proj_1", title: "Know Your Product (PWA)", desc: "Co-designed and developed a Progressive Web App built to support sales representatives during the sales process with smart selling tools.", tags: ["PWA", "UX Design", "Sales Enablement", "No-Code"], status: "Shipped", icon: "fa-mobile-screen-button", img: "" },
+        { id: "proj_2", title: "AI-Powered Chatbot", desc: "Contributing to the development of an AI chatbot focused on smarter, more automated customer engagement.", tags: ["AI", "Chatbot", "Workflow Design", "Customer Engagement"], status: "In Progress", icon: "fa-robot", img: "" }
+      ],
+      skillCats: [
+        { name: "Sales & Business", icon: "fa-chart-line", skills: [{ label: "Sales & Account Management", value: 92 }, { label: "E-Commerce Sales Operations", value: 85 }, { label: "Sales Reporting & Forecasting", value: 80 }, { label: "Persuasive Communication & Client Engagement", value: 90 }] },
+        { name: "Digital & AI Tools", icon: "fa-robot", skills: [{ label: "AI Tools Utilization & Digital Solutions", value: 78 }, { label: "PWA & Digital Product Design", value: 70 }, { label: "Basic Knowledge of Power BI", value: 55 }, { label: "Basic Knowledge of ERP & SAP Systems", value: 50 }] },
+        { name: "Professional & Soft Skills", icon: "fa-people-group", skills: [{ label: "Customer Issue Resolution", value: 88 }, { label: "Adaptability & Team Collaboration", value: 90 }, { label: "Computer Setup & Troubleshooting", value: 82 }] }
+      ],
+      certsElaraby: ["Managing Different Generations", "Problem Solving & Decision Making", "Time Management", "Advanced Negotiation Skills", "Handling Difficult Characters", "Customer Experience Management", "Design Thinking", "Building Better Teams", "Smart Selling", "Sales Skills"],
+      certsAlmentor: ["Personal Branding for Employees", "Career Success Skills", "Professional Email Writing", "Successful Marketer Skills", "Prompt Engineering", "Growth Mindset", "ChatGPT Technology"]
+    }
+  };
 
-  // إعداد نصوص الواجهة والنبذة الافتراضية (في حال كانت Firebase فارغة أول مرة)
   const FALLBACK_TEMPLATE = {
     profileImg: "assets/portrait.jpg", cvLink: "assets/AbdElMoneim_Sultan_CV.pdf",
     contact: { email: "abdosultan306@gmail.com", phone: "+20 111 455 0112", location: "Cairo, Egypt", locationAr: "القاهرة، مصر" },
@@ -821,20 +848,31 @@ window.triggerAllRenders = function() {
     }
   };
 
+  function getInitialData() {
+    if (typeof SITE_DATA !== 'undefined' && SITE_DATA.en) return SITE_DATA;
+    if (typeof window.SITE_DATA !== 'undefined' && window.SITE_DATA.en) return window.SITE_DATA;
+    return HARDCODED_FALLBACK_SITE_DATA;
+  }
+
+  // ==========================================
+  // محرك جلب وتعبئة البيانات الأوتوماتيكي
+  // ==========================================
+  const setValSafe = (id, val) => { const el = document.getElementById(id); if(el) el.value = val || ''; return val; };
+  const setCheckSafe = (id, val) => { const el = document.getElementById(id); if(el) el.checked = (val !== false); };
+  const getValSafe = (id) => { const el = document.getElementById(id); return el ? el.value : ''; };
+
   async function loadDataFromFirebase() {
     const msg = document.getElementById('fetchStatusMsg');
-    msg.style.display = 'block'; msg.className = 'status-msg'; msg.innerText = 'جاري الجلب والتأكد من البيانات...';
+    msg.style.display = 'block'; msg.className = 'status-msg'; msg.innerText = 'جاري المزامنة مع الخادم وتجهيز النماذج...';
     
     try {
       const docSnap = await getDoc(doc(db, "portfolio", "content"));
       const data = docSnap.exists() ? docSnap.data() : {};
-      const isFirstRun = Object.keys(data).length === 0;
-      
       const st = window.appState;
-      // المصفوفات الأساسية تأتي من data.js كمصدر احتياطي أول
-      const localSiteData = window.SITE_DATA || { en: {}, ar: {} };
+      
+      const localData = getInitialData();
 
-      // 1. Profile & Contact
+      // Profile & Contact
       setValSafe('f_profile_img', data.aboutData?.profileImg || FALLBACK_TEMPLATE.profileImg);
       setValSafe('f_cv_link', data.contactData?.cvLink || FALLBACK_TEMPLATE.cvLink);
       setValSafe('f_contact_email', data.contactData?.email || FALLBACK_TEMPLATE.contact.email);
@@ -842,7 +880,7 @@ window.triggerAllRenders = function() {
       setValSafe('f_contact_location', data.contactData?.location || FALLBACK_TEMPLATE.contact.location);
       setValSafe('f_contact_location_ar', data.contactData?.locationAr || FALLBACK_TEMPLATE.contact.locationAr);
 
-      // 2. Hero & About EN
+      // Hero & About EN
       setValSafe('f_brand_en', data.heroEn?.brandName || FALLBACK_TEMPLATE.en.brandName);
       setValSafe('f_hero_eyebrow_en', data.heroEn?.eyebrow || FALLBACK_TEMPLATE.en.eyebrow);
       setValSafe('f_hero_title1_en', data.heroEn?.title1 || FALLBACK_TEMPLATE.en.title);
@@ -855,7 +893,7 @@ window.triggerAllRenders = function() {
       st.aboutFactsEn = (data.aboutEn?.facts?.length ? data.aboutEn.facts : FALLBACK_TEMPLATE.en.aboutFacts);
       st.aboutArcEn = (data.aboutEn?.arc?.length ? data.aboutEn.arc : FALLBACK_TEMPLATE.en.aboutArc);
 
-      // 3. Hero & About AR
+      // Hero & About AR
       setValSafe('f_brand_ar', data.heroAr?.brandName || FALLBACK_TEMPLATE.ar.brandName);
       setValSafe('f_hero_eyebrow_ar', data.heroAr?.eyebrow || FALLBACK_TEMPLATE.ar.eyebrow);
       setValSafe('f_hero_title1_ar', data.heroAr?.title1 || FALLBACK_TEMPLATE.ar.title);
@@ -868,7 +906,7 @@ window.triggerAllRenders = function() {
       st.aboutFactsAr = (data.aboutAr?.facts?.length ? data.aboutAr.facts : FALLBACK_TEMPLATE.ar.aboutFacts);
       st.aboutArcAr = (data.aboutAr?.arc?.length ? data.aboutAr.arc : FALLBACK_TEMPLATE.ar.aboutArc);
 
-      // 4. Education
+      // Education
       setValSafe('f_edu_deg_title_en', data.educationEn?.degreeTitle || FALLBACK_TEMPLATE.en.eduTitle);
       setValSafe('f_edu_deg_meta_en', data.educationEn?.degreeMeta || FALLBACK_TEMPLATE.en.eduMeta);
       setValSafe('f_edu_cert_title_en', data.educationEn?.icdlTitle || FALLBACK_TEMPLATE.en.certTitle);
@@ -878,15 +916,30 @@ window.triggerAllRenders = function() {
       setValSafe('f_edu_cert_title_ar', data.educationAr?.icdlTitle || FALLBACK_TEMPLATE.ar.certTitle);
       setValSafe('f_edu_cert_meta_ar', data.educationAr?.icdlMeta || FALLBACK_TEMPLATE.ar.certMeta);
 
-      // 5. المصفوفات المعقدة (تسحب من data.js إذا كانت Firebase فارغة)
-      st.experience = (data.experienceData?.length) ? data.experienceData : (localSiteData.en.experience || []);
-      st.projects = (data.projectsData?.length) ? data.projectsData : (localSiteData.en.projects || []);
-      st.skillCats = (data.skillCatsData?.length) ? data.skillCatsData : (localSiteData.en.skillCats || []);
-      st.certsElaraby = (data.certsElarabyData?.length) ? data.certsElarabyData : (localSiteData.en.certsElaraby || []);
-      st.certsAlmentor = (data.certsAlmentorData?.length) ? data.certsAlmentorData : (localSiteData.en.certsAlmentor || []);
+      // المصفوفات المعقدة (سحب محمي يضمن وجود عناصر دائماً)
+      st.experience = (data.experienceData && Array.isArray(data.experienceData) && data.experienceData.length > 0)
+        ? data.experienceData 
+        : (localData.en.experience || HARDCODED_FALLBACK_SITE_DATA.en.experience);
+
+      st.projects = (data.projectsData && Array.isArray(data.projectsData) && data.projectsData.length > 0)
+        ? data.projectsData 
+        : (localData.en.projects || HARDCODED_FALLBACK_SITE_DATA.en.projects);
+
+      st.skillCats = (data.skillCatsData && Array.isArray(data.skillCatsData) && data.skillCatsData.length > 0)
+        ? data.skillCatsData 
+        : (localData.en.skillCats || HARDCODED_FALLBACK_SITE_DATA.en.skillCats);
+
+      st.certsElaraby = (data.certsElarabyData && Array.isArray(data.certsElarabyData) && data.certsElarabyData.length > 0)
+        ? data.certsElarabyData 
+        : (localData.en.certsElaraby || HARDCODED_FALLBACK_SITE_DATA.en.certsElaraby);
+
+      st.certsAlmentor = (data.certsAlmentorData && Array.isArray(data.certsAlmentorData) && data.certsAlmentorData.length > 0)
+        ? data.certsAlmentorData 
+        : (localData.en.certsAlmentor || HARDCODED_FALLBACK_SITE_DATA.en.certsAlmentor);
+
       st.mediaLibrary = data.mediaLibrary || [];
 
-      // 6. Theme Config
+      // Theme
       const t = data.themeData || {};
       setValSafe('f_theme_mode', t.mode || "dark");
       setValSafe('f_theme_font', t.font || "'Cairo', sans-serif");
@@ -901,20 +954,18 @@ window.triggerAllRenders = function() {
       const v = t.sectionVisibility || {};
       ['home','about','experience','projects','skills','education','contact'].forEach(id => setCheckSafe('sec_'+id, v[id]));
 
-      // 7. Update Dashboard Counters
+      // Update Dashboard Counters
       document.getElementById('statExp').innerText = st.experience.length;
       document.getElementById('statProj').innerText = st.projects.length;
       document.getElementById('statSkill').innerText = st.skillCats.length;
       document.getElementById('statMedia').innerText = st.mediaLibrary.length;
 
-      // 8. Re-render UI
+      // بناء النماذج فوراً في الواجهة
       window.triggerAllRenders();
       
       msg.className = 'status-msg ok'; 
-      if(isFirstRun) msg.innerText = 'قاعدة البيانات فارغة، تم سحب البيانات الافتراضية بنجاح! عدل ما تشاء واضغط حفظ لرفعها.';
-      else msg.innerText = 'تم جلب وتعبئة بياناتك من الخادم بنجاح!';
-      
-      setTimeout(() => msg.style.display = 'none', 6000);
+      msg.innerText = 'تم جلب وتعبئة البيانات بنجاح! يمكنك الآن تعديل أي عنصر أو حذف أو إضافة عناصر جديدة.';
+      setTimeout(() => msg.style.display = 'none', 5000);
 
     } catch (e) { 
       console.error(e); 
@@ -923,6 +974,21 @@ window.triggerAllRenders = function() {
   }
 
   document.getElementById('forceFetchBtn').addEventListener('click', loadDataFromFirebase);
+
+  // زر استرداد البيانات الاحتياطية للطوارئ
+  document.getElementById('restoreDataBtn').addEventListener('click', () => {
+    if (confirm("هل أنت متأكد من إعادة استرداد البيانات الافتراضية؟ سيتم جلب خبراتك ومشاريعك المكتوبة مسبقاً وتعبئتها في النماذج.")) {
+      const localData = getInitialData();
+      window.appState.experience = JSON.parse(JSON.stringify(localData.en.experience || HARDCODED_FALLBACK_SITE_DATA.en.experience));
+      window.appState.projects = JSON.parse(JSON.stringify(localData.en.projects || HARDCODED_FALLBACK_SITE_DATA.en.projects));
+      window.appState.skillCats = JSON.parse(JSON.stringify(localData.en.skillCats || HARDCODED_FALLBACK_SITE_DATA.en.skillCats));
+      window.appState.certsElaraby = JSON.parse(JSON.stringify(localData.en.certsElaraby || HARDCODED_FALLBACK_SITE_DATA.en.certsElaraby));
+      window.appState.certsAlmentor = JSON.parse(JSON.stringify(localData.en.certsAlmentor || HARDCODED_FALLBACK_SITE_DATA.en.certsAlmentor));
+
+      window.triggerAllRenders();
+      alert("تم استرداد البيانات بنجاح في الواجهة! قم بمراجعتها ثم اضغط على زر (حفظ ونشر) في كل قسم لرفعها للسيرفر.");
+    }
+  });
 
   // ==========================================
   // محرك الحفظ والدفع (Firestore Save Handlers)
