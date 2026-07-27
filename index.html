@@ -19,7 +19,18 @@
 <script src="data.js"></script>
 
 <style>
-:root { --ink: #0B1220; --ink-2: #121B2E; --gold: #C08B3D; --gold-l: #E3B36B; --teal: #1F8A70; --teal-l: #38C9A6; --bg: #0B1220; --bg-2: #121B2E; --surface: rgba(255,255,255,.04); --text: #EDEFF3; --text-dim: #A6ADBB; --border: rgba(255,255,255,.09); --radius: 12px; --font-display: 'Cairo', sans-serif; --font-body: 'Cairo', sans-serif; }
+:root { 
+  --ink: #0B1220; --ink-2: #121B2E; 
+  --gold: #C08B3D; --gold-l: #E3B36B; 
+  --teal: #1F8A70; --teal-l: #38C9A6; 
+  --bg: #0B1220; --bg-2: #121B2E; 
+  --surface: rgba(255,255,255,.04); 
+  --text: #EDEFF3; --text-dim: #A6ADBB; 
+  --border: rgba(255,255,255,.09); 
+  --radius: 12px; 
+  --font-display: 'Cairo', sans-serif; 
+  --font-body: 'Cairo', sans-serif; 
+}
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: var(--font-body); background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
 a { color: inherit; text-decoration: none; }
@@ -55,7 +66,16 @@ button, input, textarea, select { font-family: inherit; }
 .nav-item.active { background: rgba(192,139,61,.14); color: var(--gold-l); font-weight: 600; }
 .sidebar-foot { margin-top: auto; padding-top: 16px; border-top: 1px solid var(--border); }
 
-.main { padding: 40px 50px; max-width: 1150px; width: 100%; margin: 0 auto; }
+/* Language Switcher Bar */
+#adminLangSwitcher {
+  position: sticky; top: 0; background: rgba(18, 27, 46, 0.95); backdrop-filter: blur(10px);
+  padding: 16px 20px; z-index: 2000; display: flex; align-items: center; justify-content: center; 
+  gap: 16px; border-bottom: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.3); 
+  margin-bottom: 30px; border-radius: 12px; flex-wrap: wrap;
+}
+#adminLangSwitcher span { font-weight: 700; color: var(--text-dim); font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; }
+
+.main { padding: 40px 50px; max-width: 1150px; width: 100%; margin: 0 auto; transition: direction 0.3s; }
 .main-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 32px; border-bottom: 1px solid var(--border); padding-bottom: 20px; }
 .main-head h2 { font-size: 26px; font-weight: 700; }
 .main-head p { color: var(--text-dim); font-size: 14px; margin-top: 4px; }
@@ -66,11 +86,7 @@ button, input, textarea, select { font-family: inherit; }
 .card h3 { font-size: 16px; margin-bottom: 16px; font-weight: 600; color: #fff; display: flex; align-items: center; gap: 8px; }
 
 .lang-box-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 16px; }
-.lang-partition { background: rgba(255,255,255,0.01); border: 1px solid var(--border); padding: 20px; border-radius: 10px; direction: ltr; text-align: left; }
-.lang-partition.rtl-dir { direction: rtl; text-align: right; }
-.lang-partition h4 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 14px; color: var(--gold-l); display: flex; align-items: center; gap: 6px; }
-
-.field-inline { margin-bottom: 16px; }
+.field-inline { margin-bottom: 16px; text-align: start; }
 .field-inline label { display: block; font-size: 13px; color: var(--text-dim); margin-bottom: 6px; font-weight: 500; }
 .field-inline input, .field-inline textarea, .field-inline select { width: 100%; padding: 12px 14px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-size: 14px; transition: border .2s; }
 .field-inline input:focus, .field-inline textarea:focus, .field-inline select:focus { outline: none; border-color: var(--teal-l); }
@@ -91,15 +107,15 @@ button, input, textarea, select { font-family: inherit; }
 .media-item .actions { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.7); display: flex; justify-content: space-around; padding: 6px; }
 
 .stat-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 28px; }
-.stat-mini { background: var(--bg-2); border: 1px solid var(--border); border-radius: 12px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: right; }
+.stat-mini { background: var(--bg-2); border: 1px solid var(--border); border-radius: 12px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: start; }
 .stat-mini b { font-family: var(--font-display); font-size: 28px; display: block; color: var(--gold-l); line-height: 1.1; }
 .stat-mini span { font-size: 13px; color: var(--text-dim); font-weight: 500; }
 
-.status-msg { font-size: 13.5px; margin-top: 14px; padding: 12px 16px; border-radius: 8px; display: none; font-weight: 500; text-align: right; }
+.status-msg { font-size: 13.5px; margin-top: 14px; padding: 12px 16px; border-radius: 8px; display: none; font-weight: 500; text-align: center; }
 .status-msg.ok { display: block; background: rgba(31,138,112,.14); color: var(--teal-l); border: 1px solid rgba(31,138,112,.3); }
 .status-msg.err { display: block; background: rgba(220,90,90,.1); color: #e07a7a; border: 1px solid rgba(220,90,90,.3); }
 
-.list-editor-item { border: 1px solid var(--border); padding: 20px 20px 10px; margin-bottom: 16px; border-radius: 8px; background: rgba(0,0,0,0.15); position: relative; }
+.list-editor-item { border: 1px solid var(--border); padding: 20px 20px 10px; margin-bottom: 16px; border-radius: 8px; background: rgba(0,0,0,0.15); position: relative; text-align: start; }
 .remove-btn { position: absolute; top: 12px; left: 12px; }
 
 .switch-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border); }
@@ -116,44 +132,118 @@ input:checked + .slider:before { transform: translateX(20px); }
 .modal-overlay.open { display: flex; }
 .modal-box { background: var(--bg-2); border: 1px solid var(--border); border-radius: 16px; max-width: 850px; width: 100%; max-height: 85vh; overflow-y: auto; padding: 30px; box-shadow: 0 20px 60px rgba(0,0,0,0.6); }
 
+/* تنسيقات الموبايل واللوحات الذكية (Responsive UI) */
 .topbar-mobile { display: none; background: var(--bg-2); padding: 14px 20px; border-bottom: 1px solid var(--border); align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 1000; width: 100%; }
-@media(max-width:920px) { #app { grid-template-columns: 1fr; } .topbar-mobile { display: flex; } .sidebar { position: fixed; z-index: 9999; inset: 0 0 0 20%; transform: translateX(105%); transition: transform .3s ease; height: 100vh; border-left: none; border-right: 1px solid var(--border); } .sidebar.open { transform: translateX(0); } .main { padding: 24px 20px; } .lang-box-grid { grid-template-columns: 1fr; } }
+@media(max-width:920px) { 
+  #app { grid-template-columns: 1fr; } 
+  .topbar-mobile { display: flex; } 
+  .sidebar { position: fixed; z-index: 9999; inset: 0 0 0 20%; transform: translateX(105%); transition: transform .3s ease; height: 100vh; border-left: none; border-right: 1px solid var(--border); } 
+  .sidebar.open { transform: translateX(0); } 
+  .main { padding: 24px 20px; } 
+  .lang-box-grid { grid-template-columns: 1fr; } 
+  
+  html[dir="ltr"] .sidebar { inset: 0 20% 0 0; transform: translateX(-105%); border-right: none; border-left: 1px solid var(--border); }
+  html[dir="ltr"] .sidebar.open { transform: translateX(0); }
+}
 </style>
 
 <script>
 // ==========================================
-// إدارة حالة النماذج الديناميكية (Form Builders State)
+// قوالب الطوارئ (Hardcoded Fallbacks)
 // ==========================================
-window.appState = {
-  experience: [], projects: [], skillCats: [], certsElaraby: [], certsAlmentor: [], mediaLibrary: [],
-  heroStatsEn: [], heroStatsAr: [], heroChipsEn: [], heroChipsAr: [], heroTypedEn: [], heroTypedAr: [],
-  aboutFactsEn: [], aboutFactsAr: [], aboutArcEn: [], aboutArcAr: []
+const HARDCODED_FALLBACK_SITE_DATA = {
+  en: {
+    experience: [
+      { role: "Sales Executive", company: "Elaraby Group", period: "2023 – Present", bullets: ["Managing client relationships and driving sales.", "Providing tailored product solutions."] },
+      { role: "Sales Officer", company: "B.Tech", period: "June 2022 – 2023", bullets: ["Promoted company products and achieved growth."] },
+      { role: "Assistant Warehouse Manager", company: "Al-Ansar Marketing", period: "February 2020 – February 2022", bullets: ["Supervised daily warehouse operations.", "Coordinated with suppliers."] },
+      { role: "Data Entry Specialist", company: "Orascom Construction", period: "2018 – 2019", bullets: ["Entered and verified project-related data."] },
+      { role: "Accountant", company: "Omega Advertising", period: "2017 – 2018", bullets: ["Prepared and maintained financial records."] }
+    ],
+    projects: [
+      { id: "proj_1", title: "Know Your Product (PWA)", desc: "Co-designed a Progressive Web App for sales representatives.", tags: ["PWA", "UX Design", "Sales Enablement"], status: "Shipped", icon: "fa-mobile-screen-button", img: "" },
+      { id: "proj_2", title: "AI-Powered Chatbot", desc: "Developing an AI chatbot focused on automated customer engagement.", tags: ["AI", "Chatbot", "Customer Engagement"], status: "In Progress", icon: "fa-robot", img: "" }
+    ],
+    skillCats: [
+      { name: "Sales & Business", icon: "fa-chart-line", skills: [{ label: "Sales & Account Management", value: 92 }, { label: "E-Commerce Sales", value: 85 }] },
+      { name: "Digital & AI Tools", icon: "fa-robot", skills: [{ label: "AI Tools Utilization", value: 78 }, { label: "PWA Product Design", value: 70 }] },
+      { name: "Professional Skills", icon: "fa-people-group", skills: [{ label: "Customer Issue Resolution", value: 88 }, { label: "Adaptability", value: 90 }] }
+    ],
+    certsElaraby: ["Managing Different Generations", "Problem Solving & Decision Making", "Time Management", "Advanced Negotiation Skills", "Handling Difficult Characters", "Customer Experience Management", "Design Thinking", "Smart Selling"],
+    certsAlmentor: ["Personal Branding for Employees", "Career Success Skills", "Professional Email Writing", "Prompt Engineering", "Growth Mindset", "ChatGPT Technology"]
+  }
 };
 
-window.updateProp = function(arr, idx, field, val) { window.appState[arr][idx][field] = field === 'value' ? parseInt(val||0) : val; };
-window.removeProp = function(arr, idx, renderFunc) { window.appState[arr].splice(idx, 1); window[renderFunc](); };
-window.addProp = function(arr, defaultObj, renderFunc) { window.appState[arr].push(defaultObj); window[renderFunc](); };
-window.updateSimpleArray = function(arr, idx, val) { window.appState[arr][idx] = val; };
+const FALLBACK_TEMPLATE = {
+  profileImg: "assets/portrait.jpg", 
+  cvLink: "assets/AbdElMoneim_Sultan_CV.pdf",
+  contact: { email: "abdosultan306@gmail.com", phone: "+20 111 455 0112", location: "Cairo, Egypt", locationAr: "القاهرة، مصر" },
+  en: {
+    brandName: "AbdElMoneim Sultan", eyebrow: "Sales Executive → Digital Product Builder", title: "Turning client trust into measurable growth.", lead: "A professional sales executive with experience across retail, logistics, and finance...",
+    typed: ["Sales Executive", "Client Relationship Manager", "AI Tools Explorer"], chips: [{icon: "fa-chart-line", label: "Sales Growth"}, {icon: "fa-robot", label: "AI-Powered Builder"}],
+    stats: [{value: 4, label: "Years Experience"}, {value: 5, label: "Professional Roles"}, {value: 17, label: "Certificates"}],
+    aboutTitle: "A sales career built on trust...", aboutP1: "I'm a professional with over four years of experience...",
+    aboutFacts: [{label: "Based in", value: "Cairo, Egypt"}, {label: "Current Role", value: "Sales Executive"}], aboutArc: [{title: "Where it started", desc: "Finance fundamentals..."}],
+    eduTitle: "Bachelor of Commerce — Business Administration", eduMeta: "Graduated May 2016 · Grade: Good", certTitle: "ICDL Certified", certMeta: "Windows, Word, Excel, Internet"
+  },
+  ar: {
+    brandName: "عبدالمنعم سلطان", eyebrow: "تنفيذي مبيعات ← بناء منتجات رقمية", title: "أحوّل ثقة العملاء إلى نمو ملموس.", lead: "محترف مبيعات بخبرة تتجاوز 4 سنوات...",
+    typed: ["تنفيذي مبيعات", "مدير علاقات عملاء", "مستكشف ذكاء اصطناعي"], chips: [{icon: "fa-chart-line", label: "نمو المبيعات"}, {icon: "fa-robot", label: "بناء بالذكاء الاصطناعي"}],
+    stats: [{value: 4, label: "سنوات خبرة"}, {value: 5, label: "وظائف مهنية"}, {value: 17, label: "شهادة"}],
+    aboutTitle: "مسيرة مبيعات قائمة على الثقة...", aboutP1: "أنا محترف مبيعات ولدي خبرة تتجاوز 4 سنوات...",
+    aboutFacts: [{label: "المقر", value: "القاهرة، مصر"}, {label: "الوظيفة الحالية", value: "تنفيذي مبيعات"}], aboutArc: [{title: "نقطة البداية", desc: "أساسيات مالية..."}],
+    eduTitle: "بكالوريوس تجارة — إدارة أعمال", eduMeta: "التخرج 2016 · التقدير: جيد", certTitle: "شهادة ICDL", certMeta: "ويندوز، وورد، إكسل، إنترنت"
+  }
+};
+
+function getInitialData() {
+  if (typeof SITE_DATA !== 'undefined' && SITE_DATA.en) return SITE_DATA;
+  if (typeof window.SITE_DATA !== 'undefined' && window.SITE_DATA.en) return window.SITE_DATA;
+  return HARDCODED_FALLBACK_SITE_DATA;
+}
+
+// ==========================================
+// Strict Language Data Isolation Architecture
+// ==========================================
+window.activeLang = 'en'; 
+window.isDirty = false;
+
+window.appState = {
+  en: { experience: [], projects: [], skillCats: [], certsElaraby: [], certsAlmentor: [], typed: [], chips: [], stats: [], facts: [], arc: [], hero: {}, about: {}, education: {}, contact: {} },
+  ar: { experience: [], projects: [], skillCats: [], certsElaraby: [], certsAlmentor: [], typed: [], chips: [], stats: [], facts: [], arc: [], hero: {}, about: {}, education: {}, contact: {} },
+  global: { mediaLibrary: [], theme: {}, contactData: {}, aboutData: {} }
+};
+
+window.markDirty = () => { window.isDirty = true; };
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener('input', (e) => {
+      if (e.target.matches('input, textarea, select')) { window.markDirty(); }
+  });
+});
+
+window.updateProp = function(arr, idx, field, val) { window.appState[window.activeLang][arr][idx][field] = field === 'value' ? parseInt(val||0) : val; window.markDirty(); };
+window.removeProp = function(arr, idx, renderFunc) { window.appState[window.activeLang][arr].splice(idx, 1); window.markDirty(); window[renderFunc](); };
+window.addProp = function(arr, defaultObj, renderFunc) { window.appState[window.activeLang][arr].push(defaultObj); window.markDirty(); window[renderFunc](); };
+window.updateSimpleArray = function(arr, idx, val) { window.appState[window.activeLang][arr][idx] = val; window.markDirty(); };
 
 function renderSimpleArray(containerId, arrName, renderFuncName) {
   const container = document.getElementById(containerId);
   if(!container) return;
-  container.innerHTML = window.appState[arrName].map((item, idx) => `
+  const data = window.appState[window.activeLang][arrName] || [];
+  container.innerHTML = data.map((item, idx) => `
     <div style="display:flex; gap:10px; margin-bottom:8px;">
       <input type="text" value="${item||''}" oninput="updateSimpleArray('${arrName}', ${idx}, this.value)" style="flex:1; padding:8px; border-radius:6px; border:1px solid var(--border); background:var(--surface); color:#fff;">
       <button class="btn btn-danger btn-small" onclick="removeProp('${arrName}', ${idx}, '${renderFuncName}')"><i class="fa-solid fa-trash"></i></button>
     </div>
   `).join('') + `<button class="btn btn-ghost btn-small" style="margin-top:4px;" onclick="addProp('${arrName}', '', '${renderFuncName}')"><i class="fa-solid fa-plus"></i> إضافة سطر جديد</button>`;
 }
-window.renderTypedEn = () => renderSimpleArray('hero-typed-en', 'heroTypedEn', 'renderTypedEn');
-window.renderTypedAr = () => renderSimpleArray('hero-typed-ar', 'heroTypedAr', 'renderTypedAr');
-window.renderCertsElaraby = () => renderSimpleArray('certs-elaraby', 'certsElaraby', 'renderCertsElaraby');
-window.renderCertsAlmentor = () => renderSimpleArray('certs-almentor', 'certsAlmentor', 'renderCertsAlmentor');
 
 function renderGenericObjArray(containerId, arrName, fields, renderFuncName) {
   const container = document.getElementById(containerId);
   if(!container) return;
-  container.innerHTML = window.appState[arrName].map((item, idx) => `
+  const data = window.appState[window.activeLang][arrName] || [];
+  container.innerHTML = data.map((item, idx) => `
     <div style="display:flex; gap:10px; margin-bottom:8px; align-items:center; flex-wrap:wrap;">
       ${fields.map(f => `<input type="${f.type}" placeholder="${f.placeholder}" value="${item[f.key]||''}" oninput="updateProp('${arrName}', ${idx}, '${f.key}', this.value)" style="flex:${f.flex||1}; min-width:100px; padding:8px; border-radius:6px; border:1px solid var(--border); background:var(--surface); color:#fff;">`).join('')}
       <button class="btn btn-danger btn-small" onclick="removeProp('${arrName}', ${idx}, '${renderFuncName}')"><i class="fa-solid fa-trash"></i></button>
@@ -161,19 +251,20 @@ function renderGenericObjArray(containerId, arrName, fields, renderFuncName) {
   `).join('') + `<button class="btn btn-ghost btn-small" style="margin-top:4px;" onclick="addProp('${arrName}', {${fields.map(f=>`${f.key}:''`).join(',')}}, '${renderFuncName}')"><i class="fa-solid fa-plus"></i> إضافة عنصر</button>`;
 }
 
-window.renderHeroStatsEn = () => renderGenericObjArray('hero-stats-en', 'heroStatsEn', [{key:'value', type:'number', flex:'0 0 80px', placeholder:'Value'}, {key:'label', type:'text', placeholder:'Label'}], 'renderHeroStatsEn');
-window.renderHeroStatsAr = () => renderGenericObjArray('hero-stats-ar', 'heroStatsAr', [{key:'value', type:'number', flex:'0 0 80px', placeholder:'القيمة'}, {key:'label', type:'text', placeholder:'العنوان'}], 'renderHeroStatsAr');
-window.renderHeroChipsEn = () => renderGenericObjArray('hero-chips-en', 'heroChipsEn', [{key:'icon', type:'text', flex:'0 0 120px', placeholder:'fa-robot'}, {key:'label', type:'text', placeholder:'Chip Label'}], 'renderHeroChipsEn');
-window.renderHeroChipsAr = () => renderGenericObjArray('hero-chips-ar', 'heroChipsAr', [{key:'icon', type:'text', flex:'0 0 120px', placeholder:'fa-robot'}, {key:'label', type:'text', placeholder:'الوصف'}], 'renderHeroChipsAr');
-window.renderAboutFactsEn = () => renderGenericObjArray('about-facts-en', 'aboutFactsEn', [{key:'label', type:'text', flex:'0 0 120px', placeholder:'Label'}, {key:'value', type:'text', placeholder:'Value'}], 'renderAboutFactsEn');
-window.renderAboutFactsAr = () => renderGenericObjArray('about-facts-ar', 'aboutFactsAr', [{key:'label', type:'text', flex:'0 0 120px', placeholder:'العنوان'}, {key:'value', type:'text', placeholder:'القيمة'}], 'renderAboutFactsAr');
-window.renderAboutArcEn = () => renderGenericObjArray('about-arc-en', 'aboutArcEn', [{key:'title', type:'text', placeholder:'Arc Title'}, {key:'desc', type:'text', placeholder:'Description text'}], 'renderAboutArcEn');
-window.renderAboutArcAr = () => renderGenericObjArray('about-arc-ar', 'aboutArcAr', [{key:'title', type:'text', placeholder:'العنوان الزمني'}, {key:'desc', type:'text', placeholder:'الوصف'}], 'renderAboutArcAr');
+// Data Context Renderers
+window.renderTyped = () => renderSimpleArray('hero-typed', 'typed', 'renderTyped');
+window.renderCertsElaraby = () => renderSimpleArray('certs-elaraby', 'certsElaraby', 'renderCertsElaraby');
+window.renderCertsAlmentor = () => renderSimpleArray('certs-almentor', 'certsAlmentor', 'renderCertsAlmentor');
+window.renderChips = () => renderGenericObjArray('hero-chips', 'chips', [{key:'icon', type:'text', flex:'0 0 120px', placeholder:'fa-robot'}, {key:'label', type:'text', placeholder:'Label / الوصف'}], 'renderChips');
+window.renderStats = () => renderGenericObjArray('hero-stats', 'stats', [{key:'value', type:'number', flex:'0 0 80px', placeholder:'القيمة'}, {key:'label', type:'text', placeholder:'العنوان'}], 'renderStats');
+window.renderFacts = () => renderGenericObjArray('about-facts', 'facts', [{key:'label', type:'text', flex:'0 0 120px', placeholder:'Label / العنوان'}, {key:'value', type:'text', placeholder:'Value / القيمة'}], 'renderFacts');
+window.renderArc = () => renderGenericObjArray('about-arc', 'arc', [{key:'title', type:'text', placeholder:'Title / العنوان الزمني'}, {key:'desc', type:'text', placeholder:'Desc / الوصف'}], 'renderArc');
 
 window.renderExperienceEditor = () => {
   const container = document.getElementById('experience-editor');
   if(!container) return;
-  container.innerHTML = window.appState.experience.map((item, idx) => `
+  const data = window.appState[window.activeLang].experience || [];
+  container.innerHTML = data.map((item, idx) => `
     <div class="list-editor-item">
       <button class="btn btn-danger btn-small remove-btn" onclick="removeProp('experience', ${idx}, 'renderExperienceEditor')"><i class="fa-solid fa-trash"></i> حذف</button>
       <div class="field-inline"><label>Role / المسمى الوظيفي</label><input type="text" value="${item.role||''}" oninput="updateProp('experience', ${idx}, 'role', this.value)"></div>
@@ -184,11 +275,12 @@ window.renderExperienceEditor = () => {
   `).join('') + `<button class="btn btn-ghost" onclick="addProp('experience', {role:'', company:'', period:'', bullets:[]}, 'renderExperienceEditor')"><i class="fa-solid fa-plus"></i> إضافة خبرة جديدة</button>`;
 }
 
-window.updateProjectTags = function(idx, val) { window.appState.projects[idx].tags = val.split(',').map(s=>s.trim()); };
+window.updateProjectTags = function(idx, val) { window.appState[window.activeLang].projects[idx].tags = val.split(',').map(s=>s.trim()); window.markDirty(); };
 window.renderProjectsEditor = () => {
   const container = document.getElementById('projects-editor');
   if(!container) return;
-  container.innerHTML = window.appState.projects.map((item, idx) => `
+  const data = window.appState[window.activeLang].projects || [];
+  container.innerHTML = data.map((item, idx) => `
     <div class="list-editor-item">
       <button class="btn btn-danger btn-small remove-btn" onclick="removeProp('projects', ${idx}, 'renderProjectsEditor')"><i class="fa-solid fa-trash"></i> حذف</button>
       <div class="field-inline"><label>Project Title / عنوان المشروع</label><input type="text" value="${item.title||''}" oninput="updateProp('projects', ${idx}, 'title', this.value)"></div>
@@ -205,14 +297,15 @@ window.renderProjectsEditor = () => {
   `).join('') + `<button class="btn btn-ghost" onclick="addProp('projects', {title:'', desc:'', img:'', icon:'', status:'', tags:[]}, 'renderProjectsEditor')"><i class="fa-solid fa-plus"></i> إضافة مشروع جديد</button>`;
 }
 
-window.updateSkillNode = function(catIdx, skillIdx, field, val) { window.appState.skillCats[catIdx].skills[skillIdx][field] = field === 'value' ? parseInt(val||0) : val; };
-window.addSkillNode = function(catIdx) { window.appState.skillCats[catIdx].skills.push({ label: '', value: 50 }); window.renderSkillsEditor(); };
-window.removeSkillNode = function(catIdx, skillIdx) { window.appState.skillCats[catIdx].skills.splice(skillIdx, 1); window.renderSkillsEditor(); };
+window.updateSkillNode = function(catIdx, skillIdx, field, val) { window.appState[window.activeLang].skillCats[catIdx].skills[skillIdx][field] = field === 'value' ? parseInt(val||0) : val; window.markDirty(); };
+window.addSkillNode = function(catIdx) { window.appState[window.activeLang].skillCats[catIdx].skills.push({ label: '', value: 50 }); window.markDirty(); window.renderSkillsEditor(); };
+window.removeSkillNode = function(catIdx, skillIdx) { window.appState[window.activeLang].skillCats[catIdx].skills.splice(skillIdx, 1); window.markDirty(); window.renderSkillsEditor(); };
 
 window.renderSkillsEditor = () => {
   const container = document.getElementById('skills-editor');
   if(!container) return;
-  container.innerHTML = window.appState.skillCats.map((cat, catIdx) => `
+  const data = window.appState[window.activeLang].skillCats || [];
+  container.innerHTML = data.map((cat, catIdx) => `
     <div class="list-editor-item">
       <button class="btn btn-danger btn-small remove-btn" onclick="removeProp('skillCats', ${catIdx}, 'renderSkillsEditor')"><i class="fa-solid fa-trash"></i> حذف القسم كاملاً</button>
       <div class="lang-box-grid" style="margin-bottom:0;">
@@ -236,15 +329,16 @@ window.renderSkillsEditor = () => {
 
 window.deleteMedia = function(idx) {
   if(confirm("هل أنت متأكد من حذف هذه الصورة من المعرض هنا؟")) {
-    window.appState.mediaLibrary.splice(idx, 1);
+    window.appState.global.mediaLibrary.splice(idx, 1);
     window.renderMediaGallery();
+    if(window.saveGlobalDataOnly) window.saveGlobalDataOnly();
   }
 };
 window.copyMedia = function(url) { navigator.clipboard.writeText(url); alert("تم نسخ الرابط!"); };
 window.renderMediaGallery = () => {
   const container = document.getElementById('media-grid-container');
   if(!container) return;
-  container.innerHTML = window.appState.mediaLibrary.map((url, idx) => `
+  container.innerHTML = (window.appState.global.mediaLibrary || []).map((url, idx) => `
     <div class="media-item">
       <img src="${url}">
       <div class="actions">
@@ -256,11 +350,7 @@ window.renderMediaGallery = () => {
 };
 
 window.triggerAllRenders = function() {
-  window.renderHeroStatsEn(); window.renderHeroStatsAr();
-  window.renderHeroChipsEn(); window.renderHeroChipsAr();
-  window.renderAboutFactsEn(); window.renderAboutFactsAr();
-  window.renderAboutArcEn(); window.renderAboutArcAr();
-  window.renderTypedEn(); window.renderTypedAr();
+  window.renderTyped(); window.renderChips(); window.renderStats(); window.renderFacts(); window.renderArc();
   window.renderExperienceEditor(); window.renderProjectsEditor(); window.renderSkillsEditor();
   window.renderCertsElaraby(); window.renderCertsAlmentor(); window.renderMediaGallery();
 };
@@ -296,7 +386,7 @@ window.triggerAllRenders = function() {
     <div class="nav-item" data-panel="education"><i class="fa-solid fa-graduation-cap"></i> التعليم الأساسي</div>
     <div class="nav-item" data-panel="certs"><i class="fa-solid fa-certificate"></i> الكورسات والشهادات</div>
     <div class="nav-item" data-panel="sections"><i class="fa-solid fa-eye"></i> ترتيب الأقسام</div>
-    <div class="nav-item" data-panel="contact"><i class="fa-solid fa-address-book"></i> بيانات التواصل</div>
+    <div class="nav-item" data-panel="contact"><i class="fa-solid fa-address-book"></i> بيانات التواصل (Global)</div>
     <div class="nav-item" data-panel="theme"><i class="fa-solid fa-palette"></i> مظهر النظام (Theme)</div>
     <div class="nav-item" data-panel="media"><i class="fa-solid fa-images"></i> معرض الوسائط (Media)</div>
     
@@ -306,24 +396,34 @@ window.triggerAllRenders = function() {
     </div>
   </aside>
 
-  <main class="main">
-    <div style="display:flex; justify-content:flex-end; gap:12px; margin-bottom:24px; flex-wrap:wrap;">
-      <button class="btn btn-ghost" id="restoreDataBtn" style="border-color:var(--gold-l); color:var(--gold-l);">
-        <i class="fa-solid fa-file-import"></i> استرداد البيانات من ملف data.js (للطوارئ)
-      </button>
-      <button class="btn btn-ghost" id="forceFetchBtn" style="border-color:var(--teal-l); color:var(--teal-l);">
-        <i class="fa-solid fa-cloud-arrow-down"></i> جلب وتحديث البيانات (مزامنة)
-      </button>
+  <main class="main" id="mainArea">
+    
+    <!-- Language Switcher Bar -->
+    <div id="adminLangSwitcher">
+      <span>بيئة التعديل النشطة (Editing Context):</span>
+      <button class="btn btn-primary" id="btn_lang_en" onclick="switchLang('en')"><i class="fa-solid fa-flag-usa"></i> English Version</button>
+      <button class="btn btn-ghost" id="btn_lang_ar" onclick="switchLang('ar')"><i class="fa-solid fa-flag"></i> النسخة العربية</button>
     </div>
 
     <!-- Overview Panel -->
     <section class="panel active" id="panel-overview">
-      <div class="main-head"><div><h2>لوحة التحكم المركزية</h2><p>تزامن حي ومباشر مع قاعدة البيانات مع تفعيل نظام الطوارئ للملف المحلي.</p></div></div>
+      <div class="main-head"><div><h2>لوحة التحكم المركزية</h2><p>تزامن حي ومباشر مع قاعدة البيانات المزدوجة (عربي/إنجليزي).</p></div></div>
+      
       <div class="stat-cards">
         <div class="stat-mini"><b id="statExp">0</b><span>خبرات مسجلة</span></div>
         <div class="stat-mini"><b id="statProj">0</b><span>مشاريع معروضة</span></div>
         <div class="stat-mini"><b id="statSkill">0</b><span>أقسام مهارية</span></div>
         <div class="stat-mini"><b id="statMedia">0</b><span>صور في المعرض</span></div>
+      </div>
+      
+      <!-- أزرار المزامنة والطوارئ -->
+      <div style="display:flex; justify-content:flex-end; gap:12px; margin-bottom:24px; flex-wrap:wrap;">
+        <button class="btn btn-ghost" id="restoreDataBtn" style="border-color:var(--gold-l); color:var(--gold-l);">
+          <i class="fa-solid fa-file-import"></i> استرداد البيانات من ملف data.js (للطوارئ)
+        </button>
+        <button class="btn btn-primary" id="forceFetchBtn">
+          <i class="fa-solid fa-cloud-arrow-down"></i> جلب وتحديث البيانات (مزامنة)
+        </button>
       </div>
       <p class="status-msg" id="fetchStatusMsg"></p>
     </section>
@@ -332,133 +432,80 @@ window.triggerAllRenders = function() {
     <section class="panel" id="panel-parser">
       <div class="main-head">
         <div><h2>المستخرج الذكي والمحلي (AI & Local Extractor)</h2>
-        <p>ارفع ملف السيرة الذاتية (PDF/DOCX). سيحاول النظام استخراج البيانات بواسطة AI، وإذا فشل أو لم تضع مفتاحاً، سيقوم بقراءتها محلياً لتنسخ منها ما تريد.</p></div>
+        <p>قم برفع ملف السيرة الذاتية (PDF/DOCX). سيتم استخراج البيانات ووضعها مباشرة في **اللغة المحددة حالياً** في شريط التبديل العلوي.</p></div>
       </div>
-      
       <div class="api-key-box">
         <label><i class="fa-solid fa-key"></i> مفتاح الاتصال بـ Gemini API (اختياري)</label>
         <p style="font-size:12px; color:var(--text-dim); margin-top:4px;">احصل عليه مجاناً من Google AI Studio.</p>
         <input type="text" id="gemini_api_key" placeholder="AIzaSy..." class="field-inline" style="width:100%; padding:10px; border-radius:6px; margin-bottom:0;" dir="ltr">
       </div>
-
-      <div class="lang-box-grid">
-        <div class="card" style="margin-bottom:0;">
-          <h3><i class="fa-solid fa-flag-usa"></i> English CV Parser</h3>
-          <div class="upload-box">
-            <i class="fa-solid fa-file-pdf" style="color:var(--gold-l); font-size:24px; margin-bottom:10px;"></i>
-            <label for="cvFileDropEn">Upload English Resume (PDF/DOCX)</label>
-            <input type="file" id="cvFileDropEn" accept=".pdf,.docx">
-          </div>
-          <button class="btn btn-primary" id="analyzeCvBtnEn" style="width:100%;"><i class="fa-solid fa-microchip"></i> استخراج وتحليل (EN)</button>
+      <div class="card" style="margin-bottom:0;">
+        <h3><i class="fa-solid fa-file-pdf"></i> Upload CV to Active Context</h3>
+        <div class="upload-box">
+          <i class="fa-solid fa-cloud-arrow-up" style="color:var(--gold-l); font-size:30px; margin-bottom:10px;"></i>
+          <label for="cvFileDrop">رفع السيرة الذاتية لاستخراج البيانات (PDF/DOCX)</label>
+          <input type="file" id="cvFileDrop" accept=".pdf,.docx">
         </div>
-        <div class="card" style="margin-bottom:0;">
-          <h3><i class="fa-solid fa-flag"></i> المعالج العربي للـ CV</h3>
-          <div class="upload-box">
-            <i class="fa-solid fa-file-pdf" style="color:var(--gold-l); font-size:24px; margin-bottom:10px;"></i>
-            <label for="cvFileDropAr">رفع السيرة الذاتية بالعربية (PDF/DOCX)</label>
-            <input type="file" id="cvFileDropAr" accept=".pdf,.docx">
-          </div>
-          <button class="btn btn-primary" id="analyzeCvBtnAr" style="width:100%;"><i class="fa-solid fa-microchip"></i> استخراج وتحليل (AR)</button>
-        </div>
+        <button class="btn btn-primary" id="analyzeCvBtn" style="width:100%;"><i class="fa-solid fa-microchip"></i> استخراج وتحليل للغة النشطة</button>
       </div>
       <div id="parseStatus" class="status-msg"></div>
     </section>
 
-    <!-- Hero & About Panel -->
+    <!-- Hero & About Panel (Context Aware) -->
     <section class="panel" id="panel-hero">
-      <div class="main-head"><div><h2>الواجهة والنبذة</h2><p>إدارة وتخصيص النصوص واسمك وتفاصيل الواجهة.</p></div></div>
-      
+      <div class="main-head"><div><h2>الواجهة والنبذة (Context-Aware)</h2><p>يتم الحفظ في اللغة النشطة فقط.</p></div></div>
       <div class="card">
-        <h3><i class="fa-solid fa-image"></i> الإعدادات العامة والصورة الرئيسية</h3>
-        <div class="lang-box-grid">
-          <div class="field-inline"><label>رابط الصورة الشخصية (انسخه من معرض الوسائط)</label><input id="f_profile_img" dir="ltr" style="text-align:left;"></div>
-          <div class="field-inline"><label>رابط تحميل الـ CV (رابط Drive أو PDF)</label><input id="f_cv_link" dir="ltr" style="text-align:left;"></div>
-        </div>
+        <div class="field-inline"><label>الاسم أو الشعار (Brand Name)</label><input id="f_brand"></div>
+        <div class="field-inline"><label>الوسم العلوي (Eyebrow)</label><input id="f_eyebrow"></div>
+        <div class="field-inline"><label>العنوان الرئيسي (Headline)</label><input id="f_title1"></div>
+        <div class="field-inline"><label>الفقرة الافتتاحية (Lead)</label><textarea id="f_lead" rows="3"></textarea></div>
+        <div class="field-inline"><label>نصوص آلة الكتابة المتحركة</label><div id="hero-typed"></div></div>
+        <div class="field-inline"><label>الرقائق العائمة (Floating Chips)</label><div id="hero-chips"></div></div>
+        <div class="field-inline"><label>إحصائيات الواجهة (Counters Grid)</label><div id="hero-stats"></div></div>
+        <hr style="border:0; border-top:1px solid var(--border); margin:20px 0;">
+        <div class="field-inline"><label>عنوان قسم النبذة</label><input id="f_about_title"></div>
+        <div class="field-inline"><label>الفقرة التعريفية للنبذة</label><textarea id="f_about_p1" rows="3"></textarea></div>
+        <div class="field-inline"><label>حقائق النبذة السريعة (Facts Matrix)</label><div id="about-facts"></div></div>
+        <div class="field-inline"><label>قوس التطور المهني (Career Arc Timeline)</label><div id="about-arc"></div></div>
       </div>
-
-      <div class="lang-box-grid">
-        <div class="lang-partition">
-          <h4><i class="fa-solid fa-flag-usa"></i> English Section Config</h4>
-          <div class="field-inline"><label>Your Brand Name (Header Name)</label><input id="f_brand_en" placeholder="e.g. AbdElMoneim Sultan"></div>
-          <div class="field-inline"><label>Hero Eyebrow (e.g. Sales Executive)</label><input id="f_hero_eyebrow_en"></div>
-          <div class="field-inline"><label>Headline Title</label><input id="f_hero_title1_en"></div>
-          <div class="field-inline"><label>Lead Paragraph</label><textarea id="f_hero_lead_en" rows="3"></textarea></div>
-          <div class="field-inline"><label>Animated Typewriter Strings</label><div id="hero-typed-en"></div></div>
-          <div class="field-inline"><label>Hero Floating Chips</label><div id="hero-chips-en"></div></div>
-          <div class="field-inline"><label>Hero Counters (Stats Grid)</label><div id="hero-stats-en"></div></div>
-          <hr style="border:0; border-top:1px solid var(--border); margin:20px 0;">
-          <div class="field-inline"><label>About Section Title</label><input id="f_about_title_en"></div>
-          <div class="field-inline"><label>About First Paragraph</label><textarea id="f_about_p1_en" rows="3"></textarea></div>
-          <div class="field-inline"><label>About Facts Matrix</label><div id="about-facts-en"></div></div>
-          <div class="field-inline"><label>Career Arc Timeline</label><div id="about-arc-en"></div></div>
-        </div>
-
-        <div class="lang-partition rtl-dir">
-          <h4><i class="fa-solid fa-flag"></i> القسم العربي الشامل</h4>
-          <div class="field-inline"><label>اسمك أو الشعار (Brand Name)</label><input id="f_brand_ar" placeholder="مثال: عبدالمنعم سلطان"></div>
-          <div class="field-inline"><label>الوسم العلوي (Eyebrow)</label><input id="f_hero_eyebrow_ar"></div>
-          <div class="field-inline"><label>العنوان الرئيسي للواجهة</label><input id="f_hero_title1_ar"></div>
-          <div class="field-inline"><label>الفقرة الافتتاحية</label><textarea id="f_hero_lead_ar" rows="3"></textarea></div>
-          <div class="field-inline"><label>نصوص آلة الكتابة المتحركة</label><div id="hero-typed-ar"></div></div>
-          <div class="field-inline"><label>الرقائق العائمة (Floating Chips)</label><div id="hero-chips-ar"></div></div>
-          <div class="field-inline"><label>إحصائيات الواجهة (العدادات)</label><div id="hero-stats-ar"></div></div>
-          <hr style="border:0; border-top:1px solid var(--border); margin:20px 0;">
-          <div class="field-inline"><label>عنوان قسم النبذة</label><input id="f_about_title_ar"></div>
-          <div class="field-inline"><label>الفقرة التعريفية الرئيسية</label><textarea id="f_about_p1_ar" rows="3"></textarea></div>
-          <div class="field-inline"><label>حقائق النبذة السريعة (Facts)</label><div id="about-facts-ar"></div></div>
-          <div class="field-inline"><label>قوس التطور المهني (Career Arc)</label><div id="about-arc-ar"></div></div>
-        </div>
-      </div>
-      <button class="btn btn-primary" id="saveHero"><i class="fa-solid fa-floppy-disk"></i> حفظ ونشر تحديثات الواجهة والنبذة</button>
+      <button class="btn btn-primary save-btn" onclick="saveContextData('hero')"><i class="fa-solid fa-floppy-disk"></i> حفظ ونشر لبيئة العمل الحالية</button>
       <p class="status-msg" id="heroMsg"></p>
     </section>
 
     <!-- Experience Panel -->
     <section class="panel" id="panel-experience">
-      <div class="main-head"><div><h2>الخبرات المهنية (Experience Form Builder)</h2></div></div>
+      <div class="main-head"><div><h2>مسار الخبرات (Experience)</h2></div></div>
       <div class="card" id="experience-editor" style="padding:16px;"></div>
-      <button class="btn btn-primary" id="saveExperience"><i class="fa-solid fa-floppy-disk"></i> حفظ ونشر الخبرات</button>
+      <button class="btn btn-primary save-btn" onclick="saveContextData('experience')"><i class="fa-solid fa-floppy-disk"></i> حفظ الخبرات</button>
       <p class="status-msg" id="experienceMsg"></p>
     </section>
 
     <!-- Projects Panel -->
     <section class="panel" id="panel-projects">
-      <div class="main-head"><div><h2>استوديو المشاريع (Projects Builder)</h2></div></div>
+      <div class="main-head"><div><h2>المشاريع (Projects)</h2></div></div>
       <div class="card" id="projects-editor" style="padding:16px;"></div>
-      <button class="btn btn-primary" id="saveProjects"><i class="fa-solid fa-floppy-disk"></i> حفظ ونشر المشاريع</button>
+      <button class="btn btn-primary save-btn" onclick="saveContextData('projects')"><i class="fa-solid fa-floppy-disk"></i> حفظ المشاريع</button>
       <p class="status-msg" id="projectsMsg"></p>
     </section>
 
     <!-- Skills Panel -->
     <section class="panel" id="panel-skills">
-      <div class="main-head"><div><h2>المهارات والتقييم (Skills Matrix)</h2></div></div>
+      <div class="main-head"><div><h2>المهارات (Skills Matrix)</h2></div></div>
       <div class="card" id="skills-editor" style="padding:16px;"></div>
-      <button class="btn btn-primary" id="saveSkills"><i class="fa-solid fa-floppy-disk"></i> حفظ ونشر المهارات</button>
+      <button class="btn btn-primary save-btn" onclick="saveContextData('skills')"><i class="fa-solid fa-floppy-disk"></i> حفظ المهارات</button>
       <p class="status-msg" id="skillsMsg"></p>
     </section>
 
     <!-- Education Panel -->
     <section class="panel" id="panel-education">
-      <div class="main-head"><div><h2>التعليم الأساسي (Education Config)</h2></div></div>
+      <div class="main-head"><div><h2>التعليم الأساسي (Education)</h2></div></div>
       <div class="card">
-        <div class="lang-box-grid">
-          <div class="lang-partition">
-            <h4><i class="fa-solid fa-flag-usa"></i> English Degree Details</h4>
-            <div class="field-inline"><label>Degree Title</label><input id="f_edu_deg_title_en" placeholder="Bachelor of Commerce"></div>
-            <div class="field-inline"><label>Degree Meta Info</label><input id="f_edu_deg_meta_en" placeholder="Graduated 2016 · Grade: Good"></div>
-            <div class="field-inline"><label>Main Cert Title (e.g. ICDL)</label><input id="f_edu_cert_title_en" placeholder="ICDL Certified"></div>
-            <div class="field-inline"><label>Main Cert Meta Info</label><input id="f_edu_cert_meta_en" placeholder="Windows, Word, Excel..."></div>
-          </div>
-          <div class="lang-partition rtl-dir">
-            <h4><i class="fa-solid fa-flag"></i> بيانات التعليم بالعربية</h4>
-            <div class="field-inline"><label>عنوان الدرجة الجامعية</label><input id="f_edu_deg_title_ar" placeholder="بكالوريوس تجارة"></div>
-            <div class="field-inline"><label>تفاصيل التخرج / التقدير</label><input id="f_edu_deg_meta_ar" placeholder="التخرج ٢٠١٦ · التقدير: جيد"></div>
-            <div class="field-inline"><label>الشهادة التأسيسية (مثال ICDL)</label><input id="f_edu_cert_title_ar" placeholder="شهادة ICDL"></div>
-            <div class="field-inline"><label>تفاصيل الشهادة التأسيسية</label><input id="f_edu_cert_meta_ar" placeholder="ويندوز، وورد، إكسل..."></div>
-          </div>
-        </div>
+        <div class="field-inline"><label>عنوان الدرجة الجامعية (Degree Title)</label><input id="f_edu_deg_title"></div>
+        <div class="field-inline"><label>تفاصيل التخرج (Degree Meta Info)</label><input id="f_edu_deg_meta"></div>
+        <div class="field-inline"><label>الشهادة التأسيسية (Main Cert Title)</label><input id="f_edu_cert_title"></div>
+        <div class="field-inline"><label>تفاصيل الشهادة التأسيسية (Main Cert Meta Info)</label><input id="f_edu_cert_meta"></div>
       </div>
-      <button class="btn btn-primary" id="saveEducation"><i class="fa-solid fa-floppy-disk"></i> حفظ بيانات التعليم</button>
+      <button class="btn btn-primary save-btn" onclick="saveContextData('education')"><i class="fa-solid fa-floppy-disk"></i> حفظ بيانات التعليم</button>
       <p class="status-msg" id="educationMsg"></p>
     </section>
 
@@ -466,16 +513,16 @@ window.triggerAllRenders = function() {
     <section class="panel" id="panel-certs">
       <div class="main-head"><div><h2>الكورسات والشهادات المستمرة</h2></div></div>
       <div class="lang-box-grid">
-        <div class="card"><h3>كورسات منصة العربي (Elaraby)</h3><div id="certs-elaraby"></div></div>
-        <div class="card"><h3>كورسات منصة المنتور (Almentor)</h3><div id="certs-almentor"></div></div>
+        <div class="card"><h3>منصة العربي (Elaraby)</h3><div id="certs-elaraby"></div></div>
+        <div class="card"><h3>منصة المنتور (Almentor)</h3><div id="certs-almentor"></div></div>
       </div>
-      <button class="btn btn-primary" id="saveCerts"><i class="fa-solid fa-floppy-disk"></i> تحديث الشهادات</button>
+      <button class="btn btn-primary save-btn" onclick="saveContextData('certs')"><i class="fa-solid fa-floppy-disk"></i> تحديث الشهادات</button>
       <p class="status-msg" id="certsMsg"></p>
     </section>
 
     <!-- Sections Visibility Manager -->
     <section class="panel" id="panel-sections">
-      <div class="main-head"><div><h2>إدارة ظهور الأقسام (Visibility Manager)</h2></div></div>
+      <div class="main-head"><div><h2>إدارة ظهور الأقسام (Visibility Manager - Global)</h2></div></div>
       <div class="card">
         <div class="switch-row"><div class="lbl">الواجهة الرئيسية (Hero Section)</div><label class="switch"><input type="checkbox" id="sec_home" checked><span class="slider"></span></label></div>
         <div class="switch-row"><div class="lbl">نبذة عني (About)</div><label class="switch"><input type="checkbox" id="sec_about" checked><span class="slider"></span></label></div>
@@ -485,26 +532,30 @@ window.triggerAllRenders = function() {
         <div class="switch-row"><div class="lbl">التعليم (Education)</div><label class="switch"><input type="checkbox" id="sec_education" checked><span class="slider"></span></label></div>
         <div class="switch-row"><div class="lbl">التواصل (Contact)</div><label class="switch"><input type="checkbox" id="sec_contact" checked><span class="slider"></span></label></div>
       </div>
-      <button class="btn btn-primary" id="saveSections"><i class="fa-solid fa-floppy-disk"></i> حفظ رؤية الأقسام</button>
+      <button class="btn btn-primary" onclick="saveGlobalDataOnly('sectionsMsg')"><i class="fa-solid fa-floppy-disk"></i> حفظ الرؤية العامة</button>
       <p class="status-msg" id="sectionsMsg"></p>
     </section>
 
-    <!-- Contact Panel -->
+    <!-- Contact & Globals Panel -->
     <section class="panel" id="panel-contact">
-      <div class="main-head"><div><h2>بيانات وسائل الاتصال</h2></div></div>
+      <div class="main-head"><div><h2>الإعدادات العامة والتواصل (Globals & Contact)</h2></div></div>
       <div class="card">
-        <div class="field-inline"><label>البريد الإلكتروني المباشر</label><input id="f_contact_email" dir="ltr" style="text-align:left;"></div>
-        <div class="field-inline"><label>رقم الهاتف / الواتساب (بالصيغة الدولية)</label><input id="f_contact_phone" dir="ltr" style="text-align:left;" placeholder="+20 111 455 0112"></div>
-        <div class="field-inline"><label>الموقع الجغرافي (بالإنجليزية)</label><input id="f_contact_location" placeholder="Cairo, Egypt"></div>
-        <div class="field-inline"><label>الموقع الجغرافي (بالعربية)</label><input id="f_contact_location_ar" placeholder="القاهرة، مصر"></div>
+        <h4 style="color:var(--gold-l); margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:10px;">إعدادات عامة تطبق على النسختين (Global Settings)</h4>
+        <div class="field-inline"><label>رابط الصورة الشخصية (Global Profile Image)</label><input id="f_profile_img" dir="ltr" style="text-align:left;"></div>
+        <div class="field-inline"><label>رابط تحميل السيرة الذاتية (Global CV Link)</label><input id="f_cv_link" dir="ltr" style="text-align:left;"></div>
+        <div class="field-inline"><label>البريد الإلكتروني المباشر (Global Email)</label><input id="f_contact_email" dir="ltr" style="text-align:left;"></div>
+        <div class="field-inline"><label>رقم الهاتف / الواتساب (Global Phone)</label><input id="f_contact_phone" dir="ltr" style="text-align:left;" placeholder="+20 111 455 0112"></div>
+        
+        <h4 style="color:var(--gold-l); margin-top:24px; margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:10px;">إعدادات خاصة باللغة النشطة (Context-Aware)</h4>
+        <div class="field-inline"><label>الموقع الجغرافي (Localized Location Name)</label><input id="f_contact_location"></div>
       </div>
-      <button class="btn btn-primary" id="saveContact"><i class="fa-solid fa-floppy-disk"></i> حفظ الاتصال</button>
+      <button class="btn btn-primary" onclick="saveGlobalContact()"><i class="fa-solid fa-floppy-disk"></i> حفظ وتحديث الإعدادات العامة</button>
       <p class="status-msg" id="contactMsg"></p>
     </section>
 
     <!-- Theme Panel -->
     <section class="panel" id="panel-theme">
-      <div class="main-head"><div><h2>التحكم الشامل في المظهر (Theme Engine)</h2></div></div>
+      <div class="main-head"><div><h2>التحكم الشامل في المظهر (Theme Engine - Global)</h2></div></div>
       <div class="card">
         <div class="lang-box-grid">
           <div class="field-inline"><label>الوضع الافتراضي (Mode)</label><select id="f_theme_mode"><option value="dark">مظلم (Dark)</option><option value="light">مضيء (Light)</option></select></div>
@@ -518,13 +569,13 @@ window.triggerAllRenders = function() {
         <div class="switch-row"><div class="lbl">لون الكروت والأسطح (Surface Color)</div><input type="color" id="c_surface" value="#121B2E" style="height:34px; border-radius:6px; cursor:pointer;"></div>
         <div class="field-inline" style="margin-top:24px;"><label>درجة انحناء الحواف (Border Radius - بالبكسل)</label><input type="number" id="c_radius" value="14" style="direction:ltr; text-align:left;"></div>
       </div>
-      <button class="btn btn-primary" id="saveTheme"><i class="fa-solid fa-floppy-disk"></i> تطبيق وحفظ المظهر الشامل</button>
+      <button class="btn btn-primary" onclick="saveGlobalDataOnly('themeMsg')"><i class="fa-solid fa-floppy-disk"></i> تطبيق وحفظ المظهر الشامل</button>
       <p class="status-msg" id="themeMsg"></p>
     </section>
 
     <!-- Media Library Panel -->
     <section class="panel" id="panel-media">
-      <div class="main-head"><div><h2>معرض الوسائط والروابط (Media Library)</h2></div></div>
+      <div class="main-head"><div><h2>معرض الوسائط والروابط (Global Media Library)</h2></div></div>
       <div class="card">
         <div class="upload-box" style="margin-bottom:24px;">
           <label for="mediaLibraryFile"><i class="fa-solid fa-cloud-arrow-up" style="font-size:38px; color:var(--gold-l); margin-bottom:12px; display:block;"></i> اضغط هنا لرفع صورة جديدة لمعرضك (ستحفظ بشكل دائم)</label>
@@ -571,11 +622,11 @@ window.triggerAllRenders = function() {
   const CLOUDINARY_URL = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
 
   const firebaseConfig = {
-    apiKey: "AIzaSyAMLeRa5BeV6YQf7rqLx0JQd3fb_LhbeSU", 
+    apiKey: "AIzaSyAMLeRa5BeV6YQf7rqLx0JQd3fb_LhbeSU",
     authDomain: "portfolio-2933c.firebaseapp.com",
-    projectId: "portfolio-2933c", 
+    projectId: "portfolio-2933c",
     storageBucket: "portfolio-2933c.firebasestorage.app",
-    messagingSenderId: "599965326470", 
+    messagingSenderId: "599965326470",
     appId: "1:599965326470:web:ff465c87d42bb0ab188507"
   };
 
@@ -583,9 +634,385 @@ window.triggerAllRenders = function() {
   const auth = getAuth(app);
   const db = getFirestore(app);
 
-  const appShell = document.getElementById('app');
-  const loginScreen = document.getElementById('loginScreen');
+  const setValSafe = (id, val) => { const el = document.getElementById(id); if(el) el.value = val || ''; return val; };
+  const getValSafe = (id) => { const el = document.getElementById(id); return el ? el.value : ''; };
+  const setCheckSafe = (id, val) => { const el = document.getElementById(id); if(el) el.checked = (val !== false); };
 
+  // ==========================================
+  // Context Switcher Core
+  // ==========================================
+  window.switchLang = function(lang) {
+    if(window.isDirty) {
+      if(!confirm("لقد قمت بتعديلات ولم تقم بحفظها. هل تود الانتقال لبيئة أخرى وتجاهل التعديلات؟")) return;
+    }
+    window.activeLang = lang;
+    document.getElementById('btn_lang_en').className = lang === 'en' ? 'btn btn-primary' : 'btn btn-ghost';
+    document.getElementById('btn_lang_ar').className = lang === 'ar' ? 'btn btn-primary' : 'btn btn-ghost';
+    
+    const main = document.getElementById('mainArea');
+    if(lang === 'ar') { 
+      main.style.direction = 'rtl'; main.style.textAlign = 'right'; 
+      document.querySelectorAll('.field-inline').forEach(el => el.style.textAlign = 'right');
+    } else { 
+      main.style.direction = 'ltr'; main.style.textAlign = 'left'; 
+      document.querySelectorAll('.field-inline').forEach(el => el.style.textAlign = 'left');
+    }
+    
+    populateForms();
+  }
+
+  window.populateForms = function() {
+    const st = window.appState[window.activeLang] || {};
+    const gl = window.appState.global || {};
+
+    // Context Aware Data
+    setValSafe('f_brand', st.hero?.brandName); 
+    setValSafe('f_eyebrow', st.hero?.eyebrow);
+    setValSafe('f_title1', st.hero?.title1); 
+    setValSafe('f_lead', st.hero?.lead);
+    setValSafe('f_about_title', st.about?.title); 
+    setValSafe('f_about_p1', st.about?.p1);
+    setValSafe('f_edu_deg_title', st.education?.degreeTitle); 
+    setValSafe('f_edu_deg_meta', st.education?.degreeMeta);
+    setValSafe('f_edu_cert_title', st.education?.icdlTitle); 
+    setValSafe('f_edu_cert_meta', st.education?.icdlMeta);
+    setValSafe('f_contact_location', st.contact?.location);
+
+    // Globals (Profile, CV, Contact)
+    setValSafe('f_profile_img', gl.aboutData?.profileImg); 
+    setValSafe('f_cv_link', gl.contactData?.cvLink);
+    setValSafe('f_contact_email', gl.contactData?.email); 
+    setValSafe('f_contact_phone', gl.contactData?.phone);
+
+    // Globals (Theme)
+    const t = gl.themeData || {};
+    setValSafe('f_theme_mode', t.mode || "dark");
+    setValSafe('f_theme_font', t.font || "'Cairo', sans-serif");
+    setValSafe('c_gold', t.gold || "#C08B3D");
+    setValSafe('c_gold_l', t.goldLight || "#E3B36B");
+    setValSafe('c_teal', t.teal || "#1F8A70");
+    setValSafe('c_teal_l', t.tealLight || "#38C9A6");
+    setValSafe('c_bg', t.bg || "#0B1220");
+    setValSafe('c_surface', t.surface || "#121B2E");
+    setValSafe('c_radius', t.radius || "14");
+    
+    const v = t.sectionVisibility || {};
+    ['home','about','experience','projects','skills','education','contact'].forEach(id => setCheckSafe('sec_'+id, v[id]));
+
+    window.triggerAllRenders();
+    window.isDirty = false;
+  }
+
+  // ==========================================
+  // Migration & Sync Engine (خوارزمية المزامنة والدمج الذكي مع القوالب)
+  // ==========================================
+  async function runMigrationIfNeeded() {
+    const globalRef = doc(db, "portfolio", "global");
+    const enRef = doc(db, "portfolio", "en");
+    const arRef = doc(db, "portfolio", "ar");
+    const oldRef = doc(db, "portfolio", "content");
+
+    try {
+      const [gSnap, enSnap, oldSnap] = await Promise.all([getDoc(globalRef), getDoc(enRef), getDoc(oldRef)]);
+      
+      if (oldSnap.exists() && (!enSnap.exists() || !gSnap.exists())) {
+        const old = oldSnap.data() || {};
+        
+        const globalData = { 
+          mediaLibrary: old.mediaLibrary||[], 
+          themeData: old.themeData||{}, 
+          aboutData: old.aboutData||{}, 
+          contactData: old.contactData||{} 
+        };
+        
+        const enData = {
+          hero: old.heroEn||{}, typed: old.heroEn?.typed||[], chips: old.heroEn?.chips||[], stats: old.heroEn?.stats||[],
+          about: old.aboutEn||{}, facts: old.aboutEn?.facts||[], arc: old.aboutEn?.arc||[],
+          experience: old.experienceData||[], projects: old.projectsData||[], skillCats: old.skillCatsData||[],
+          certsElaraby: old.certsElarabyData||[], certsAlmentor: old.certsAlmentorData||[],
+          education: old.educationEn||{}, contact: { location: old.contactData?.location||"" }
+        };
+        
+        const arData = {
+          hero: old.heroAr||{}, typed: old.heroAr?.typed||[], chips: old.heroAr?.chips||[], stats: old.heroAr?.stats||[],
+          about: old.aboutAr||{}, facts: old.aboutAr?.facts||[], arc: old.aboutAr?.arc||[],
+          experience: old.experienceData||[], projects: old.projectsData||[], skillCats: old.skillCatsData||[],
+          certsElaraby: old.certsElarabyData||[], certsAlmentor: old.certsAlmentorData||[],
+          education: old.educationAr||{}, contact: { location: old.contactData?.locationAr||"" }
+        };
+
+        await Promise.all([
+          setDoc(globalRef, globalData, { merge: true }),
+          setDoc(enRef, enData, { merge: true }),
+          setDoc(arRef, arData, { merge: true })
+        ]);
+      }
+    } catch(err) {
+      console.warn("Migration check:", err);
+    }
+  }
+
+  async function loadDataFromFirebase() {
+    const msg = document.getElementById('fetchStatusMsg');
+    msg.style.display = 'block'; msg.className = 'status-msg'; msg.innerText = 'جاري المزامنة مع الخادم وتجهيز النماذج...';
+
+    try {
+      await runMigrationIfNeeded();
+
+      const gSnap = await getDoc(doc(db, "portfolio", "global"));
+      const enSnap = await getDoc(doc(db, "portfolio", "en"));
+      const arSnap = await getDoc(doc(db, "portfolio", "ar"));
+
+      const gData = gSnap.exists() ? gSnap.data() : {};
+      const enData = enSnap.exists() ? enSnap.data() : {};
+      const arData = arSnap.exists() ? arSnap.data() : {};
+      const localData = getInitialData();
+
+      // 1. الدمج المحمي للبيانات العامة (Global Data)
+      window.appState.global = {
+        mediaLibrary: gData.mediaLibrary || [],
+        themeData: gData.themeData || {},
+        aboutData: {
+          profileImg: gData.aboutData?.profileImg || FALLBACK_TEMPLATE.profileImg
+        },
+        contactData: {
+          cvLink: gData.contactData?.cvLink || FALLBACK_TEMPLATE.cvLink,
+          email: gData.contactData?.email || FALLBACK_TEMPLATE.contact.email,
+          phone: gData.contactData?.phone || FALLBACK_TEMPLATE.contact.phone
+        }
+      };
+
+      // 2. الدمج المحمي للنسخة الإنجليزية (English Context)
+      window.appState.en = {
+        hero: {
+          brandName: enData.hero?.brandName || FALLBACK_TEMPLATE.en.brandName,
+          eyebrow: enData.hero?.eyebrow || FALLBACK_TEMPLATE.en.eyebrow,
+          title1: enData.hero?.title1 || FALLBACK_TEMPLATE.en.title,
+          lead: enData.hero?.lead || FALLBACK_TEMPLATE.en.lead
+        },
+        typed: (enData.typed && enData.typed.length) ? enData.typed : FALLBACK_TEMPLATE.en.typed,
+        chips: (enData.chips && enData.chips.length) ? enData.chips : FALLBACK_TEMPLATE.en.chips,
+        stats: (enData.stats && enData.stats.length) ? enData.stats : FALLBACK_TEMPLATE.en.stats,
+        about: {
+          title: enData.about?.title || FALLBACK_TEMPLATE.en.aboutTitle,
+          p1: enData.about?.p1 || FALLBACK_TEMPLATE.en.aboutP1
+        },
+        facts: (enData.facts && enData.facts.length) ? enData.facts : FALLBACK_TEMPLATE.en.aboutFacts,
+        arc: (enData.arc && enData.arc.length) ? enData.arc : FALLBACK_TEMPLATE.en.aboutArc,
+        education: {
+          degreeTitle: enData.education?.degreeTitle || FALLBACK_TEMPLATE.en.eduTitle,
+          degreeMeta: enData.education?.degreeMeta || FALLBACK_TEMPLATE.en.eduMeta,
+          icdlTitle: enData.education?.icdlTitle || FALLBACK_TEMPLATE.en.certTitle,
+          icdlMeta: enData.education?.icdlMeta || FALLBACK_TEMPLATE.en.certMeta
+        },
+        contact: {
+          location: enData.contact?.location || FALLBACK_TEMPLATE.contact.location
+        },
+        experience: (enData.experience && Array.isArray(enData.experience) && enData.experience.length > 0) 
+          ? enData.experience 
+          : (localData.en?.experience || HARDCODED_FALLBACK_SITE_DATA.en.experience),
+        projects: (enData.projects && Array.isArray(enData.projects) && enData.projects.length > 0) 
+          ? enData.projects 
+          : (localData.en?.projects || HARDCODED_FALLBACK_SITE_DATA.en.projects),
+        skillCats: (enData.skillCats && Array.isArray(enData.skillCats) && enData.skillCats.length > 0) 
+          ? enData.skillCats 
+          : (localData.en?.skillCats || HARDCODED_FALLBACK_SITE_DATA.en.skillCats),
+        certsElaraby: (enData.certsElaraby && Array.isArray(enData.certsElaraby) && enData.certsElaraby.length > 0) 
+          ? enData.certsElaraby 
+          : (localData.en?.certsElaraby || HARDCODED_FALLBACK_SITE_DATA.en.certsElaraby),
+        certsAlmentor: (enData.certsAlmentor && Array.isArray(enData.certsAlmentor) && enData.certsAlmentor.length > 0) 
+          ? enData.certsAlmentor 
+          : (localData.en?.certsAlmentor || HARDCODED_FALLBACK_SITE_DATA.en.certsAlmentor)
+      };
+
+      // 3. الدمج المحمي للنسخة العربية (Arabic Context)
+      window.appState.ar = {
+        hero: {
+          brandName: arData.hero?.brandName || FALLBACK_TEMPLATE.ar.brandName,
+          eyebrow: arData.hero?.eyebrow || FALLBACK_TEMPLATE.ar.eyebrow,
+          title1: arData.hero?.title1 || FALLBACK_TEMPLATE.ar.title,
+          lead: arData.hero?.lead || FALLBACK_TEMPLATE.ar.lead
+        },
+        typed: (arData.typed && arData.typed.length) ? arData.typed : FALLBACK_TEMPLATE.ar.typed,
+        chips: (arData.chips && arData.chips.length) ? arData.chips : FALLBACK_TEMPLATE.ar.chips,
+        stats: (arData.stats && arData.stats.length) ? arData.stats : FALLBACK_TEMPLATE.ar.stats,
+        about: {
+          title: arData.about?.title || FALLBACK_TEMPLATE.ar.aboutTitle,
+          p1: arData.about?.p1 || FALLBACK_TEMPLATE.ar.aboutP1
+        },
+        facts: (arData.facts && arData.facts.length) ? arData.facts : FALLBACK_TEMPLATE.ar.aboutFacts,
+        arc: (arData.arc && arData.arc.length) ? arData.arc : FALLBACK_TEMPLATE.ar.aboutArc,
+        education: {
+          degreeTitle: arData.education?.degreeTitle || FALLBACK_TEMPLATE.ar.eduTitle,
+          degreeMeta: arData.education?.degreeMeta || FALLBACK_TEMPLATE.ar.eduMeta,
+          icdlTitle: arData.education?.icdlTitle || FALLBACK_TEMPLATE.ar.certTitle,
+          icdlMeta: arData.education?.icdlMeta || FALLBACK_TEMPLATE.ar.certMeta
+        },
+        contact: {
+          location: arData.contact?.location || FALLBACK_TEMPLATE.contact.locationAr
+        },
+        experience: (arData.experience && Array.isArray(arData.experience) && arData.experience.length > 0) 
+          ? arData.experience 
+          : (localData.ar?.experience || localData.en?.experience || HARDCODED_FALLBACK_SITE_DATA.en.experience),
+        projects: (arData.projects && Array.isArray(arData.projects) && arData.projects.length > 0) 
+          ? arData.projects 
+          : (localData.ar?.projects || localData.en?.projects || HARDCODED_FALLBACK_SITE_DATA.en.projects),
+        skillCats: (arData.skillCats && Array.isArray(arData.skillCats) && arData.skillCats.length > 0) 
+          ? arData.skillCats 
+          : (localData.ar?.skillCats || localData.en?.skillCats || HARDCODED_FALLBACK_SITE_DATA.en.skillCats),
+        certsElaraby: (arData.certsElaraby && Array.isArray(arData.certsElaraby) && arData.certsElaraby.length > 0) 
+          ? arData.certsElaraby 
+          : (localData.ar?.certsElaraby || localData.en?.certsElaraby || HARDCODED_FALLBACK_SITE_DATA.en.certsElaraby),
+        certsAlmentor: (arData.certsAlmentor && Array.isArray(arData.certsAlmentor) && arData.certsAlmentor.length > 0) 
+          ? arData.certsAlmentor 
+          : (localData.ar?.certsAlmentor || localData.en?.certsAlmentor || HARDCODED_FALLBACK_SITE_DATA.en.certsAlmentor)
+      };
+
+      // تحديث إحصائيات لوحة التحكم
+      document.getElementById('statExp').innerText = window.appState.en.experience?.length || 0;
+      document.getElementById('statProj').innerText = window.appState.en.projects?.length || 0;
+      document.getElementById('statSkill').innerText = window.appState.en.skillCats?.length || 0;
+      document.getElementById('statMedia').innerText = window.appState.global.mediaLibrary?.length || 0;
+
+      window.switchLang(window.activeLang || 'en');
+      msg.className='status-msg ok'; msg.innerText='تمت المزامنة وجلب كافة البيانات بنجاح!'; 
+      setTimeout(()=>msg.style.display='none',3000);
+    } catch(e) {
+      console.error(e); 
+      msg.className = 'status-msg err'; msg.innerText = 'حدث خطأ أثناء الجلب: ' + e.message; 
+    }
+  }
+
+  document.getElementById('forceFetchBtn').addEventListener('click', loadDataFromFirebase);
+
+  // زر استرداد البيانات للطوارئ (Emergency Restore)
+  document.getElementById('restoreDataBtn').addEventListener('click', () => {
+    if (!confirm("هل أنت متأكد من استرداد البيانات الافتراضية؟ سيتم تعبئة كافة النماذج من data.js، ويجب عليك الضغط على زر الحفظ للرفع على الخادم.")) return;
+    
+    const localData = getInitialData();
+    
+    window.appState.global = {
+      mediaLibrary: [],
+      themeData: { mode: "dark", font: "'Cairo', sans-serif" },
+      aboutData: { profileImg: FALLBACK_TEMPLATE.profileImg },
+      contactData: { cvLink: FALLBACK_TEMPLATE.cvLink, email: FALLBACK_TEMPLATE.contact.email, phone: FALLBACK_TEMPLATE.contact.phone }
+    };
+
+    window.appState.en = {
+      hero: { brandName: FALLBACK_TEMPLATE.en.brandName, eyebrow: FALLBACK_TEMPLATE.en.eyebrow, title1: FALLBACK_TEMPLATE.en.title, lead: FALLBACK_TEMPLATE.en.lead },
+      typed: FALLBACK_TEMPLATE.en.typed, chips: FALLBACK_TEMPLATE.en.chips, stats: FALLBACK_TEMPLATE.en.stats,
+      about: { title: FALLBACK_TEMPLATE.en.aboutTitle, p1: FALLBACK_TEMPLATE.en.aboutP1 },
+      facts: FALLBACK_TEMPLATE.en.aboutFacts, arc: FALLBACK_TEMPLATE.en.aboutArc,
+      experience: localData.en?.experience || HARDCODED_FALLBACK_SITE_DATA.en.experience,
+      projects: localData.en?.projects || HARDCODED_FALLBACK_SITE_DATA.en.projects,
+      skillCats: localData.en?.skillCats || HARDCODED_FALLBACK_SITE_DATA.en.skillCats,
+      certsElaraby: localData.en?.certsElaraby || HARDCODED_FALLBACK_SITE_DATA.en.certsElaraby,
+      certsAlmentor: localData.en?.certsAlmentor || HARDCODED_FALLBACK_SITE_DATA.en.certsAlmentor,
+      education: { degreeTitle: FALLBACK_TEMPLATE.en.eduTitle, degreeMeta: FALLBACK_TEMPLATE.en.eduMeta, icdlTitle: FALLBACK_TEMPLATE.en.certTitle, icdlMeta: FALLBACK_TEMPLATE.en.certMeta },
+      contact: { location: FALLBACK_TEMPLATE.contact.location }
+    };
+
+    window.appState.ar = {
+      hero: { brandName: FALLBACK_TEMPLATE.ar.brandName, eyebrow: FALLBACK_TEMPLATE.ar.eyebrow, title1: FALLBACK_TEMPLATE.ar.title, lead: FALLBACK_TEMPLATE.ar.lead },
+      typed: FALLBACK_TEMPLATE.ar.typed, chips: FALLBACK_TEMPLATE.ar.chips, stats: FALLBACK_TEMPLATE.ar.stats,
+      about: { title: FALLBACK_TEMPLATE.ar.aboutTitle, p1: FALLBACK_TEMPLATE.ar.aboutP1 },
+      facts: FALLBACK_TEMPLATE.ar.aboutFacts, arc: FALLBACK_TEMPLATE.ar.aboutArc,
+      experience: localData.ar?.experience || localData.en?.experience || HARDCODED_FALLBACK_SITE_DATA.en.experience, 
+      projects: localData.ar?.projects || localData.en?.projects || HARDCODED_FALLBACK_SITE_DATA.en.projects,
+      skillCats: localData.ar?.skillCats || localData.en?.skillCats || HARDCODED_FALLBACK_SITE_DATA.en.skillCats,
+      certsElaraby: localData.ar?.certsElaraby || localData.en?.certsElaraby || HARDCODED_FALLBACK_SITE_DATA.en.certsElaraby,
+      certsAlmentor: localData.ar?.certsAlmentor || localData.en?.certsAlmentor || HARDCODED_FALLBACK_SITE_DATA.en.certsAlmentor,
+      education: { degreeTitle: FALLBACK_TEMPLATE.ar.eduTitle, degreeMeta: FALLBACK_TEMPLATE.ar.eduMeta, icdlTitle: FALLBACK_TEMPLATE.ar.certTitle, icdlMeta: FALLBACK_TEMPLATE.ar.certMeta },
+      contact: { location: FALLBACK_TEMPLATE.contact.locationAr }
+    };
+
+    window.isDirty = true;
+    window.populateForms();
+    alert("تم استرداد كافة البيانات الافتراضية بنجاح! يمكنك الآن مراجعتها ثم الحفظ للتحديث دائمًا.");
+  });
+
+  // ==========================================
+  // Save Document Engine
+  // ==========================================
+  window.saveContextData = async function(section) {
+    const msgId = section + 'Msg';
+    const msg = document.getElementById(msgId);
+    msg.className='status-msg ok'; msg.innerText=`يتم الآن الحفظ لبيئة [${window.activeLang.toUpperCase()}] ...`; msg.style.display='block';
+    
+    try {
+      const payload = {};
+      if(section === 'hero') {
+        payload.hero = { brandName: getValSafe('f_brand'), eyebrow: getValSafe('f_eyebrow'), title1: getValSafe('f_title1'), lead: getValSafe('f_lead') };
+        payload.typed = window.appState[window.activeLang].typed; 
+        payload.chips = window.appState[window.activeLang].chips; 
+        payload.stats = window.appState[window.activeLang].stats;
+        payload.about = { title: getValSafe('f_about_title'), p1: getValSafe('f_about_p1') }; 
+        payload.facts = window.appState[window.activeLang].facts; 
+        payload.arc = window.appState[window.activeLang].arc;
+      }
+      if(section === 'experience') payload.experience = window.appState[window.activeLang].experience;
+      if(section === 'projects') payload.projects = window.appState[window.activeLang].projects;
+      if(section === 'skills') payload.skillCats = window.appState[window.activeLang].skillCats;
+      if(section === 'education') payload.education = { degreeTitle: getValSafe('f_edu_deg_title'), degreeMeta: getValSafe('f_edu_deg_meta'), icdlTitle: getValSafe('f_edu_cert_title'), icdlMeta: getValSafe('f_edu_cert_meta') };
+      if(section === 'certs') { 
+        payload.certsElaraby = window.appState[window.activeLang].certsElaraby; 
+        payload.certsAlmentor = window.appState[window.activeLang].certsAlmentor; 
+      }
+
+      await setDoc(doc(db, "portfolio", window.activeLang), payload, { merge: true });
+      window.isDirty = false;
+      msg.innerText = window.activeLang === 'ar' ? 'تم حفظ النسخة العربية بنجاح!' : 'English context saved successfully!';
+      setTimeout(()=>msg.style.display='none', 4000);
+    } catch(e) { msg.className='status-msg err'; msg.innerText = 'Error: ' + e.message; }
+  }
+
+  window.saveGlobalContact = async function() {
+    const msg = document.getElementById('contactMsg');
+    msg.className='status-msg ok'; msg.innerText='جاري الحفظ...'; msg.style.display='block';
+    try {
+      // Localized location part
+      await setDoc(doc(db, "portfolio", window.activeLang), { contact: { location: getValSafe('f_contact_location') } }, { merge: true });
+      // Global part
+      await setDoc(doc(db, "portfolio", "global"), { 
+        aboutData: { profileImg: getValSafe('f_profile_img') },
+        contactData: { cvLink: getValSafe('f_cv_link'), email: getValSafe('f_contact_email'), phone: getValSafe('f_contact_phone') }
+      }, { merge: true });
+      window.isDirty = false;
+      msg.innerText='تم الحفظ للإعدادات العامة وتحديث الموقع الجغرافي بنجاح!';
+      setTimeout(()=>msg.style.display='none', 3000);
+    } catch (e) { msg.className='status-msg err'; msg.innerText='فشل الحفظ: ' + e.message; }
+  }
+
+  window.saveGlobalDataOnly = async function(msgId) {
+    const m = msgId ? document.getElementById(msgId) : null;
+    if(m) { m.className='status-msg ok'; m.style.display='block'; m.innerText='جاري الحفظ (Global)...'; }
+    try {
+      const payload = { mediaLibrary: window.appState.global.mediaLibrary };
+      
+      const sectionVisibility = {};
+      ['home','about','experience','projects','skills','education','contact'].forEach(id => {
+        const el = document.getElementById('sec_'+id);
+        if(el) sectionVisibility[id] = el.checked;
+      });
+
+      payload.themeData = {
+        mode: getValSafe('f_theme_mode'), font: getValSafe('f_theme_font'),
+        gold: getValSafe('c_gold'), goldLight: getValSafe('c_gold_l'),
+        teal: getValSafe('c_teal'), tealLight: getValSafe('c_teal_l'),
+        bg: getValSafe('c_bg'), surface: getValSafe('c_surface'),
+        radius: getValSafe('c_radius'), sectionVisibility
+      };
+
+      await setDoc(doc(db, "portfolio", "global"), payload, { merge: true });
+      if(m) { m.innerText = 'تم حفظ الإعدادات العامة بنجاح!'; setTimeout(()=>m.style.display='none', 4000); }
+    } catch(e) {
+      if(m) { m.className='status-msg err'; m.innerText='فشل الحفظ: ' + e.message; }
+    }
+  }
+
+  // ==========================================
+  // Auth & UI Layout Control
+  // ==========================================
   const geminiKeyInput = document.getElementById('gemini_api_key');
   if(localStorage.getItem('portfolio_gemini_key')) geminiKeyInput.value = localStorage.getItem('portfolio_gemini_key');
   geminiKeyInput.addEventListener('change', (e) => localStorage.setItem('portfolio_gemini_key', e.target.value));
@@ -600,35 +1027,42 @@ window.triggerAllRenders = function() {
     });
   });
 
-  document.getElementById('menuToggle').addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('sidebar').classList.toggle('open'); });
-  document.addEventListener('click', () => { document.getElementById('sidebar').classList.remove('open'); });
+  // Mobile Menu Toggle Fix
+  document.getElementById('menuToggle').addEventListener('click', (e) => { 
+    e.stopPropagation(); 
+    document.getElementById('sidebar').classList.toggle('open'); 
+  });
+  
+  document.addEventListener('click', (e) => { 
+    const sidebar = document.getElementById('sidebar');
+    if(!sidebar.contains(e.target) && e.target.id !== 'menuToggle' && !e.target.closest('#menuToggle')){
+        sidebar.classList.remove('open'); 
+    }
+  });
 
   onAuthStateChanged(auth, (user) => {
     if (user) { 
-      loginScreen.style.display = 'none'; 
-      appShell.classList.add('show'); 
+      document.getElementById('loginScreen').style.display = 'none'; 
+      document.getElementById('app').classList.add('show'); 
       loadDataFromFirebase(); 
     } else { 
-      loginScreen.style.display = 'flex'; 
-      appShell.classList.remove('show'); 
+      document.getElementById('loginScreen').style.display = 'flex'; 
+      document.getElementById('app').classList.remove('show'); 
     }
   });
 
   document.getElementById('loginBtn').addEventListener('click', () => {
-    const email = document.getElementById('loginUser').value;
-    const pass = document.getElementById('loginPass').value;
     const btn = document.getElementById('loginBtn');
     btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري التحقق...';
-    signInWithEmailAndPassword(auth, email, pass).catch((error) => { 
+    signInWithEmailAndPassword(auth, getValSafe('loginUser'), getValSafe('loginPass')).catch((error) => { 
       alert("خطأ في تسجيل الدخول: " + error.message); 
       btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> الدخول للنظام'; 
     });
   });
-
   document.getElementById('logoutBtn').addEventListener('click', () => signOut(auth));
 
   // ==========================================
-  // Cloudinary Upload
+  // Cloudinary Upload (Global)
   // ==========================================
   document.getElementById('mediaLibraryFile').addEventListener('change', async function() {
     const file = this.files[0];
@@ -644,9 +1078,9 @@ window.triggerAllRenders = function() {
       const res = await fetch(CLOUDINARY_URL, { method: "POST", body: formData });
       const cloudData = await res.json();
       if(cloudData.secure_url) {
-        window.appState.mediaLibrary.push(cloudData.secure_url);
+        window.appState.global.mediaLibrary.push(cloudData.secure_url);
         window.renderMediaGallery();
-        await setDoc(doc(db, "portfolio", "content"), { mediaLibrary: window.appState.mediaLibrary }, { merge: true });
+        if(window.saveGlobalDataOnly) await window.saveGlobalDataOnly(); // auto save
         alert("تم رفع الصورة وإضافتها للمعرض بنجاح!");
       } else {
         alert("فشل الرفع: تأكد من إعدادات الـ Upload Preset في Cloudinary.");
@@ -659,41 +1093,45 @@ window.triggerAllRenders = function() {
   });
 
   // ==========================================
-  // المعالج المحلي (Local Fallback Parser)
+  // Local Fallback Parsing
   // ==========================================
   function extractSectionsByRegex(text) {
     const cleanText = text.replace(/\n\s*\n/g, '\n');
     const expRegex = /(Experience|الخبرات|الخبرة المهنية|Work History|Employment)[\s\S]*?(Education|التعليم|المؤهلات|Skills|المهارات|Projects|المشاريع|$)/i;
     const eduRegex = /(Education|التعليم|المؤهلات|Academic)[\s\S]*?(Skills|المهارات|Projects|المشاريع|Experience|الخبرات|$)/i;
     const skillsRegex = /(Skills|المهارات|Technical Skills|Core Competencies)[\s\S]*?(Education|التعليم|Projects|المشاريع|Experience|الخبرات|$)/i;
-    
     let exp = (cleanText.match(expRegex) || ['', 'لم يتم العثور بوضوح على هذا القسم.'])[0];
     let edu = (cleanText.match(eduRegex) || ['', 'لم يتم العثور بوضوح على هذا القسم.'])[0];
     let skills = (cleanText.match(skillsRegex) || ['', 'لم يتم العثور بوضوح على هذا القسم.'])[0];
-    
     return { exp: exp.substring(0, 2000), edu: edu.substring(0, 1000), skills: skills.substring(0, 1000) };
   }
 
   function fallbackLocalParsing(rawText, statusEl) {
     const emailMatch = rawText.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
     const phoneMatch = rawText.match(/(\+?\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4,6}/);
-    
     setValSafe('cv_parsed_email', emailMatch ? emailMatch[0] : "");
     setValSafe('cv_parsed_phone', phoneMatch ? phoneMatch[0] : "");
-    
     const sections = extractSectionsByRegex(rawText);
     setValSafe('cv_parsed_exp', sections.exp);
     setValSafe('cv_parsed_edu', sections.edu);
     setValSafe('cv_parsed_skills', sections.skills);
-    
     document.getElementById('parsedCvModal').classList.add('open');
     if(statusEl) statusEl.style.display = 'none';
   }
 
+  document.getElementById('confirmCvContactImport').addEventListener('click', () => {
+    const em = getValSafe('cv_parsed_email');
+    const ph = getValSafe('cv_parsed_phone');
+    if(em) setValSafe('f_contact_email', em);
+    if(ph) setValSafe('f_contact_phone', ph);
+    alert("تم نقل أرقام الاتصال للإعدادات العامة بنجاح!");
+    document.getElementById('parsedCvModal').classList.remove('open');
+  });
+
   // ==========================================
-  // معالج الذكاء الاصطناعي (AI Processor)
+  // AI Processor (Context Aware)
   // ==========================================
-  async function processWithAI(rawText, lang, statusId) {
+  async function processWithAI(rawText, statusId) {
     const apiKey = document.getElementById('gemini_api_key').value.trim();
     const status = document.getElementById(statusId);
 
@@ -702,11 +1140,11 @@ window.triggerAllRenders = function() {
       return;
     }
 
-    status.innerText = 'يتم الآن تحليل وفهم البيانات بواسطة الذكاء الاصطناعي... يرجى الانتظار (قد يستغرق 10 ثوانٍ).';
+    status.innerText = `يتم التحليل للغة [${window.activeLang.toUpperCase()}] عبر AI... (انتظر 10 ثوانٍ).`;
     
     const prompt = `You are an expert CV parsing assistant. Extract data from the following CV text.
-    Return ONLY a raw JSON object exactly matching this schema. Do not wrap it in markdown code blocks.
-    Translate or adapt the content into ${lang === 'ar' ? 'Arabic' : 'English'} where appropriate.
+    Return ONLY a raw JSON object exactly matching this schema. 
+    Crucially, translate or adapt the content entirely into ${window.activeLang === 'ar' ? 'Arabic' : 'English'}.
     
     SCHEMA:
     {
@@ -732,8 +1170,8 @@ window.triggerAllRenders = function() {
       const data = await response.json();
       const parsedData = JSON.parse(data.candidates[0].content.parts[0].text);
 
-      if(parsedData.experience && parsedData.experience.length) window.appState.experience = parsedData.experience;
-      if(parsedData.skillCats && parsedData.skillCats.length) window.appState.skillCats = parsedData.skillCats;
+      if(parsedData.experience && parsedData.experience.length) window.appState[window.activeLang].experience = parsedData.experience;
+      if(parsedData.skillCats && parsedData.skillCats.length) window.appState[window.activeLang].skillCats = parsedData.skillCats;
       
       if(parsedData.contact) {
          if(parsedData.contact.email) setValSafe('f_contact_email', parsedData.contact.email);
@@ -741,23 +1179,18 @@ window.triggerAllRenders = function() {
       }
       
       if(parsedData.education) {
-         if(lang === 'ar') {
-            setValSafe('f_edu_deg_title_ar', parsedData.education.degreeTitle);
-            setValSafe('f_edu_deg_meta_ar', parsedData.education.degreeMeta);
-         } else {
-            setValSafe('f_edu_deg_title_en', parsedData.education.degreeTitle);
-            setValSafe('f_edu_deg_meta_en', parsedData.education.degreeMeta);
-         }
+        setValSafe('f_edu_deg_title', parsedData.education.degreeTitle);
+        setValSafe('f_edu_deg_meta', parsedData.education.degreeMeta);
       }
 
       if(parsedData.brandName) {
-        if(lang === 'ar') setValSafe('f_brand_ar', parsedData.brandName);
-        else setValSafe('f_brand_en', parsedData.brandName);
+        setValSafe('f_brand', parsedData.brandName);
       }
 
       window.triggerAllRenders();
+      window.markDirty();
       status.className = 'status-msg ok';
-      status.innerText = "نجاح! تم استخراج البيانات بذكاء وتسكينها. قم بمراجعتها ثم اضغط (حفظ ونشر) لتفعيلها على الموقع.";
+      status.innerText = "تم استخراج البيانات بذكاء للإصدار الحالي! قم بمراجعتها ثم اضغط (حفظ).";
       setTimeout(() => status.style.display = 'none', 8000);
 
     } catch (e) {
@@ -766,7 +1199,7 @@ window.triggerAllRenders = function() {
     }
   }
 
-  function handleCVUpload(lang, file, statusId) {
+  function handleCVUpload(file, statusId) {
     if(!file) return alert("الرجاء تحديد ملف (PDF/DOCX) أولاً.");
     const status = document.getElementById(statusId);
     status.style.display = 'block'; status.className = 'status-msg ok'; status.innerText = 'جاري استخراج النصوص من المستند...';
@@ -775,290 +1208,20 @@ window.triggerAllRenders = function() {
     reader.onload = (e) => {
       if(file.name.endsWith('.docx')) {
         mammoth.extractRawText({ arrayBuffer: e.target.result }).then(res => {
-          processWithAI(res.value, lang, statusId);
+          processWithAI(res.value, statusId);
         }).catch(err => { status.className = 'status-msg err'; status.innerText = "خطأ في قراءة الـ Word: " + err.message; });
       } else {
         pdfjsLib.getDocument({ data: new Uint8Array(e.target.result) }).promise.then(pdf => {
           let pages = [];
           for(let j=1; j<=pdf.numPages; j++) { pages.push(pdf.getPage(j).then(p => p.getTextContent().then(t => t.items.map(s => s.str).join(' ')))); }
-          Promise.all(pages).then(texts => processWithAI(texts.join('\n'), lang, statusId));
+          Promise.all(pages).then(texts => processWithAI(texts.join('\n'), statusId));
         }).catch(err => { status.className = 'status-msg err'; status.innerText = "فشل في قراءة الـ PDF. تأكد أنه غير محمي برقم سري."; });
       }
     };
     reader.readAsArrayBuffer(file);
   }
 
-  document.getElementById('analyzeCvBtnEn').addEventListener('click', () => handleCVUpload('en', document.getElementById('cvFileDropEn').files[0], 'parseStatus'));
-  document.getElementById('analyzeCvBtnAr').addEventListener('click', () => handleCVUpload('ar', document.getElementById('cvFileDropAr').files[0], 'parseStatus'));
-
-  document.getElementById('confirmCvContactImport').addEventListener('click', () => {
-    const em = getValSafe('cv_parsed_email');
-    const ph = getValSafe('cv_parsed_phone');
-    if(em) setValSafe('f_contact_email', em);
-    if(ph) setValSafe('f_contact_phone', ph);
-    alert("تم نقل أرقام الاتصال لنموذج التواصل بنجاح!");
-    document.getElementById('parsedCvModal').classList.remove('open');
-  });
-
-  // ==========================================
-  // قاعدة البيانات البديلة المضمنة مباشرة (HARDCODED FALLBACK TEMPLATE)
-  // تضمن عدم ظهور الكروت فارغة حتى لو تعذر جلب data.js
-  // ==========================================
-  const HARDCODED_FALLBACK_SITE_DATA = {
-    en: {
-      experience: [
-        { role: "Sales Executive", company: "Elaraby Group", period: "2023 – Present", bullets: ["Managing client relationships and driving sales to achieve company targets.", "Providing tailored product solutions and ensuring a high level of customer satisfaction.", "Collaborating with internal teams to optimize sales operations and performance."] },
-        { role: "Sales Officer", company: "B.Tech", period: "June 2022 – 2023", bullets: ["Promoted company products and achieved consistent sales growth.", "Assisted customers in selecting suitable products based on their needs and preferences."] },
-        { role: "Assistant Warehouse Manager", company: "Al-Ansar Marketing", period: "February 2020 – February 2022", bullets: ["Supervised daily warehouse operations, ensuring inventory accuracy and timely order fulfillment.", "Coordinated with suppliers and logistics teams to streamline supply chain activities."] },
-        { role: "Data Entry Specialist", company: "Orascom Construction", period: "2018 – 2019", bullets: ["Entered and verified project-related data with high accuracy.", "Supported the reporting process for construction projects.", "Ensured data integrity and compliance with company standards."] },
-        { role: "Accountant", company: "Omega Advertising", period: "2017 – 2018", bullets: ["Prepared and maintained financial records in compliance with accounting principles.", "Collaborated with management to support financial decision-making."] }
-      ],
-      projects: [
-        { id: "proj_1", title: "Know Your Product (PWA)", desc: "Co-designed and developed a Progressive Web App built to support sales representatives during the sales process with smart selling tools.", tags: ["PWA", "UX Design", "Sales Enablement", "No-Code"], status: "Shipped", icon: "fa-mobile-screen-button", img: "" },
-        { id: "proj_2", title: "AI-Powered Chatbot", desc: "Contributing to the development of an AI chatbot focused on smarter, more automated customer engagement.", tags: ["AI", "Chatbot", "Workflow Design", "Customer Engagement"], status: "In Progress", icon: "fa-robot", img: "" }
-      ],
-      skillCats: [
-        { name: "Sales & Business", icon: "fa-chart-line", skills: [{ label: "Sales & Account Management", value: 92 }, { label: "E-Commerce Sales Operations", value: 85 }, { label: "Sales Reporting & Forecasting", value: 80 }, { label: "Persuasive Communication & Client Engagement", value: 90 }] },
-        { name: "Digital & AI Tools", icon: "fa-robot", skills: [{ label: "AI Tools Utilization & Digital Solutions", value: 78 }, { label: "PWA & Digital Product Design", value: 70 }, { label: "Basic Knowledge of Power BI", value: 55 }, { label: "Basic Knowledge of ERP & SAP Systems", value: 50 }] },
-        { name: "Professional & Soft Skills", icon: "fa-people-group", skills: [{ label: "Customer Issue Resolution", value: 88 }, { label: "Adaptability & Team Collaboration", value: 90 }, { label: "Computer Setup & Troubleshooting", value: 82 }] }
-      ],
-      certsElaraby: ["Managing Different Generations", "Problem Solving & Decision Making", "Time Management", "Advanced Negotiation Skills", "Handling Difficult Characters", "Customer Experience Management", "Design Thinking", "Building Better Teams", "Smart Selling", "Sales Skills"],
-      certsAlmentor: ["Personal Branding for Employees", "Career Success Skills", "Professional Email Writing", "Successful Marketer Skills", "Prompt Engineering", "Growth Mindset", "ChatGPT Technology"]
-    }
-  };
-
-  const FALLBACK_TEMPLATE = {
-    profileImg: "assets/portrait.jpg", cvLink: "assets/AbdElMoneim_Sultan_CV.pdf",
-    contact: { email: "abdosultan306@gmail.com", phone: "+20 111 455 0112", location: "Cairo, Egypt", locationAr: "القاهرة، مصر" },
-    en: {
-      brandName: "AbdElMoneim Sultan", eyebrow: "Sales Executive → Digital Product Builder", title: "Turning client trust into measurable growth.", lead: "A professional sales executive with experience across retail, logistics, and finance...",
-      typed: ["Sales Executive", "Client Relationship Manager", "AI Tools Explorer"], chips: [{icon: "fa-chart-line", label: "Sales Growth Focus"}, {icon: "fa-robot", label: "AI-Powered Builder"}],
-      stats: [{value: 4, label: "Years Experience"}, {value: 5, label: "Professional Roles"}, {value: 17, label: "Courses & Certificates"}],
-      aboutTitle: "A sales career built on trust...", aboutP1: "I'm a professional with over four years of experience...",
-      aboutFacts: [{label: "Based in", value: "Cairo, Egypt"}, {label: "Current Role", value: "Sales Executive"}], aboutArc: [{title: "Where it started", desc: "Finance fundamentals..."}],
-      eduTitle: "Bachelor of Commerce — Business Administration", eduMeta: "Graduated May 2016 · Grade: Good", certTitle: "ICDL Certified", certMeta: "Windows, Word, Excel, Internet"
-    },
-    ar: {
-      brandName: "عبدالمنعم سلطان", eyebrow: "تنفيذي مبيعات ← بناء منتجات رقمية", title: "أحوّل ثقة العملاء إلى نمو ملموس.", lead: "محترف مبيعات بخبرة تتجاوز 4 سنوات...",
-      typed: ["تنفيذي مبيعات", "مدير علاقات عملاء", "مستكشف ذكاء اصطناعي"], chips: [{icon: "fa-chart-line", label: "نمو المبيعات"}, {icon: "fa-robot", label: "بناء بالذكاء الاصطناعي"}],
-      stats: [{value: 4, label: "سنوات خبرة"}, {value: 5, label: "وظائف مهنية"}, {value: 17, label: "دورة وشهادة"}],
-      aboutTitle: "مسيرة مبيعات قائمة على الثقة...", aboutP1: "أنا محترف مبيعات ولدي خبرة تتجاوز 4 سنوات...",
-      aboutFacts: [{label: "المقر", value: "القاهرة، مصر"}, {label: "الوظيفة الحالية", value: "تنفيذي مبيعات"}], aboutArc: [{title: "نقطة البداية", desc: "أساسيات مالية..."}],
-      eduTitle: "بكالوريوس تجارة — إدارة أعمال", eduMeta: "التخرج 2016 · التقدير: جيد", certTitle: "شهادة ICDL", certMeta: "ويندوز، وورد، إكسل، إنترنت"
-    }
-  };
-
-  function getInitialData() {
-    if (typeof SITE_DATA !== 'undefined' && SITE_DATA.en) return SITE_DATA;
-    if (typeof window.SITE_DATA !== 'undefined' && window.SITE_DATA.en) return window.SITE_DATA;
-    return HARDCODED_FALLBACK_SITE_DATA;
-  }
-
-  // ==========================================
-  // محرك جلب وتعبئة البيانات الأوتوماتيكي
-  // ==========================================
-  const setValSafe = (id, val) => { const el = document.getElementById(id); if(el) el.value = val || ''; return val; };
-  const setCheckSafe = (id, val) => { const el = document.getElementById(id); if(el) el.checked = (val !== false); };
-  const getValSafe = (id) => { const el = document.getElementById(id); return el ? el.value : ''; };
-
-  async function loadDataFromFirebase() {
-    const msg = document.getElementById('fetchStatusMsg');
-    msg.style.display = 'block'; msg.className = 'status-msg'; msg.innerText = 'جاري المزامنة مع الخادم وتجهيز النماذج...';
-    
-    try {
-      const docSnap = await getDoc(doc(db, "portfolio", "content"));
-      const data = docSnap.exists() ? docSnap.data() : {};
-      const st = window.appState;
-      
-      const localData = getInitialData();
-
-      // Profile & Contact
-      setValSafe('f_profile_img', data.aboutData?.profileImg || FALLBACK_TEMPLATE.profileImg);
-      setValSafe('f_cv_link', data.contactData?.cvLink || FALLBACK_TEMPLATE.cvLink);
-      setValSafe('f_contact_email', data.contactData?.email || FALLBACK_TEMPLATE.contact.email);
-      setValSafe('f_contact_phone', data.contactData?.phone || FALLBACK_TEMPLATE.contact.phone);
-      setValSafe('f_contact_location', data.contactData?.location || FALLBACK_TEMPLATE.contact.location);
-      setValSafe('f_contact_location_ar', data.contactData?.locationAr || FALLBACK_TEMPLATE.contact.locationAr);
-
-      // Hero & About EN
-      setValSafe('f_brand_en', data.heroEn?.brandName || FALLBACK_TEMPLATE.en.brandName);
-      setValSafe('f_hero_eyebrow_en', data.heroEn?.eyebrow || FALLBACK_TEMPLATE.en.eyebrow);
-      setValSafe('f_hero_title1_en', data.heroEn?.title1 || FALLBACK_TEMPLATE.en.title);
-      setValSafe('f_hero_lead_en', data.heroEn?.lead || FALLBACK_TEMPLATE.en.lead);
-      st.heroTypedEn = (data.heroEn?.typed?.length ? data.heroEn.typed : FALLBACK_TEMPLATE.en.typed);
-      st.heroChipsEn = (data.heroEn?.chips?.length ? data.heroEn.chips : FALLBACK_TEMPLATE.en.chips);
-      st.heroStatsEn = (data.heroEn?.stats?.length ? data.heroEn.stats : FALLBACK_TEMPLATE.en.stats);
-      setValSafe('f_about_title_en', data.aboutEn?.title || FALLBACK_TEMPLATE.en.aboutTitle);
-      setValSafe('f_about_p1_en', data.aboutEn?.p1 || FALLBACK_TEMPLATE.en.aboutP1);
-      st.aboutFactsEn = (data.aboutEn?.facts?.length ? data.aboutEn.facts : FALLBACK_TEMPLATE.en.aboutFacts);
-      st.aboutArcEn = (data.aboutEn?.arc?.length ? data.aboutEn.arc : FALLBACK_TEMPLATE.en.aboutArc);
-
-      // Hero & About AR
-      setValSafe('f_brand_ar', data.heroAr?.brandName || FALLBACK_TEMPLATE.ar.brandName);
-      setValSafe('f_hero_eyebrow_ar', data.heroAr?.eyebrow || FALLBACK_TEMPLATE.ar.eyebrow);
-      setValSafe('f_hero_title1_ar', data.heroAr?.title1 || FALLBACK_TEMPLATE.ar.title);
-      setValSafe('f_hero_lead_ar', data.heroAr?.lead || FALLBACK_TEMPLATE.ar.lead);
-      st.heroTypedAr = (data.heroAr?.typed?.length ? data.heroAr.typed : FALLBACK_TEMPLATE.ar.typed);
-      st.heroChipsAr = (data.heroAr?.chips?.length ? data.heroAr.chips : FALLBACK_TEMPLATE.ar.chips);
-      st.heroStatsAr = (data.heroAr?.stats?.length ? data.heroAr.stats : FALLBACK_TEMPLATE.ar.stats);
-      setValSafe('f_about_title_ar', data.aboutAr?.title || FALLBACK_TEMPLATE.ar.aboutTitle);
-      setValSafe('f_about_p1_ar', data.aboutAr?.p1 || FALLBACK_TEMPLATE.ar.aboutP1);
-      st.aboutFactsAr = (data.aboutAr?.facts?.length ? data.aboutAr.facts : FALLBACK_TEMPLATE.ar.aboutFacts);
-      st.aboutArcAr = (data.aboutAr?.arc?.length ? data.aboutAr.arc : FALLBACK_TEMPLATE.ar.aboutArc);
-
-      // Education
-      setValSafe('f_edu_deg_title_en', data.educationEn?.degreeTitle || FALLBACK_TEMPLATE.en.eduTitle);
-      setValSafe('f_edu_deg_meta_en', data.educationEn?.degreeMeta || FALLBACK_TEMPLATE.en.eduMeta);
-      setValSafe('f_edu_cert_title_en', data.educationEn?.icdlTitle || FALLBACK_TEMPLATE.en.certTitle);
-      setValSafe('f_edu_cert_meta_en', data.educationEn?.icdlMeta || FALLBACK_TEMPLATE.en.certMeta);
-      setValSafe('f_edu_deg_title_ar', data.educationAr?.degreeTitle || FALLBACK_TEMPLATE.ar.eduTitle);
-      setValSafe('f_edu_deg_meta_ar', data.educationAr?.degreeMeta || FALLBACK_TEMPLATE.ar.eduMeta);
-      setValSafe('f_edu_cert_title_ar', data.educationAr?.icdlTitle || FALLBACK_TEMPLATE.ar.certTitle);
-      setValSafe('f_edu_cert_meta_ar', data.educationAr?.icdlMeta || FALLBACK_TEMPLATE.ar.certMeta);
-
-      // المصفوفات المعقدة (سحب محمي يضمن وجود عناصر دائماً)
-      st.experience = (data.experienceData && Array.isArray(data.experienceData) && data.experienceData.length > 0)
-        ? data.experienceData 
-        : (localData.en.experience || HARDCODED_FALLBACK_SITE_DATA.en.experience);
-
-      st.projects = (data.projectsData && Array.isArray(data.projectsData) && data.projectsData.length > 0)
-        ? data.projectsData 
-        : (localData.en.projects || HARDCODED_FALLBACK_SITE_DATA.en.projects);
-
-      st.skillCats = (data.skillCatsData && Array.isArray(data.skillCatsData) && data.skillCatsData.length > 0)
-        ? data.skillCatsData 
-        : (localData.en.skillCats || HARDCODED_FALLBACK_SITE_DATA.en.skillCats);
-
-      st.certsElaraby = (data.certsElarabyData && Array.isArray(data.certsElarabyData) && data.certsElarabyData.length > 0)
-        ? data.certsElarabyData 
-        : (localData.en.certsElaraby || HARDCODED_FALLBACK_SITE_DATA.en.certsElaraby);
-
-      st.certsAlmentor = (data.certsAlmentorData && Array.isArray(data.certsAlmentorData) && data.certsAlmentorData.length > 0)
-        ? data.certsAlmentorData 
-        : (localData.en.certsAlmentor || HARDCODED_FALLBACK_SITE_DATA.en.certsAlmentor);
-
-      st.mediaLibrary = data.mediaLibrary || [];
-
-      // Theme
-      const t = data.themeData || {};
-      setValSafe('f_theme_mode', t.mode || "dark");
-      setValSafe('f_theme_font', t.font || "'Cairo', sans-serif");
-      setValSafe('c_gold', t.gold || "#C08B3D");
-      setValSafe('c_gold_l', t.goldLight || "#E3B36B");
-      setValSafe('c_teal', t.teal || "#1F8A70");
-      setValSafe('c_teal_l', t.tealLight || "#38C9A6");
-      setValSafe('c_bg', t.bg || "#0B1220");
-      setValSafe('c_surface', t.surface || "#121B2E");
-      setValSafe('c_radius', t.radius || "14");
-      
-      const v = t.sectionVisibility || {};
-      ['home','about','experience','projects','skills','education','contact'].forEach(id => setCheckSafe('sec_'+id, v[id]));
-
-      // Update Dashboard Counters
-      document.getElementById('statExp').innerText = st.experience.length;
-      document.getElementById('statProj').innerText = st.projects.length;
-      document.getElementById('statSkill').innerText = st.skillCats.length;
-      document.getElementById('statMedia').innerText = st.mediaLibrary.length;
-
-      // بناء النماذج فوراً في الواجهة
-      window.triggerAllRenders();
-      
-      msg.className = 'status-msg ok'; 
-      msg.innerText = 'تم جلب وتعبئة البيانات بنجاح! يمكنك الآن تعديل أي عنصر أو حذف أو إضافة عناصر جديدة.';
-      setTimeout(() => msg.style.display = 'none', 5000);
-
-    } catch (e) { 
-      console.error(e); 
-      msg.className = 'status-msg err'; msg.innerText = 'حدث خطأ أثناء الجلب: ' + e.message; 
-    }
-  }
-
-  document.getElementById('forceFetchBtn').addEventListener('click', loadDataFromFirebase);
-
-  // زر استرداد البيانات الاحتياطية للطوارئ
-  document.getElementById('restoreDataBtn').addEventListener('click', () => {
-    if (confirm("هل أنت متأكد من إعادة استرداد البيانات الافتراضية؟ سيتم جلب خبراتك ومشاريعك المكتوبة مسبقاً وتعبئتها في النماذج.")) {
-      const localData = getInitialData();
-      window.appState.experience = JSON.parse(JSON.stringify(localData.en.experience || HARDCODED_FALLBACK_SITE_DATA.en.experience));
-      window.appState.projects = JSON.parse(JSON.stringify(localData.en.projects || HARDCODED_FALLBACK_SITE_DATA.en.projects));
-      window.appState.skillCats = JSON.parse(JSON.stringify(localData.en.skillCats || HARDCODED_FALLBACK_SITE_DATA.en.skillCats));
-      window.appState.certsElaraby = JSON.parse(JSON.stringify(localData.en.certsElaraby || HARDCODED_FALLBACK_SITE_DATA.en.certsElaraby));
-      window.appState.certsAlmentor = JSON.parse(JSON.stringify(localData.en.certsAlmentor || HARDCODED_FALLBACK_SITE_DATA.en.certsAlmentor));
-
-      window.triggerAllRenders();
-      alert("تم استرداد البيانات بنجاح في الواجهة! قم بمراجعتها ثم اضغط على زر (حفظ ونشر) في كل قسم لرفعها للسيرفر.");
-    }
-  });
-
-  // ==========================================
-  // محرك الحفظ والدفع (Firestore Save Handlers)
-  // ==========================================
-  async function saveDoc(payload, msgId) {
-    const msg = document.getElementById(msgId); 
-    msg.className='status-msg ok'; msg.innerText='جاري الحفظ والمزامنة...'; msg.style.display='block';
-    try {
-      await setDoc(doc(db, "portfolio", "content"), payload, { merge: true });
-      msg.innerText = 'تم الحفظ والنشر بنجاح!'; 
-      setTimeout(() => msg.style.display='none', 4000);
-    } catch (e) { 
-      msg.className='status-msg err'; msg.innerText = 'فشل الحفظ: ' + e.message; 
-    }
-  }
-
-  document.getElementById('saveHero').addEventListener('click', () => {
-    saveDoc({
-      aboutData: { profileImg: getValSafe('f_profile_img') },
-      contactData: { cvLink: getValSafe('f_cv_link') },
-      heroEn: { brandName: getValSafe('f_brand_en'), eyebrow: getValSafe('f_hero_eyebrow_en'), title1: getValSafe('f_hero_title1_en'), lead: getValSafe('f_hero_lead_en'), typed: window.appState.heroTypedEn, chips: window.appState.heroChipsEn, stats: window.appState.heroStatsEn },
-      heroAr: { brandName: getValSafe('f_brand_ar'), eyebrow: getValSafe('f_hero_eyebrow_ar'), title1: getValSafe('f_hero_title1_ar'), lead: getValSafe('f_hero_lead_ar'), typed: window.appState.heroTypedAr, chips: window.appState.heroChipsAr, stats: window.appState.heroStatsAr },
-      aboutEn: { title: getValSafe('f_about_title_en'), p1: getValSafe('f_about_p1_en'), facts: window.appState.aboutFactsEn, arc: window.appState.aboutArcEn },
-      aboutAr: { title: getValSafe('f_about_title_ar'), p1: getValSafe('f_about_p1_ar'), facts: window.appState.aboutFactsAr, arc: window.appState.aboutArcAr }
-    }, 'heroMsg');
-  });
-
-  document.getElementById('saveExperience').addEventListener('click', () => saveDoc({ experienceData: window.appState.experience }, 'experienceMsg'));
-  document.getElementById('saveProjects').addEventListener('click', () => saveDoc({ projectsData: window.appState.projects }, 'projectsMsg'));
-  document.getElementById('saveSkills').addEventListener('click', () => saveDoc({ skillCatsData: window.appState.skillCats }, 'skillsMsg'));
-  
-  document.getElementById('saveEducation').addEventListener('click', () => {
-    saveDoc({
-      educationEn: { degreeTitle: getValSafe('f_edu_deg_title_en'), degreeMeta: getValSafe('f_edu_deg_meta_en'), icdlTitle: getValSafe('f_edu_cert_title_en'), icdlMeta: getValSafe('f_edu_cert_meta_en') },
-      educationAr: { degreeTitle: getValSafe('f_edu_deg_title_ar'), degreeMeta: getValSafe('f_edu_deg_meta_ar'), icdlTitle: getValSafe('f_edu_cert_title_ar'), icdlMeta: getValSafe('f_edu_cert_meta_ar') }
-    }, 'educationMsg');
-  });
-
-  document.getElementById('saveCerts').addEventListener('click', () => saveDoc({ certsElarabyData: window.appState.certsElaraby, certsAlmentorData: window.appState.certsAlmentor }, 'certsMsg'));
-
-  document.getElementById('saveContact').addEventListener('click', () => {
-    saveDoc({ contactData: { email: getValSafe('f_contact_email'), phone: getValSafe('f_contact_phone'), location: getValSafe('f_contact_location'), locationAr: getValSafe('f_contact_location_ar') } }, 'contactMsg');
-  });
-
-  document.getElementById('saveSections').addEventListener('click', () => {
-    const sectionVisibility = {};
-    ['home','about','experience','projects','skills','education','contact'].forEach(id => {
-      const el = document.getElementById('sec_'+id);
-      if(el) sectionVisibility[id] = el.checked;
-    });
-    saveDoc({ themeData: { sectionVisibility } }, 'sectionsMsg');
-  });
-
-  document.getElementById('saveTheme').addEventListener('click', async () => {
-    const docRef = doc(db, "portfolio", "content");
-    const docSnap = await getDoc(docRef);
-    const existingTheme = docSnap.exists() && docSnap.data().themeData ? docSnap.data().themeData : {};
-    
-    existingTheme.mode = getValSafe('f_theme_mode');
-    existingTheme.font = getValSafe('f_theme_font');
-    existingTheme.gold = getValSafe('c_gold');
-    existingTheme.goldLight = getValSafe('c_gold_l');
-    existingTheme.teal = getValSafe('c_teal');
-    existingTheme.tealLight = getValSafe('c_teal_l');
-    existingTheme.bg = getValSafe('c_bg');
-    existingTheme.surface = getValSafe('c_surface');
-    existingTheme.radius = getValSafe('c_radius');
-    
-    saveDoc({ themeData: existingTheme }, 'themeMsg');
-  });
+  document.getElementById('analyzeCvBtn').addEventListener('click', () => handleCVUpload(document.getElementById('cvFileDrop').files[0], 'parseStatus'));
 </script>
 </body>
 </html>
