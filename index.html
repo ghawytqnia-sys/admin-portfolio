@@ -15,33 +15,17 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
 
-<style>
-/* ============ المتغيرات والألوان ============ */
-:root {
-  --ink: #0B1220; 
-  --ink-2: #121B2E; 
-  --gold: #C08B3D; 
-  --gold-l: #E3B36B; 
-  --teal: #1F8A70; 
-  --teal-l: #38C9A6;
-  --bg: #0B1220; 
-  --bg-2: #121B2E; 
-  --surface: rgba(255,255,255,.04); 
-  --text: #EDEFF3; 
-  --text-dim: #A6ADBB; 
-  --border: rgba(255,255,255,.09);
-  --radius: 12px; 
-  --font-display: 'Cairo', sans-serif; 
-  --font-body: 'Cairo', sans-serif;
-}
+<!-- استدعاء ملف البيانات المحلي كمصدر أولي (Fallback Data) -->
+<script src="data.js"></script>
 
+<style>
+:root { --ink: #0B1220; --ink-2: #121B2E; --gold: #C08B3D; --gold-l: #E3B36B; --teal: #1F8A70; --teal-l: #38C9A6; --bg: #0B1220; --bg-2: #121B2E; --surface: rgba(255,255,255,.04); --text: #EDEFF3; --text-dim: #A6ADBB; --border: rgba(255,255,255,.09); --radius: 12px; --font-display: 'Cairo', sans-serif; --font-body: 'Cairo', sans-serif; }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: var(--font-body); background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
 a { color: inherit; text-decoration: none; }
 h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 700; }
 button, input, textarea, select { font-family: inherit; }
 
-/* ============ شاشة تسجيل الدخول ============ */
 #loginScreen { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; background: radial-gradient(circle at 50% 50%, #121B2E 0%, #0B1220 100%); }
 .login-card { width: 100%; max-width: 420px; background: var(--bg-2); border: 1px solid var(--border); border-radius: 16px; padding: 40px 30px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); text-align: center; }
 .login-card h1 { font-size: 24px; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; gap: 12px; }
@@ -51,7 +35,6 @@ button, input, textarea, select { font-family: inherit; }
 .field input { width: 100%; padding: 12px 14px; border-radius: 9px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-size: 15px; transition: border .25s; text-align: left; direction: ltr; }
 .field input:focus { outline: none; border-color: var(--gold); }
 
-/* ============ الأزرار ============ */
 .btn { display: inline-flex; align-items: center; gap: 8px; padding: 11px 20px; border-radius: 9px; font-weight: 600; font-size: 13.5px; border: 1px solid transparent; cursor: pointer; transition: .25s ease; white-space: nowrap; justify-content: center; }
 .btn-primary { background: linear-gradient(135deg, var(--gold), var(--gold-l)); color: #181008; box-shadow: 0 8px 20px -6px rgba(192,139,61,0.4); }
 .btn-primary:hover { opacity: .95; transform: translateY(-1px); }
@@ -61,7 +44,6 @@ button, input, textarea, select { font-family: inherit; }
 .btn-danger:hover { background: rgba(220,90,90,0.16); border-color: #e07a7a; }
 .btn-small { padding: 6px 12px; font-size: 12px; }
 
-/* ============ الهيكل الرئيسي للوحة ============ */
 #app { display: none; min-height: 100vh; grid-template-columns: 1fr 270px; }
 #app.show { display: grid; }
 .sidebar { background: var(--bg-2); border-left: 1px solid var(--border); padding: 26px 16px; display: flex; flex-direction: column; gap: 4px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
@@ -80,7 +62,6 @@ button, input, textarea, select { font-family: inherit; }
 .panel { display: none; }
 .panel.active { display: block; }
 
-/* ============ الكروت والحقول ============ */
 .card { background: var(--bg-2); border: 1px solid var(--border); border-radius: 14px; padding: 26px; margin-bottom: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
 .card h3 { font-size: 16px; margin-bottom: 16px; font-weight: 600; color: #fff; display: flex; align-items: center; gap: 8px; }
 
@@ -99,7 +80,6 @@ button, input, textarea, select { font-family: inherit; }
 .api-key-box label { font-weight: 700; color: var(--gold-l); }
 .api-key-box input { background: var(--bg); border: 1px solid var(--border); margin-top: 8px; }
 
-/* ============ الرفع والمعرض ============ */
 .upload-box { border: 2px dashed var(--border); padding: 24px; border-radius: 10px; text-align: center; background: rgba(0,0,0,0.15); transition: all 0.3s; margin-bottom: 16px; }
 .upload-box:hover { border-color: var(--gold); background: rgba(192,139,61,0.02); }
 .upload-box input[type="file"] { display: none; }
@@ -110,7 +90,6 @@ button, input, textarea, select { font-family: inherit; }
 .media-item img { width: 100%; height: 100%; object-fit: cover; }
 .media-item .actions { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.7); display: flex; justify-content: space-around; padding: 6px; }
 
-/* ============ رسائل الحالة والإحصائيات ============ */
 .stat-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 28px; }
 .stat-mini { background: var(--bg-2); border: 1px solid var(--border); border-radius: 12px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: right; }
 .stat-mini b { font-family: var(--font-display); font-size: 28px; display: block; color: var(--gold-l); line-height: 1.1; }
@@ -120,11 +99,9 @@ button, input, textarea, select { font-family: inherit; }
 .status-msg.ok { display: block; background: rgba(31,138,112,.14); color: var(--teal-l); border: 1px solid rgba(31,138,112,.3); }
 .status-msg.err { display: block; background: rgba(220,90,90,.1); color: #e07a7a; border: 1px solid rgba(220,90,90,.3); }
 
-/* ============ القوائم الديناميكية (Form Builders) ============ */
 .list-editor-item { border: 1px solid var(--border); padding: 20px 20px 10px; margin-bottom: 16px; border-radius: 8px; background: rgba(0,0,0,0.15); position: relative; }
 .remove-btn { position: absolute; top: 12px; left: 12px; }
 
-/* ============ أزرار التبديل والمودال ============ */
 .switch-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border); }
 .switch-row:last-child { border-bottom: none; }
 .switch-row .lbl { font-size: 13.5px; font-weight: 500; }
@@ -138,18 +115,9 @@ input:checked + .slider:before { transform: translateX(20px); }
 .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 10000; display: none; align-items: center; justify-content: center; padding: 20px; }
 .modal-overlay.open { display: flex; }
 .modal-box { background: var(--bg-2); border: 1px solid var(--border); border-radius: 16px; max-width: 850px; width: 100%; max-height: 85vh; overflow-y: auto; padding: 30px; box-shadow: 0 20px 60px rgba(0,0,0,0.6); }
-.confidence-badge { font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 100px; text-transform: uppercase; margin-top: 4px; display: inline-block; background: rgba(31,138,112,0.2); color: var(--teal-l); border: 1px solid var(--teal); }
 
 .topbar-mobile { display: none; background: var(--bg-2); padding: 14px 20px; border-bottom: 1px solid var(--border); align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 1000; width: 100%; }
-
-@media(max-width:920px) {
-  #app { grid-template-columns: 1fr; }
-  .topbar-mobile { display: flex; }
-  .sidebar { position: fixed; z-index: 9999; inset: 0 0 0 20%; transform: translateX(105%); transition: transform .3s ease; height: 100vh; border-left: none; border-right: 1px solid var(--border); }
-  .sidebar.open { transform: translateX(0); }
-  .main { padding: 24px 20px; }
-  .lang-box-grid { grid-template-columns: 1fr; }
-}
+@media(max-width:920px) { #app { grid-template-columns: 1fr; } .topbar-mobile { display: flex; } .sidebar { position: fixed; z-index: 9999; inset: 0 0 0 20%; transform: translateX(105%); transition: transform .3s ease; height: 100vh; border-left: none; border-right: 1px solid var(--border); } .sidebar.open { transform: translateX(0); } .main { padding: 24px 20px; } .lang-box-grid { grid-template-columns: 1fr; } }
 </style>
 
 <script>
@@ -317,7 +285,7 @@ window.triggerAllRenders = function() {
   <aside class="sidebar" id="sidebar">
     <div class="brand"><span class="dot"></span> استوديو التحكم</div>
     <div class="nav-item active" data-panel="overview"><i class="fa-solid fa-gauge"></i> الإحصائيات والمزامنة</div>
-    <div class="nav-item" data-panel="parser"><i class="fa-solid fa-robot"></i> المعالج بالذكاء الاصطناعي</div>
+    <div class="nav-item" data-panel="parser"><i class="fa-solid fa-robot"></i> المعالج والمستخرج الذكي</div>
     <div class="nav-item" data-panel="hero"><i class="fa-solid fa-bullseye"></i> الواجهة ونبذة عني</div>
     <div class="nav-item" data-panel="experience"><i class="fa-solid fa-briefcase"></i> مسار الخبرات</div>
     <div class="nav-item" data-panel="projects"><i class="fa-solid fa-diagram-project"></i> استوديو المشاريع</div>
@@ -338,7 +306,7 @@ window.triggerAllRenders = function() {
   <main class="main">
     <div style="display:flex; justify-content:flex-end; gap:12px; margin-bottom:24px; flex-wrap:wrap;">
       <button class="btn btn-ghost" id="forceFetchBtn" style="border-color:var(--teal-l); color:var(--teal-l);">
-        <i class="fa-solid fa-cloud-arrow-down"></i> جلب وتحديث البيانات من القاعدة
+        <i class="fa-solid fa-cloud-arrow-down"></i> جلب وتحديث البيانات
       </button>
     </div>
 
@@ -354,16 +322,16 @@ window.triggerAllRenders = function() {
       <p class="status-msg" id="fetchStatusMsg"></p>
     </section>
 
-    <!-- Parser (AI) Panel -->
+    <!-- Parser (AI & Fallback) Panel -->
     <section class="panel" id="panel-parser">
       <div class="main-head">
-        <div><h2>الاستخراج والتسكين التلقائي بالذكاء الاصطناعي (AI CV Auto-Filler)</h2>
-        <p>ارفع ملف السيرة الذاتية ليقوم الذكاء الاصطناعي (Gemini) بقراءته، استخراج البيانات، وتسكينها تلقائياً في نماذج لوحة التحكم.</p></div>
+        <div><h2>استخراج السيرة الذاتية (بواسطة AI أو الاستخراج المحلي)</h2>
+        <p>ارفع ملف السيرة الذاتية. سيحاول النظام قراءته باستخدام Gemini AI لتسكين البيانات تلقائياً. في حال عدم وجود مفتاح، سيقوم النظام بمحاولة استخراجه وعرضه لك للنسخ اليدوي.</p></div>
       </div>
       
       <!-- إعداد مفتاح API -->
       <div class="api-key-box">
-        <label><i class="fa-solid fa-key"></i> مفتاح الاتصال بـ Gemini API (مطلوب للذكاء الاصطناعي)</label>
+        <label><i class="fa-solid fa-key"></i> مفتاح الاتصال بـ Gemini API (اختياري للذكاء الاصطناعي)</label>
         <p style="font-size:12px; color:var(--text-dim); margin-top:4px;">يمكنك الحصول عليه مجاناً من Google AI Studio.</p>
         <input type="text" id="gemini_api_key" placeholder="AIzaSy..." class="field-inline" style="width:100%; padding:10px; border-radius:6px; margin-bottom:0;" dir="ltr">
       </div>
@@ -376,7 +344,7 @@ window.triggerAllRenders = function() {
             <label for="cvFileDropEn">Upload English Resume (PDF/DOCX)</label>
             <input type="file" id="cvFileDropEn" accept=".pdf,.docx">
           </div>
-          <button class="btn btn-primary" id="analyzeCvBtnEn" style="width:100%;"><i class="fa-solid fa-microchip"></i> قراءة وتسكين البيانات (EN)</button>
+          <button class="btn btn-primary" id="analyzeCvBtnEn" style="width:100%;"><i class="fa-solid fa-microchip"></i> استخراج وتحليل (EN)</button>
         </div>
         <div class="card" style="margin-bottom:0;">
           <h3><i class="fa-solid fa-flag"></i> المعالج العربي للـ CV</h3>
@@ -385,7 +353,7 @@ window.triggerAllRenders = function() {
             <label for="cvFileDropAr">رفع السيرة الذاتية بالعربية (PDF/DOCX)</label>
             <input type="file" id="cvFileDropAr" accept=".pdf,.docx">
           </div>
-          <button class="btn btn-primary" id="analyzeCvBtnAr" style="width:100%;"><i class="fa-solid fa-microchip"></i> قراءة وتسكين البيانات (AR)</button>
+          <button class="btn btn-primary" id="analyzeCvBtnAr" style="width:100%;"><i class="fa-solid fa-microchip"></i> استخراج وتحليل (AR)</button>
         </div>
       </div>
       <div id="parseStatus" class="status-msg"></div>
@@ -444,7 +412,7 @@ window.triggerAllRenders = function() {
 
     <!-- Experience Panel -->
     <section class="panel" id="panel-experience">
-      <div class="main-head"><div><h2>الخبرات المهنية (Experience Form Builder)</h2><p>يتم تسكين هذه الحقول تلقائياً في حال استخدام الذكاء الاصطناعي لتحليل سيرتك.</p></div></div>
+      <div class="main-head"><div><h2>الخبرات المهنية (Experience Form Builder)</h2><p>يتم تسكين هذه الحقول تلقائياً في حال استخدام الذكاء الاصطناعي لتحليل سيرتك، أو يمكنك تعديلها يدوياً.</p></div></div>
       <div class="card" id="experience-editor" style="padding:16px;"></div>
       <button class="btn btn-primary" id="saveExperience"><i class="fa-solid fa-floppy-disk"></i> حفظ ونشر الخبرات</button>
       <p class="status-msg" id="experienceMsg"></p>
@@ -563,16 +531,26 @@ window.triggerAllRenders = function() {
   </main>
 </div>
 
-<!-- Modal for Regex Fallback Extract -->
+<!-- Modal for Local Fallback Parsing -->
 <div class="modal-overlay" id="parsedCvModal">
   <div class="modal-box">
-    <h3 style="margin-bottom:20px; border-bottom:1px solid var(--border); padding-bottom:14px; color:var(--gold-l);"><i class="fa-solid fa-circle-info"></i> الاستخراج اليدوي (بدون API)</h3>
-    <p style="color:var(--text-dim); margin-bottom:16px;">لم يتم وضع مفتاح Gemini API. لذلك قمنا بتفكيك النص مبدئياً، يمكنك نسخه يدوياً إلى لوحة التحكم.</p>
-    <div style="border-top:1px dashed var(--border); padding-top:16px;">
-      <div class="field-inline"><label>النص الكامل المستخرج:</label><textarea id="cv_parsed_raw" readonly style="min-height:200px; font-size:13px; direction:ltr; text-align:left; background:var(--bg);"></textarea></div>
+    <h3 style="margin-bottom:20px; border-bottom:1px solid var(--border); padding-bottom:14px; color:var(--gold-l);"><i class="fa-solid fa-wand-magic-sparkles"></i> المعالج المحلي للسيرة الذاتية (Local Extractor)</h3>
+    <p style="color:var(--text-dim); margin-bottom:16px;">قام النظام بقراءة وتفكيك الملف بدقة عالية. يمكنك نسخ الأجزاء المستخرجة ونقلها للحقول الخاصة بها.</p>
+    
+    <div class="lang-box-grid" style="margin-bottom:10px;">
+      <div class="field-inline"><label>البريد الإلكتروني المكتشف:</label><input id="cv_parsed_email" dir="ltr" style="text-align:left;"></div>
+      <div class="field-inline"><label>رقم الهاتف المكتشف:</label><input id="cv_parsed_phone" dir="ltr" style="text-align:left;"></div>
     </div>
+    
+    <div style="border-top:1px dashed var(--border); padding-top:16px; margin-top:10px;">
+      <div class="field-inline"><label>مقطع (Experience / الخبرات):</label><textarea id="cv_parsed_exp" readonly style="min-height:140px; font-size:13px; direction:ltr; text-align:left; background:var(--bg);"></textarea></div>
+      <div class="field-inline"><label>مقطع (Education / التعليم):</label><textarea id="cv_parsed_edu" readonly style="min-height:100px; font-size:13px; direction:ltr; text-align:left; background:var(--bg);"></textarea></div>
+      <div class="field-inline"><label>مقطع (Skills / المهارات):</label><textarea id="cv_parsed_skills" readonly style="min-height:100px; font-size:13px; direction:ltr; text-align:left; background:var(--bg);"></textarea></div>
+    </div>
+
     <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:24px;">
-      <button class="btn btn-primary" onclick="document.getElementById('parsedCvModal').classList.remove('open');">فهمت، إغلاق</button>
+      <button class="btn btn-ghost" onclick="document.getElementById('parsedCvModal').classList.remove('open');">تجاهل وإغلاق</button>
+      <button class="btn btn-primary" id="confirmCvContactImport"><i class="fa-solid fa-check"></i> نقل أرقام الاتصال لنموذج التواصل</button>
     </div>
   </div>
 </div>
@@ -668,30 +646,76 @@ window.triggerAllRenders = function() {
         window.appState.mediaLibrary.push(cloudData.secure_url);
         window.renderMediaGallery();
         await setDoc(doc(db, "portfolio", "content"), { mediaLibrary: window.appState.mediaLibrary }, { merge: true });
-        alert("تم رفع الصورة بنجاح!");
+        alert("تم رفع الصورة وإضافتها للمعرض بنجاح!");
+      } else {
+        alert("فشل الرفع: تأكد من إعدادات الـ Upload Preset في Cloudinary.");
       }
-    } catch(e) { console.error(e); alert("خطأ أثناء الرفع."); }
+    } catch(e) { 
+      console.error(e); 
+      alert("خطأ في الاتصال بالخادم أثناء الرفع."); 
+    }
     this.previousElementSibling.innerHTML = oldLabel;
   });
 
+
   // ==========================================
-  // محرك الذكاء الاصطناعي (Gemini API Integration) للتسكين التلقائي
+  // المعالج المحلي واستخراج البيانات Local Extract & AI
   // ==========================================
+
+  // تقطيع النص محلياً بخوارزمية متقدمة
+  function extractSectionsByRegex(text) {
+    const cleanText = text.replace(/\n\s*\n/g, '\n');
+    
+    // قواعد مرنة للبحث عن الكلمات المفتاحية
+    const expRegex = /(Experience|الخبرات|الخبرة المهنية|Work History|Employment)[\s\S]*?(Education|التعليم|المؤهلات|Skills|المهارات|Projects|المشاريع|$)/i;
+    const eduRegex = /(Education|التعليم|المؤهلات|Academic)[\s\S]*?(Skills|المهارات|Projects|المشاريع|Experience|الخبرات|$)/i;
+    const skillsRegex = /(Skills|المهارات|Technical Skills|Core Competencies)[\s\S]*?(Education|التعليم|Projects|المشاريع|Experience|الخبرات|$)/i;
+    
+    let exp = (cleanText.match(expRegex) || ['', 'لم يتم العثور على قسم خبرات واضح.'])[0];
+    let edu = (cleanText.match(eduRegex) || ['', 'لم يتم العثور على قسم تعليم واضح.'])[0];
+    let skills = (cleanText.match(skillsRegex) || ['', 'لم يتم العثور على قسم مهارات واضح.'])[0];
+    
+    return {
+      exp: exp.substring(0, 2000),
+      edu: edu.substring(0, 1000),
+      skills: skills.substring(0, 1000)
+    };
+  }
+
+  // الاستخراج المحلي الكامل (Fallback Method)
+  function fallbackLocalParsing(rawText, statusEl, customMsg) {
+    const emailMatch = rawText.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
+    const phoneMatch = rawText.match(/(\+?\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4,6}/);
+    
+    document.getElementById('cv_parsed_email').value = emailMatch ? emailMatch[0] : "";
+    document.getElementById('cv_parsed_phone').value = phoneMatch ? phoneMatch[0] : "";
+    
+    const sections = extractSectionsByRegex(rawText);
+    document.getElementById('cv_parsed_exp').value = sections.exp;
+    document.getElementById('cv_parsed_edu').value = sections.edu;
+    document.getElementById('cv_parsed_skills').value = sections.skills;
+    
+    document.getElementById('parsedCvModal').classList.add('open');
+    
+    if(statusEl) {
+      statusEl.style.display = 'none';
+      if(customMsg) alert(customMsg);
+    }
+  }
+
+  // المعالجة بواسطة الذكاء الاصطناعي
   async function processWithAI(rawText, lang, statusId) {
     const apiKey = document.getElementById('gemini_api_key').value.trim();
     const status = document.getElementById(statusId);
 
-    // إذا لم يضع المستخدم مفتاح AI، نلجأ للطريقة التقليدية (Fallback Modal)
+    // إذا لم يضع المستخدم مفتاح AI، نلجأ للطريقة اليدوية المحلية المتقدمة
     if(!apiKey) {
-      document.getElementById('cv_parsed_raw').value = rawText;
-      document.getElementById('parsedCvModal').classList.add('open');
-      status.style.display = 'none';
+      fallbackLocalParsing(rawText, status);
       return;
     }
 
     status.innerText = 'يتم الآن تحليل وفهم البيانات بواسطة الذكاء الاصطناعي... يرجى الانتظار.';
     
-    // الأوامر الصارمة للـ AI لإرجاع JSON نظيف فقط
     const prompt = `You are an expert CV parsing assistant. Extract data from the following CV text.
     Return ONLY a raw JSON object exactly matching this schema. Do not wrap it in markdown code blocks.
     Translate or adapt the content into ${lang === 'ar' ? 'Arabic' : 'English'} where appropriate.
@@ -714,16 +738,16 @@ window.triggerAllRenders = function() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: { responseMimeType: "application/json" } // Force JSON response type
+          generationConfig: { responseMimeType: "application/json" }
         })
       });
 
-      if(!response.ok) throw new Error("API Key غير صحيح أو تم تجاوز الحد المسموح للاستخدام.");
+      if(!response.ok) throw new Error("API Key is restricted or expired.");
 
       const data = await response.json();
       const parsedData = JSON.parse(data.candidates[0].content.parts[0].text);
 
-      // تسكين البيانات في النماذج (Auto-Populate App State)
+      // التسكين التلقائي للمصفوفات المستخرجة من AI
       if(parsedData.experience && parsedData.experience.length) window.appState.experience = parsedData.experience;
       if(parsedData.skillCats && parsedData.skillCats.length) window.appState.skillCats = parsedData.skillCats;
       
@@ -747,20 +771,17 @@ window.triggerAllRenders = function() {
         else document.getElementById('f_brand_en').value = parsedData.brandName;
       }
 
-      // تحديث الواجهة
       window.triggerAllRenders();
       status.className = 'status-msg ok';
       status.innerText = "نجاح! تم استخراج البيانات بذكاء وتسكينها في حقول لوحة التحكم. قم بمراجعتها ثم اضغط (حفظ).";
       setTimeout(() => status.style.display = 'none', 6000);
 
     } catch (e) {
-      console.error(e);
-      status.className = 'status-msg err';
-      status.innerText = "فشل الذكاء الاصطناعي: " + e.message;
+      console.warn("AI Parsing failed, falling back to local:", e);
+      fallbackLocalParsing(rawText, status, "تم رفض مفتاح الذكاء الاصطناعي (أو انتهت صلاحيته). تم التحويل للمعالج المحلي بدلاً من ذلك ليقوم بفك المستند وتجهيزه لك.");
     }
   }
 
-  // --- استخراج النص الخام من الملف ثم تمريره للـ AI ---
   function handleCVUpload(lang, file, statusId) {
     if(!file) return alert("الرجاء تحديد ملف (PDF/DOCX) أولاً.");
     const status = document.getElementById(statusId);
@@ -790,18 +811,29 @@ window.triggerAllRenders = function() {
   document.getElementById('analyzeCvBtnEn').addEventListener('click', () => handleCVUpload('en', document.getElementById('cvFileDropEn').files[0], 'parseStatus'));
   document.getElementById('analyzeCvBtnAr').addEventListener('click', () => handleCVUpload('ar', document.getElementById('cvFileDropAr').files[0], 'parseStatus'));
 
+  document.getElementById('confirmCvContactImport').addEventListener('click', () => {
+    const em = document.getElementById('cv_parsed_email').value;
+    const ph = document.getElementById('cv_parsed_phone').value;
+    if(em) document.getElementById('f_contact_email').value = em;
+    if(ph) document.getElementById('f_contact_phone').value = ph;
+    alert("تم نسخ أرقام الاتصال لنموذج التواصل بنجاح!");
+    document.getElementById('parsedCvModal').classList.remove('open');
+  });
 
   // ==========================================
-  // محرك جلب ومزامنة البيانات (Firestore Fetch Engine)
+  // محرك جلب ومزامنة البيانات من Firestore مع Fallback للملف المحلي
   // ==========================================
   async function loadDataFromFirebase() {
     const msg = document.getElementById('fetchStatusMsg');
-    msg.style.display = 'block'; msg.className = 'status-msg'; msg.innerText = 'جاري جلب البيانات من الخادم...';
+    msg.style.display = 'block'; msg.className = 'status-msg'; msg.innerText = 'جاري الجلب والمزامنة...';
     
     try {
       const docSnap = await getDoc(doc(db, "portfolio", "content"));
       const data = docSnap.exists() ? docSnap.data() : {};
       const st = window.appState;
+      
+      // Default Data Object sourced from data.js
+      const defaultSiteData = window.SITE_DATA || { en: {}, ar: {} };
 
       // Profile & Contact
       document.getElementById('f_profile_img').value = data.aboutData?.profileImg || "";
@@ -847,12 +879,12 @@ window.triggerAllRenders = function() {
       document.getElementById('f_edu_cert_title_ar').value = data.educationAr?.icdlTitle || "";
       document.getElementById('f_edu_cert_meta_ar').value = data.educationAr?.icdlMeta || "";
 
-      // Matrices
-      st.experience = data.experienceData || [];
-      st.projects = data.projectsData || [];
-      st.skillCats = data.skillCatsData || [];
-      st.certsElaraby = data.certsElarabyData || [];
-      st.certsAlmentor = data.certsAlmentorData || [];
+      // Matrices (If Firebase is empty, load from default SITE_DATA)
+      st.experience = (data.experienceData && data.experienceData.length) ? data.experienceData : (defaultSiteData.en.experience || []);
+      st.projects = (data.projectsData && data.projectsData.length) ? data.projectsData : (defaultSiteData.en.projects || []);
+      st.skillCats = (data.skillCatsData && data.skillCatsData.length) ? data.skillCatsData : (defaultSiteData.en.skillCats || []);
+      st.certsElaraby = (data.certsElarabyData && data.certsElarabyData.length) ? data.certsElarabyData : (defaultSiteData.en.certsElaraby || []);
+      st.certsAlmentor = (data.certsAlmentorData && data.certsAlmentorData.length) ? data.certsAlmentorData : (defaultSiteData.en.certsAlmentor || []);
       st.mediaLibrary = data.mediaLibrary || [];
 
       // Theme
@@ -860,9 +892,12 @@ window.triggerAllRenders = function() {
       document.getElementById('f_theme_mode').value = t.mode || "dark";
       document.getElementById('f_theme_font').value = t.font || "'Cairo', sans-serif";
       document.getElementById('c_gold').value = t.gold || "#C08B3D";
+      document.getElementById('c_gold_l').value = t.goldLight || "#E3B36B";
       document.getElementById('c_teal').value = t.teal || "#1F8A70";
+      document.getElementById('c_teal_l').value = t.tealLight || "#38C9A6";
       document.getElementById('c_bg').value = t.bg || "#0B1220";
       document.getElementById('c_surface').value = t.surface || "#121B2E";
+      document.getElementById('c_radius').value = t.radius || "14";
       
       const v = t.sectionVisibility || {};
       ['home','about','experience','projects','skills','education','contact'].forEach(id => {
@@ -876,10 +911,10 @@ window.triggerAllRenders = function() {
       document.getElementById('statSkill').innerText = st.skillCats.length;
       document.getElementById('statMedia').innerText = st.mediaLibrary.length;
 
-      // Re-render UI
+      // Re-render UI Elements
       window.triggerAllRenders();
       
-      msg.className = 'status-msg ok'; msg.innerText = 'تم الجلب والتحديث بنجاح!';
+      msg.className = 'status-msg ok'; msg.innerText = 'تم جلب وتعبئة البيانات بنجاح!';
       setTimeout(() => msg.style.display = 'none', 3000);
 
     } catch (e) { 
@@ -905,29 +940,12 @@ window.triggerAllRenders = function() {
     }
   }
 
-  // Save Hero/About & Brand Name
   document.getElementById('saveHero').addEventListener('click', () => {
     saveDoc({
       aboutData: { profileImg: document.getElementById('f_profile_img').value },
       contactData: { cvLink: document.getElementById('f_cv_link').value },
-      heroEn: { 
-        brandName: document.getElementById('f_brand_en').value,
-        eyebrow: document.getElementById('f_hero_eyebrow_en').value, 
-        title1: document.getElementById('f_hero_title1_en').value, 
-        lead: document.getElementById('f_hero_lead_en').value, 
-        typed: window.appState.heroTypedEn, 
-        chips: window.appState.heroChipsEn, 
-        stats: window.appState.heroStatsEn 
-      },
-      heroAr: { 
-        brandName: document.getElementById('f_brand_ar').value,
-        eyebrow: document.getElementById('f_hero_eyebrow_ar').value, 
-        title1: document.getElementById('f_hero_title1_ar').value, 
-        lead: document.getElementById('f_hero_lead_ar').value, 
-        typed: window.appState.heroTypedAr, 
-        chips: window.appState.heroChipsAr, 
-        stats: window.appState.heroStatsAr 
-      },
+      heroEn: { brandName: document.getElementById('f_brand_en').value, eyebrow: document.getElementById('f_hero_eyebrow_en').value, title1: document.getElementById('f_hero_title1_en').value, lead: document.getElementById('f_hero_lead_en').value, typed: window.appState.heroTypedEn, chips: window.appState.heroChipsEn, stats: window.appState.heroStatsEn },
+      heroAr: { brandName: document.getElementById('f_brand_ar').value, eyebrow: document.getElementById('f_hero_eyebrow_ar').value, title1: document.getElementById('f_hero_title1_ar').value, lead: document.getElementById('f_hero_lead_ar').value, typed: window.appState.heroTypedAr, chips: window.appState.heroChipsAr, stats: window.appState.heroStatsAr },
       aboutEn: { title: document.getElementById('f_about_title_en').value, p1: document.getElementById('f_about_p1_en').value, facts: window.appState.aboutFactsEn, arc: window.appState.aboutArcEn },
       aboutAr: { title: document.getElementById('f_about_title_ar').value, p1: document.getElementById('f_about_p1_ar').value, facts: window.appState.aboutFactsAr, arc: window.appState.aboutArcAr }
     }, 'heroMsg');
@@ -966,9 +984,12 @@ window.triggerAllRenders = function() {
     existingTheme.mode = document.getElementById('f_theme_mode').value;
     existingTheme.font = document.getElementById('f_theme_font').value;
     existingTheme.gold = document.getElementById('c_gold').value;
+    existingTheme.goldLight = document.getElementById('c_gold_l').value;
     existingTheme.teal = document.getElementById('c_teal').value;
+    existingTheme.tealLight = document.getElementById('c_teal_l').value;
     existingTheme.bg = document.getElementById('c_bg').value;
     existingTheme.surface = document.getElementById('c_surface').value;
+    existingTheme.radius = document.getElementById('c_radius').value;
     
     saveDoc({ themeData: existingTheme }, 'themeMsg');
   });
