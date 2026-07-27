@@ -312,7 +312,7 @@ window.triggerAllRenders = function() {
 
     <!-- Overview Panel -->
     <section class="panel active" id="panel-overview">
-      <div class="main-head"><div><h2>لوحة التحكم المركزية</h2><p>تزامن حي ومباشر مع خوادم Firebase.</p></div></div>
+      <div class="main-head"><div><h2>لوحة التحكم المركزية</h2><p>تزامن حي ومباشر مع قاعدة البيانات.</p></div></div>
       <div class="stat-cards">
         <div class="stat-mini"><b id="statExp">0</b><span>خبرات مسجلة</span></div>
         <div class="stat-mini"><b id="statProj">0</b><span>مشاريع معروضة</span></div>
@@ -325,14 +325,14 @@ window.triggerAllRenders = function() {
     <!-- Parser (AI & Fallback) Panel -->
     <section class="panel" id="panel-parser">
       <div class="main-head">
-        <div><h2>استخراج السيرة الذاتية (بواسطة AI أو الاستخراج المحلي)</h2>
-        <p>ارفع ملف السيرة الذاتية. سيحاول النظام قراءته باستخدام Gemini AI لتسكين البيانات تلقائياً. في حال عدم وجود مفتاح، سيقوم النظام بمحاولة استخراجه وعرضه لك للنسخ اليدوي.</p></div>
+        <div><h2>المستخرج الذكي (AI & Smart Regex Parsing)</h2>
+        <p>قم برفع ملف السيرة الذاتية الخاص بك. سيحاول النظام استخراج البيانات بواسطة الذكاء الاصطناعي لتسكينها تلقائياً. وإن فشل الذكاء الاصطناعي (أو لم تضع مفتاح API)، سيقوم النظام بتحليل النص وعرضه لك لتنسخه في المكان المناسب.</p></div>
       </div>
       
       <!-- إعداد مفتاح API -->
       <div class="api-key-box">
-        <label><i class="fa-solid fa-key"></i> مفتاح الاتصال بـ Gemini API (اختياري للذكاء الاصطناعي)</label>
-        <p style="font-size:12px; color:var(--text-dim); margin-top:4px;">يمكنك الحصول عليه مجاناً من Google AI Studio.</p>
+        <label><i class="fa-solid fa-key"></i> مفتاح الاتصال بـ Gemini API (اختياري)</label>
+        <p style="font-size:12px; color:var(--text-dim); margin-top:4px;">احصل عليه مجاناً من Google AI Studio للحصول على تسكين تلقائي بالكامل.</p>
         <input type="text" id="gemini_api_key" placeholder="AIzaSy..." class="field-inline" style="width:100%; padding:10px; border-radius:6px; margin-bottom:0;" dir="ltr">
       </div>
 
@@ -412,7 +412,7 @@ window.triggerAllRenders = function() {
 
     <!-- Experience Panel -->
     <section class="panel" id="panel-experience">
-      <div class="main-head"><div><h2>الخبرات المهنية (Experience Form Builder)</h2><p>يتم تسكين هذه الحقول تلقائياً في حال استخدام الذكاء الاصطناعي لتحليل سيرتك، أو يمكنك تعديلها يدوياً.</p></div></div>
+      <div class="main-head"><div><h2>الخبرات المهنية (Experience Form Builder)</h2><p>نظام ديناميكي لإضافة وتعديل الخبرات.</p></div></div>
       <div class="card" id="experience-editor" style="padding:16px;"></div>
       <button class="btn btn-primary" id="saveExperience"><i class="fa-solid fa-floppy-disk"></i> حفظ ونشر الخبرات</button>
       <p class="status-msg" id="experienceMsg"></p>
@@ -508,9 +508,15 @@ window.triggerAllRenders = function() {
           <div class="field-inline"><label>نوع الخط (Font)</label><select id="f_theme_font"><option value="'Cairo', sans-serif">Cairo</option><option value="'Tajawal', sans-serif">Tajawal</option><option value="'Alexandria', sans-serif">Alexandria</option><option value="'Poppins', sans-serif">Poppins / Inter</option></select></div>
         </div>
         <div class="switch-row"><div class="lbl">اللون الأساسي الذهبي (Primary Gold)</div><input type="color" id="c_gold" value="#C08B3D" style="height:34px; border-radius:6px; cursor:pointer;"></div>
+        <div class="switch-row"><div class="lbl">اللون الذهبي الفاتح (Gold Light)</div><input type="color" id="c_gold_l" value="#E3B36B" style="height:34px; border-radius:6px; cursor:pointer;"></div>
         <div class="switch-row"><div class="lbl">اللون الثانوي التيركواز (Secondary Teal)</div><input type="color" id="c_teal" value="#1F8A70" style="height:34px; border-radius:6px; cursor:pointer;"></div>
+        <div class="switch-row"><div class="lbl">اللون التيركواز الفاتح (Teal Light)</div><input type="color" id="c_teal_l" value="#38C9A6" style="height:34px; border-radius:6px; cursor:pointer;"></div>
         <div class="switch-row"><div class="lbl">لون خلفية الموقع (Background Color)</div><input type="color" id="c_bg" value="#0B1220" style="height:34px; border-radius:6px; cursor:pointer;"></div>
         <div class="switch-row"><div class="lbl">لون الكروت والأسطح (Surface Color)</div><input type="color" id="c_surface" value="#121B2E" style="height:34px; border-radius:6px; cursor:pointer;"></div>
+        <div class="field-inline" style="margin-top:24px;">
+          <label>درجة انحناء الحواف (Border Radius - بالبكسل)</label>
+          <input type="number" id="c_radius" value="14" style="direction:ltr; text-align:left;">
+        </div>
       </div>
       <button class="btn btn-primary" id="saveTheme"><i class="fa-solid fa-floppy-disk"></i> تطبيق وحفظ المظهر الشامل</button>
       <p class="status-msg" id="themeMsg"></p>
@@ -535,7 +541,7 @@ window.triggerAllRenders = function() {
 <div class="modal-overlay" id="parsedCvModal">
   <div class="modal-box">
     <h3 style="margin-bottom:20px; border-bottom:1px solid var(--border); padding-bottom:14px; color:var(--gold-l);"><i class="fa-solid fa-wand-magic-sparkles"></i> المعالج المحلي للسيرة الذاتية (Local Extractor)</h3>
-    <p style="color:var(--text-dim); margin-bottom:16px;">قام النظام بقراءة وتفكيك الملف بدقة عالية. يمكنك نسخ الأجزاء المستخرجة ونقلها للحقول الخاصة بها.</p>
+    <p style="color:var(--text-dim); margin-bottom:16px;">لم يتم استخدام مفتاح AI أو انتهت صلاحيته. قام النظام محلياً بقراءة وتفكيك الملف بدقة عالية. يمكنك نسخ الأجزاء المستخرجة ونقلها للحقول الخاصة بها.</p>
     
     <div class="lang-box-grid" style="margin-bottom:10px;">
       <div class="field-inline"><label>البريد الإلكتروني المكتشف:</label><input id="cv_parsed_email" dir="ltr" style="text-align:left;"></div>
@@ -543,9 +549,9 @@ window.triggerAllRenders = function() {
     </div>
     
     <div style="border-top:1px dashed var(--border); padding-top:16px; margin-top:10px;">
-      <div class="field-inline"><label>مقطع (Experience / الخبرات):</label><textarea id="cv_parsed_exp" readonly style="min-height:140px; font-size:13px; direction:ltr; text-align:left; background:var(--bg);"></textarea></div>
-      <div class="field-inline"><label>مقطع (Education / التعليم):</label><textarea id="cv_parsed_edu" readonly style="min-height:100px; font-size:13px; direction:ltr; text-align:left; background:var(--bg);"></textarea></div>
-      <div class="field-inline"><label>مقطع (Skills / المهارات):</label><textarea id="cv_parsed_skills" readonly style="min-height:100px; font-size:13px; direction:ltr; text-align:left; background:var(--bg);"></textarea></div>
+      <div class="field-inline"><label>مقطع (Experience / الخبرات):</label><textarea id="cv_parsed_exp" readonly style="min-height:140px; font-size:13px; direction:ltr; text-align:left; background:var(--bg); border:1px solid var(--gold-l); color:#fff;"></textarea></div>
+      <div class="field-inline"><label>مقطع (Education / التعليم):</label><textarea id="cv_parsed_edu" readonly style="min-height:100px; font-size:13px; direction:ltr; text-align:left; background:var(--bg); color:#fff;"></textarea></div>
+      <div class="field-inline"><label>مقطع (Skills / المهارات):</label><textarea id="cv_parsed_skills" readonly style="min-height:100px; font-size:13px; direction:ltr; text-align:left; background:var(--bg); color:#fff;"></textarea></div>
     </div>
 
     <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:24px;">
@@ -587,7 +593,7 @@ window.triggerAllRenders = function() {
   if(localStorage.getItem('portfolio_gemini_key')) geminiKeyInput.value = localStorage.getItem('portfolio_gemini_key');
   geminiKeyInput.addEventListener('change', (e) => localStorage.setItem('portfolio_gemini_key', e.target.value));
 
-  // --- التبديل بين قوائم الـ Sidebar ---
+  // نظام التنقل (Tabs)
   document.querySelectorAll('.sidebar .nav-item[data-panel]').forEach(item => {
     item.addEventListener('click', () => {
       document.querySelectorAll('.sidebar .nav-item').forEach(i => i.classList.remove('active'));
@@ -601,7 +607,7 @@ window.triggerAllRenders = function() {
   document.getElementById('menuToggle').addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('sidebar').classList.toggle('open'); });
   document.addEventListener('click', () => { document.getElementById('sidebar').classList.remove('open'); });
 
-  // --- نظام المصادقة Firebase ---
+  // نظام المصادقة Firebase
   onAuthStateChanged(auth, (user) => {
     if (user) { 
       loginScreen.style.display = 'none'; 
@@ -657,16 +663,11 @@ window.triggerAllRenders = function() {
     this.previousElementSibling.innerHTML = oldLabel;
   });
 
-
   // ==========================================
-  // المعالج المحلي واستخراج البيانات Local Extract & AI
+  // المعالج المحلي واستخراج البيانات Local Extract & AI (تحديث نظام الطوارئ Fallback)
   // ==========================================
-
-  // تقطيع النص محلياً بخوارزمية متقدمة
   function extractSectionsByRegex(text) {
     const cleanText = text.replace(/\n\s*\n/g, '\n');
-    
-    // قواعد مرنة للبحث عن الكلمات المفتاحية
     const expRegex = /(Experience|الخبرات|الخبرة المهنية|Work History|Employment)[\s\S]*?(Education|التعليم|المؤهلات|Skills|المهارات|Projects|المشاريع|$)/i;
     const eduRegex = /(Education|التعليم|المؤهلات|Academic)[\s\S]*?(Skills|المهارات|Projects|المشاريع|Experience|الخبرات|$)/i;
     const skillsRegex = /(Skills|المهارات|Technical Skills|Core Competencies)[\s\S]*?(Education|التعليم|Projects|المشاريع|Experience|الخبرات|$)/i;
@@ -675,15 +676,10 @@ window.triggerAllRenders = function() {
     let edu = (cleanText.match(eduRegex) || ['', 'لم يتم العثور على قسم تعليم واضح.'])[0];
     let skills = (cleanText.match(skillsRegex) || ['', 'لم يتم العثور على قسم مهارات واضح.'])[0];
     
-    return {
-      exp: exp.substring(0, 2000),
-      edu: edu.substring(0, 1000),
-      skills: skills.substring(0, 1000)
-    };
+    return { exp: exp.substring(0, 2000), edu: edu.substring(0, 1000), skills: skills.substring(0, 1000) };
   }
 
-  // الاستخراج المحلي الكامل (Fallback Method)
-  function fallbackLocalParsing(rawText, statusEl, customMsg) {
+  function fallbackLocalParsing(rawText, statusEl) {
     const emailMatch = rawText.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
     const phoneMatch = rawText.match(/(\+?\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4,6}/);
     
@@ -696,19 +692,14 @@ window.triggerAllRenders = function() {
     document.getElementById('cv_parsed_skills').value = sections.skills;
     
     document.getElementById('parsedCvModal').classList.add('open');
-    
-    if(statusEl) {
-      statusEl.style.display = 'none';
-      if(customMsg) alert(customMsg);
-    }
+    if(statusEl) statusEl.style.display = 'none';
   }
 
-  // المعالجة بواسطة الذكاء الاصطناعي
   async function processWithAI(rawText, lang, statusId) {
     const apiKey = document.getElementById('gemini_api_key').value.trim();
     const status = document.getElementById(statusId);
 
-    // إذا لم يضع المستخدم مفتاح AI، نلجأ للطريقة اليدوية المحلية المتقدمة
+    // إذا لم يضع المستخدم مفتاح AI، نلجأ فوراً للطريقة اليدوية المحلية المتقدمة
     if(!apiKey) {
       fallbackLocalParsing(rawText, status);
       return;
@@ -736,10 +727,7 @@ window.triggerAllRenders = function() {
       const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: { responseMimeType: "application/json" }
-        })
+        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }], generationConfig: { responseMimeType: "application/json" } })
       });
 
       if(!response.ok) throw new Error("API Key is restricted or expired.");
@@ -747,38 +735,38 @@ window.triggerAllRenders = function() {
       const data = await response.json();
       const parsedData = JSON.parse(data.candidates[0].content.parts[0].text);
 
-      // التسكين التلقائي للمصفوفات المستخرجة من AI
+      // التسكين التلقائي
       if(parsedData.experience && parsedData.experience.length) window.appState.experience = parsedData.experience;
       if(parsedData.skillCats && parsedData.skillCats.length) window.appState.skillCats = parsedData.skillCats;
       
       if(parsedData.contact) {
-         if(parsedData.contact.email) document.getElementById('f_contact_email').value = parsedData.contact.email;
-         if(parsedData.contact.phone) document.getElementById('f_contact_phone').value = parsedData.contact.phone;
+         if(parsedData.contact.email) setValSafe('f_contact_email', parsedData.contact.email);
+         if(parsedData.contact.phone) setValSafe('f_contact_phone', parsedData.contact.phone);
       }
       
       if(parsedData.education) {
          if(lang === 'ar') {
-            if(parsedData.education.degreeTitle) document.getElementById('f_edu_deg_title_ar').value = parsedData.education.degreeTitle;
-            if(parsedData.education.degreeMeta) document.getElementById('f_edu_deg_meta_ar').value = parsedData.education.degreeMeta;
+            setValSafe('f_edu_deg_title_ar', parsedData.education.degreeTitle);
+            setValSafe('f_edu_deg_meta_ar', parsedData.education.degreeMeta);
          } else {
-            if(parsedData.education.degreeTitle) document.getElementById('f_edu_deg_title_en').value = parsedData.education.degreeTitle;
-            if(parsedData.education.degreeMeta) document.getElementById('f_edu_deg_meta_en').value = parsedData.education.degreeMeta;
+            setValSafe('f_edu_deg_title_en', parsedData.education.degreeTitle);
+            setValSafe('f_edu_deg_meta_en', parsedData.education.degreeMeta);
          }
       }
 
       if(parsedData.brandName) {
-        if(lang === 'ar') document.getElementById('f_brand_ar').value = parsedData.brandName;
-        else document.getElementById('f_brand_en').value = parsedData.brandName;
+        if(lang === 'ar') setValSafe('f_brand_ar', parsedData.brandName);
+        else setValSafe('f_brand_en', parsedData.brandName);
       }
 
       window.triggerAllRenders();
       status.className = 'status-msg ok';
-      status.innerText = "نجاح! تم استخراج البيانات بذكاء وتسكينها في حقول لوحة التحكم. قم بمراجعتها ثم اضغط (حفظ).";
+      status.innerText = "نجاح! تم استخراج البيانات بذكاء وتسكينها في الحقول. قم بمراجعتها ثم اضغط (حفظ).";
       setTimeout(() => status.style.display = 'none', 6000);
 
     } catch (e) {
       console.warn("AI Parsing failed, falling back to local:", e);
-      fallbackLocalParsing(rawText, status, "تم رفض مفتاح الذكاء الاصطناعي (أو انتهت صلاحيته). تم التحويل للمعالج المحلي بدلاً من ذلك ليقوم بفك المستند وتجهيزه لك.");
+      fallbackLocalParsing(rawText, status); // التحويل الفوري للمعالج المحلي بدلاً من تعطل النظام
     }
   }
 
@@ -792,17 +780,13 @@ window.triggerAllRenders = function() {
       if(file.name.endsWith('.docx')) {
         mammoth.extractRawText({ arrayBuffer: e.target.result }).then(res => {
           processWithAI(res.value, lang, statusId);
-        }).catch(err => { status.className = 'status-msg err'; status.innerText = "خطأ: " + err.message; });
+        }).catch(err => { status.className = 'status-msg err'; status.innerText = "خطأ في قراءة ملف وورد: " + err.message; });
       } else {
         pdfjsLib.getDocument({ data: new Uint8Array(e.target.result) }).promise.then(pdf => {
           let pages = [];
-          for(let j=1; j<=pdf.numPages; j++) {
-            pages.push(pdf.getPage(j).then(p => p.getTextContent().then(t => t.items.map(s => s.str).join(' '))));
-          }
-          Promise.all(pages).then(texts => {
-            processWithAI(texts.join('\n'), lang, statusId);
-          });
-        }).catch(err => { status.className = 'status-msg err'; status.innerText = "فشل في قراءة الـ PDF: تأكد أن الملف غير محمي."; });
+          for(let j=1; j<=pdf.numPages; j++) { pages.push(pdf.getPage(j).then(p => p.getTextContent().then(t => t.items.map(s => s.str).join(' ')))); }
+          Promise.all(pages).then(texts => processWithAI(texts.join('\n'), lang, statusId));
+        }).catch(err => { status.className = 'status-msg err'; status.innerText = "فشل في قراءة الـ PDF: تأكد أن الملف غير محمي بكلمة مرور."; });
       }
     };
     reader.readAsArrayBuffer(file);
@@ -816,13 +800,16 @@ window.triggerAllRenders = function() {
     const ph = document.getElementById('cv_parsed_phone').value;
     if(em) document.getElementById('f_contact_email').value = em;
     if(ph) document.getElementById('f_contact_phone').value = ph;
-    alert("تم نسخ أرقام الاتصال لنموذج التواصل بنجاح!");
+    alert("تم نقل أرقام الاتصال لنموذج التواصل بنجاح!");
     document.getElementById('parsedCvModal').classList.remove('open');
   });
 
   // ==========================================
-  // محرك جلب ومزامنة البيانات من Firestore مع Fallback للملف المحلي
+  // محرك جلب ومزامنة البيانات (استدعاء آمن يعتمد على ملف data.js كمصدر أولي في حال كانت القاعدة فارغة)
   // ==========================================
+  const setValSafe = (id, val) => { const el = document.getElementById(id); if(el) el.value = val || ''; };
+  const setCheckSafe = (id, val) => { const el = document.getElementById(id); if(el) el.checked = (val !== false); };
+
   async function loadDataFromFirebase() {
     const msg = document.getElementById('fetchStatusMsg');
     msg.style.display = 'block'; msg.className = 'status-msg'; msg.innerText = 'جاري الجلب والمزامنة...';
@@ -832,54 +819,54 @@ window.triggerAllRenders = function() {
       const data = docSnap.exists() ? docSnap.data() : {};
       const st = window.appState;
       
-      // Default Data Object sourced from data.js
+      // جلب البيانات الافتراضية من data.js كمرجع بديل (Fallback)
       const defaultSiteData = window.SITE_DATA || { en: {}, ar: {} };
 
       // Profile & Contact
-      document.getElementById('f_profile_img').value = data.aboutData?.profileImg || "";
-      document.getElementById('f_cv_link').value = data.contactData?.cvLink || "";
-      document.getElementById('f_contact_email').value = data.contactData?.email || "";
-      document.getElementById('f_contact_phone').value = data.contactData?.phone || "";
-      document.getElementById('f_contact_location').value = data.contactData?.location || "";
-      document.getElementById('f_contact_location_ar').value = data.contactData?.locationAr || "";
+      setValSafe('f_profile_img', data.aboutData?.profileImg);
+      setValSafe('f_cv_link', data.contactData?.cvLink);
+      setValSafe('f_contact_email', data.contactData?.email);
+      setValSafe('f_contact_phone', data.contactData?.phone);
+      setValSafe('f_contact_location', data.contactData?.location);
+      setValSafe('f_contact_location_ar', data.contactData?.locationAr);
 
       // Hero & About EN
-      document.getElementById('f_brand_en').value = data.heroEn?.brandName || "";
-      document.getElementById('f_hero_eyebrow_en').value = data.heroEn?.eyebrow || "";
-      document.getElementById('f_hero_title1_en').value = data.heroEn?.title1 || "";
-      document.getElementById('f_hero_lead_en').value = data.heroEn?.lead || "";
+      setValSafe('f_brand_en', data.heroEn?.brandName);
+      setValSafe('f_hero_eyebrow_en', data.heroEn?.eyebrow);
+      setValSafe('f_hero_title1_en', data.heroEn?.title1);
+      setValSafe('f_hero_lead_en', data.heroEn?.lead);
       st.heroTypedEn = data.heroEn?.typed || [];
       st.heroChipsEn = data.heroEn?.chips || [];
       st.heroStatsEn = data.heroEn?.stats || [];
-      document.getElementById('f_about_title_en').value = data.aboutEn?.title || "";
-      document.getElementById('f_about_p1_en').value = data.aboutEn?.p1 || "";
+      setValSafe('f_about_title_en', data.aboutEn?.title);
+      setValSafe('f_about_p1_en', data.aboutEn?.p1);
       st.aboutFactsEn = data.aboutEn?.facts || [];
       st.aboutArcEn = data.aboutEn?.arc || [];
 
       // Hero & About AR
-      document.getElementById('f_brand_ar').value = data.heroAr?.brandName || "";
-      document.getElementById('f_hero_eyebrow_ar').value = data.heroAr?.eyebrow || "";
-      document.getElementById('f_hero_title1_ar').value = data.heroAr?.title1 || "";
-      document.getElementById('f_hero_lead_ar').value = data.heroAr?.lead || "";
+      setValSafe('f_brand_ar', data.heroAr?.brandName);
+      setValSafe('f_hero_eyebrow_ar', data.heroAr?.eyebrow);
+      setValSafe('f_hero_title1_ar', data.heroAr?.title1);
+      setValSafe('f_hero_lead_ar', data.heroAr?.lead);
       st.heroTypedAr = data.heroAr?.typed || [];
       st.heroChipsAr = data.heroAr?.chips || [];
       st.heroStatsAr = data.heroAr?.stats || [];
-      document.getElementById('f_about_title_ar').value = data.aboutAr?.title || "";
-      document.getElementById('f_about_p1_ar').value = data.aboutAr?.p1 || "";
+      setValSafe('f_about_title_ar', data.aboutAr?.title);
+      setValSafe('f_about_p1_ar', data.aboutAr?.p1);
       st.aboutFactsAr = data.aboutAr?.facts || [];
       st.aboutArcAr = data.aboutAr?.arc || [];
 
       // Education
-      document.getElementById('f_edu_deg_title_en').value = data.educationEn?.degreeTitle || "";
-      document.getElementById('f_edu_deg_meta_en').value = data.educationEn?.degreeMeta || "";
-      document.getElementById('f_edu_cert_title_en').value = data.educationEn?.icdlTitle || "";
-      document.getElementById('f_edu_cert_meta_en').value = data.educationEn?.icdlMeta || "";
-      document.getElementById('f_edu_deg_title_ar').value = data.educationAr?.degreeTitle || "";
-      document.getElementById('f_edu_deg_meta_ar').value = data.educationAr?.degreeMeta || "";
-      document.getElementById('f_edu_cert_title_ar').value = data.educationAr?.icdlTitle || "";
-      document.getElementById('f_edu_cert_meta_ar').value = data.educationAr?.icdlMeta || "";
+      setValSafe('f_edu_deg_title_en', data.educationEn?.degreeTitle);
+      setValSafe('f_edu_deg_meta_en', data.educationEn?.degreeMeta);
+      setValSafe('f_edu_cert_title_en', data.educationEn?.icdlTitle);
+      setValSafe('f_edu_cert_meta_en', data.educationEn?.icdlMeta);
+      setValSafe('f_edu_deg_title_ar', data.educationAr?.degreeTitle);
+      setValSafe('f_edu_deg_meta_ar', data.educationAr?.degreeMeta);
+      setValSafe('f_edu_cert_title_ar', data.educationAr?.icdlTitle);
+      setValSafe('f_edu_cert_meta_ar', data.educationAr?.icdlMeta);
 
-      // Matrices (If Firebase is empty, load from default SITE_DATA)
+      // المصفوفات المعقدة - إذا كانت القاعدة فارغة (مثل أول مرة تسجيل دخول)، اسحب من data.js
       st.experience = (data.experienceData && data.experienceData.length) ? data.experienceData : (defaultSiteData.en.experience || []);
       st.projects = (data.projectsData && data.projectsData.length) ? data.projectsData : (defaultSiteData.en.projects || []);
       st.skillCats = (data.skillCatsData && data.skillCatsData.length) ? data.skillCatsData : (defaultSiteData.en.skillCats || []);
@@ -889,29 +876,25 @@ window.triggerAllRenders = function() {
 
       // Theme
       const t = data.themeData || {};
-      document.getElementById('f_theme_mode').value = t.mode || "dark";
-      document.getElementById('f_theme_font').value = t.font || "'Cairo', sans-serif";
-      document.getElementById('c_gold').value = t.gold || "#C08B3D";
-      document.getElementById('c_gold_l').value = t.goldLight || "#E3B36B";
-      document.getElementById('c_teal').value = t.teal || "#1F8A70";
-      document.getElementById('c_teal_l').value = t.tealLight || "#38C9A6";
-      document.getElementById('c_bg').value = t.bg || "#0B1220";
-      document.getElementById('c_surface').value = t.surface || "#121B2E";
-      document.getElementById('c_radius').value = t.radius || "14";
+      setValSafe('f_theme_mode', t.mode || "dark");
+      setValSafe('f_theme_font', t.font || "'Cairo', sans-serif");
+      setValSafe('c_gold', t.gold || "#C08B3D");
+      setValSafe('c_gold_l', t.goldLight || "#E3B36B");
+      setValSafe('c_teal', t.teal || "#1F8A70");
+      setValSafe('c_teal_l', t.tealLight || "#38C9A6");
+      setValSafe('c_bg', t.bg || "#0B1220");
+      setValSafe('c_surface', t.surface || "#121B2E");
+      setValSafe('c_radius', t.radius || "14");
       
       const v = t.sectionVisibility || {};
-      ['home','about','experience','projects','skills','education','contact'].forEach(id => {
-        const el = document.getElementById('sec_'+id);
-        if(el) el.checked = v[id] !== false; 
-      });
+      ['home','about','experience','projects','skills','education','contact'].forEach(id => setCheckSafe('sec_'+id, v[id]));
 
-      // Update Counters
+      // تحديث إحصائيات الصفحة الرئيسية للوحة التحكم
       document.getElementById('statExp').innerText = st.experience.length;
       document.getElementById('statProj').innerText = st.projects.length;
       document.getElementById('statSkill').innerText = st.skillCats.length;
       document.getElementById('statMedia').innerText = st.mediaLibrary.length;
 
-      // Re-render UI Elements
       window.triggerAllRenders();
       
       msg.className = 'status-msg ok'; msg.innerText = 'تم جلب وتعبئة البيانات بنجاح!';
@@ -928,6 +911,8 @@ window.triggerAllRenders = function() {
   // ==========================================
   // محرك الحفظ والدفع لقاعدة البيانات (Firestore Save Handlers)
   // ==========================================
+  const getValSafe = (id) => { const el = document.getElementById(id); return el ? el.value : ''; };
+
   async function saveDoc(payload, msgId) {
     const msg = document.getElementById(msgId); 
     msg.className='status-msg ok'; msg.innerText='جاري الحفظ والمزامنة...'; msg.style.display='block';
@@ -942,12 +927,12 @@ window.triggerAllRenders = function() {
 
   document.getElementById('saveHero').addEventListener('click', () => {
     saveDoc({
-      aboutData: { profileImg: document.getElementById('f_profile_img').value },
-      contactData: { cvLink: document.getElementById('f_cv_link').value },
-      heroEn: { brandName: document.getElementById('f_brand_en').value, eyebrow: document.getElementById('f_hero_eyebrow_en').value, title1: document.getElementById('f_hero_title1_en').value, lead: document.getElementById('f_hero_lead_en').value, typed: window.appState.heroTypedEn, chips: window.appState.heroChipsEn, stats: window.appState.heroStatsEn },
-      heroAr: { brandName: document.getElementById('f_brand_ar').value, eyebrow: document.getElementById('f_hero_eyebrow_ar').value, title1: document.getElementById('f_hero_title1_ar').value, lead: document.getElementById('f_hero_lead_ar').value, typed: window.appState.heroTypedAr, chips: window.appState.heroChipsAr, stats: window.appState.heroStatsAr },
-      aboutEn: { title: document.getElementById('f_about_title_en').value, p1: document.getElementById('f_about_p1_en').value, facts: window.appState.aboutFactsEn, arc: window.appState.aboutArcEn },
-      aboutAr: { title: document.getElementById('f_about_title_ar').value, p1: document.getElementById('f_about_p1_ar').value, facts: window.appState.aboutFactsAr, arc: window.appState.aboutArcAr }
+      aboutData: { profileImg: getValSafe('f_profile_img') },
+      contactData: { cvLink: getValSafe('f_cv_link') },
+      heroEn: { brandName: getValSafe('f_brand_en'), eyebrow: getValSafe('f_hero_eyebrow_en'), title1: getValSafe('f_hero_title1_en'), lead: getValSafe('f_hero_lead_en'), typed: window.appState.heroTypedEn, chips: window.appState.heroChipsEn, stats: window.appState.heroStatsEn },
+      heroAr: { brandName: getValSafe('f_brand_ar'), eyebrow: getValSafe('f_hero_eyebrow_ar'), title1: getValSafe('f_hero_title1_ar'), lead: getValSafe('f_hero_lead_ar'), typed: window.appState.heroTypedAr, chips: window.appState.heroChipsAr, stats: window.appState.heroStatsAr },
+      aboutEn: { title: getValSafe('f_about_title_en'), p1: getValSafe('f_about_p1_en'), facts: window.appState.aboutFactsEn, arc: window.appState.aboutArcEn },
+      aboutAr: { title: getValSafe('f_about_title_ar'), p1: getValSafe('f_about_p1_ar'), facts: window.appState.aboutFactsAr, arc: window.appState.aboutArcAr }
     }, 'heroMsg');
   });
 
@@ -957,21 +942,22 @@ window.triggerAllRenders = function() {
   
   document.getElementById('saveEducation').addEventListener('click', () => {
     saveDoc({
-      educationEn: { degreeTitle: document.getElementById('f_edu_deg_title_en').value, degreeMeta: document.getElementById('f_edu_deg_meta_en').value, icdlTitle: document.getElementById('f_edu_cert_title_en').value, icdlMeta: document.getElementById('f_edu_cert_meta_en').value },
-      educationAr: { degreeTitle: document.getElementById('f_edu_deg_title_ar').value, degreeMeta: document.getElementById('f_edu_deg_meta_ar').value, icdlTitle: document.getElementById('f_edu_cert_title_ar').value, icdlMeta: document.getElementById('f_edu_cert_meta_ar').value }
+      educationEn: { degreeTitle: getValSafe('f_edu_deg_title_en'), degreeMeta: getValSafe('f_edu_deg_meta_en'), icdlTitle: getValSafe('f_edu_cert_title_en'), icdlMeta: getValSafe('f_edu_cert_meta_en') },
+      educationAr: { degreeTitle: getValSafe('f_edu_deg_title_ar'), degreeMeta: getValSafe('f_edu_deg_meta_ar'), icdlTitle: getValSafe('f_edu_cert_title_ar'), icdlMeta: getValSafe('f_edu_cert_meta_ar') }
     }, 'educationMsg');
   });
 
   document.getElementById('saveCerts').addEventListener('click', () => saveDoc({ certsElarabyData: window.appState.certsElaraby, certsAlmentorData: window.appState.certsAlmentor }, 'certsMsg'));
 
   document.getElementById('saveContact').addEventListener('click', () => {
-    saveDoc({ contactData: { email: document.getElementById('f_contact_email').value, phone: document.getElementById('f_contact_phone').value, location: document.getElementById('f_contact_location').value, locationAr: document.getElementById('f_contact_location_ar').value } }, 'contactMsg');
+    saveDoc({ contactData: { email: getValSafe('f_contact_email'), phone: getValSafe('f_contact_phone'), location: getValSafe('f_contact_location'), locationAr: getValSafe('f_contact_location_ar') } }, 'contactMsg');
   });
 
   document.getElementById('saveSections').addEventListener('click', () => {
     const sectionVisibility = {};
     ['home','about','experience','projects','skills','education','contact'].forEach(id => {
-      sectionVisibility[id] = document.getElementById('sec_'+id).checked;
+      const el = document.getElementById('sec_'+id);
+      if(el) sectionVisibility[id] = el.checked;
     });
     saveDoc({ themeData: { sectionVisibility } }, 'sectionsMsg');
   });
@@ -981,15 +967,15 @@ window.triggerAllRenders = function() {
     const docSnap = await getDoc(docRef);
     const existingTheme = docSnap.exists() && docSnap.data().themeData ? docSnap.data().themeData : {};
     
-    existingTheme.mode = document.getElementById('f_theme_mode').value;
-    existingTheme.font = document.getElementById('f_theme_font').value;
-    existingTheme.gold = document.getElementById('c_gold').value;
-    existingTheme.goldLight = document.getElementById('c_gold_l').value;
-    existingTheme.teal = document.getElementById('c_teal').value;
-    existingTheme.tealLight = document.getElementById('c_teal_l').value;
-    existingTheme.bg = document.getElementById('c_bg').value;
-    existingTheme.surface = document.getElementById('c_surface').value;
-    existingTheme.radius = document.getElementById('c_radius').value;
+    existingTheme.mode = getValSafe('f_theme_mode');
+    existingTheme.font = getValSafe('f_theme_font');
+    existingTheme.gold = getValSafe('c_gold');
+    existingTheme.goldLight = getValSafe('c_gold_l');
+    existingTheme.teal = getValSafe('c_teal');
+    existingTheme.tealLight = getValSafe('c_teal_l');
+    existingTheme.bg = getValSafe('c_bg');
+    existingTheme.surface = getValSafe('c_surface');
+    existingTheme.radius = getValSafe('c_radius');
     
     saveDoc({ themeData: existingTheme }, 'themeMsg');
   });
