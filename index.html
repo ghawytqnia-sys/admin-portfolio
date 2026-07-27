@@ -25,7 +25,7 @@ a{color:inherit; text-decoration:none;}
 h1,h2,h3,h4{font-family:var(--font-display); font-weight:700;}
 button, input, textarea, select{font-family:inherit;}
 
-/* ---- LOGIN ---- */
+/* ---- LOGIN SCREEN ---- */
 #loginScreen{min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px; background:radial-gradient(circle at 50% 50%, #121B2E 0%, #0B1220 100%);}
 .login-card{width:100%; max-width:420px; background:var(--bg-2); border:1px solid var(--border); border-radius:16px; padding:40px 30px; box-shadow:0 20px 50px rgba(0,0,0,0.5); text-align:center;}
 .login-card h1{font-size:24px; margin-bottom:8px; display:flex; align-items:center; justify-content:center; gap:12px;}
@@ -122,7 +122,7 @@ input:checked + .slider:before{transform:translateX(20px);}
 .modal-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom:1px solid var(--border); padding-bottom:14px;}
 .modal-head h3{font-size:18px; color:var(--gold-l);}
 .close-modal{cursor:pointer; font-size:20px; color:var(--text-dim);}
-.confidence-badge{font-size:11px; font-weight:700; padding:3px 8px; border-radius:100px; text-transform:uppercase;}
+.confidence-badge{font-size:11px; font-weight:700; padding:3px 8px; border-radius:100px; text-transform:uppercase; margin-top:4px; display:inline-block;}
 .conf-high{background:rgba(31,138,112,0.2); color:var(--teal-l); border:1px solid var(--teal);}
 .conf-mid{background:rgba(192,139,61,0.2); color:var(--gold-l); border:1px solid var(--gold);}
 
@@ -209,7 +209,7 @@ input:checked + .slider:before{transform:translateX(20px);}
 
     <!-- Parser Panel -->
     <section class="panel" id="panel-parser">
-      <div class="main-head"><div><h2>معالج المستندات الذكي ثنائي اللغة (Bilingual CV Parser)</h2><p>ارفع ملف السيرة الذاتية (PDF أو DOCX) للغتين العربية والإنجليزية بشكل مستقل.</p></div></div>
+      <div class="main-head"><div><h2>معالج المستندات الذكي ثنائي اللغة (Bilingual CV Parser)</h2><p>ارفع ملف السيرة الذاتية (PDF أو DOCX) للغتين العربية والإنجليزية بشكل مستقل مع المعالجة التلقائية للترميز.</p></div></div>
       
       <div class="lang-box-grid">
         <div class="card" style="margin-bottom:0;">
@@ -230,7 +230,7 @@ input:checked + .slider:before{transform:translateX(20px);}
             <label for="cvFileDropAr">رفع السيرة الذاتية بالعربية (PDF / DOCX)</label>
             <input type="file" id="cvFileDropAr" accept=".pdf,.docx">
           </div>
-          <div class="field-inline"><textarea id="extractedCvTextAr" placeholder="سيظهر النص العربي المستخرج هنا..." style="min-height:120px;"></textarea></div>
+          <div class="field-inline"><textarea id="extractedCvTextAr" placeholder="سيظهر النص العربي المستخرج ونظيفاً هنا..." style="min-height:120px;"></textarea></div>
           <button class="btn btn-primary" id="analyzeCvBtnAr" style="width:100%;"><i class="fa-solid fa-microchip"></i> تحليل السيرة الذاتية العربية</button>
         </div>
       </div>
@@ -341,7 +341,7 @@ input:checked + .slider:before{transform:translateX(20px);}
 
     <!-- Sections Visibility Manager -->
     <section class="panel" id="panel-sections">
-      <div class="main-head"><div><h2>إدارة ظهور الأقسام (Sections Manager)</h2><p>التحكم الإشعاعي بظهور وإخفاء كل قسم بالموقع.</p></div></div>
+      <div class="main-head"><div><h2>إدارة ظهور الأقسام (Sections Manager)</h2><p>التحكم بظهور وإخفاء كل قسم بالموقع بشكل كامل.</p></div></div>
       <div class="card">
         <div class="switch-row"><div class="lbl">قسم الواجهة الرئيسية (Hero Section)</div><label class="switch"><input type="checkbox" id="sec_hero" checked><span class="slider"></span></label></div>
         <div class="switch-row"><div class="lbl">قسم نبذة عني (About Section)</div><label class="switch"><input type="checkbox" id="sec_about" checked><span class="slider"></span></label></div>
@@ -412,7 +412,7 @@ input:checked + .slider:before{transform:translateX(20px);}
       <div class="card">
         <h3><i class="fa-solid fa-cloud-arrow-up"></i> رفع صورة جديدة</h3>
         <div class="upload-box">
-          <label for="mediaLibraryFile">اضغط هنا لرفع أي صورة واستخراج رابطها في Cloudinary</label>
+          <label for="mediaLibraryFile">اضغط هنا لرفع أي صورة واستخراج رابطها المباشر من Cloudinary</label>
           <input type="file" id="mediaLibraryFile" accept="image/*">
           <div class="preview-container" id="mediaPreviewWrap">
             <img src="" id="mediaPreviewImg">
@@ -433,7 +433,7 @@ input:checked + .slider:before{transform:translateX(20px);}
       <span class="close-modal" id="closeCvModal">&times;</span>
     </div>
     <div id="cvModalBody">
-      <p style="color:var(--text-dim); margin-bottom:16px;">قام المعالج بتحليل المستند وتصنيفه. يمكنك المراجعة قبل الاعتماد والتحديث.</p>
+      <p style="color:var(--text-dim); margin-bottom:16px;">قام المعالج بتحليل المستند وتصنيفه. يمكنك المراجعة والتعديل قبل الاعتماد والتحديث.</p>
       
       <div class="field-inline"><label>الاسم الكامل:</label><input id="cv_parsed_name"><span class="confidence-badge conf-high">High Confidence</span></div>
       <div class="field-inline"><label>المسمى الوظيفي:</label><input id="cv_parsed_title"><span class="confidence-badge conf-high">High Confidence</span></div>
@@ -462,7 +462,8 @@ input:checked + .slider:before{transform:translateX(20px);}
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
   import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-  import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";       
+  import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
   const CLOUDINARY_CLOUD_NAME = "dxkxuajgf"; 
   const CLOUDINARY_UPLOAD_PRESET = "portfolio_preset";
   const CLOUDINARY_URL = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
@@ -486,7 +487,7 @@ input:checked + .slider:before{transform:translateX(20px);}
   const loginBtn = document.getElementById('loginBtn');
   const logoutBtn = document.getElementById('logoutBtn');
 
-  // Sidebar Nav
+  // Navigation Setup
   document.querySelectorAll('.sidebar .nav-item[data-panel]').forEach(item => {
     item.addEventListener('click', () => {
       document.querySelectorAll('.sidebar .nav-item').forEach(i => i.classList.remove('active'));
@@ -517,7 +518,7 @@ input:checked + .slider:before{transform:translateX(20px);}
 
   logoutBtn.addEventListener('click', () => signOut(auth));
 
-  // Media Upload (Cloudinary)
+  // Media Upload Helper
   async function handleMediaUpload(fileElement, previewWrapId, previewImgId, hiddenInputId, copyBtnId) {
     const file = fileElement.files[0];
     if(!file) return;
@@ -545,7 +546,196 @@ input:checked + .slider:before{transform:translateX(20px);}
   document.getElementById('uploadProjectImg').addEventListener('change', function() { handleMediaUpload(this, 'previewProjectWrap', 'previewProjectImg', null, 'copyProjectUrlBtn'); });
   document.getElementById('mediaLibraryFile').addEventListener('change', function() { handleMediaUpload(this, 'mediaPreviewWrap', 'mediaPreviewImg', null, 'copyMediaUrlBtn'); });
 
-  // Load Data from Firebase Firestore
+  // -------------------------------------------------------------
+  // ARABIC & MULTILINGUAL CLEANING AND NORMALIZATION ENGINE
+  // -------------------------------------------------------------
+  function cleanAndNormalizeArabicText(text) {
+    if (!text) return "";
+
+    // 1. Unicode Normalization (NFC)
+    let normalized = text.normalize("NFC");
+
+    // 2. Map Arabic Presentation Forms A & B to basic Arabic Unicode Characters
+    const arabicFormsMap = {
+      'ﺃ': 'أ', 'ﺄ': 'أ', 'ﺇ': 'إ', 'ﺈ': 'إ', 'ﺁ': 'آ', 'ﺂ': 'آ',
+      'ﺋ': 'ئ', 'ﺌ': 'ئ', 'ﺅ': 'ؤ', 'ﺆ': 'ؤ',
+      'ﺑ': 'ب', 'ﺒ': 'ب', 'ﺐ': 'ب', 'ﺏ': 'ب',
+      'ﺗ': 'ت', 'ﺘ': 'ت', 'ﺖ': 'ت', 'ﺕ': 'ت',
+      'ﺛ': 'ث', 'ﺜ': 'ث', 'ﺚ': 'ث', 'ﺙ': 'ث',
+      'ﺟ': 'ج', 'ﺠ': 'ج', 'ﺞ': 'ج', 'ﺝ': 'ج',
+      'ﺣ': 'ح', 'ﺤ': 'ح', 'ﺢ': 'ح', 'ﺡ': 'ح',
+      'ﺧ': 'خ', 'ﺨ': 'خ', 'ﺦ': 'خ', 'ﺥ': 'خ',
+      'ﺩ': 'د', 'ﺪ': 'د', 'ﺫ': 'ذ', 'ﺬ': 'ذ',
+      'ﺭ': 'ر', 'ﺮ': 'ر', 'ﺯ': 'ز', 'ﺰ': 'ز',
+      'ﺳ': 'س', 'ﺴ': 'س', 'ﺲ': 'س', 'ﺱ': 'س',
+      'ﺷ': 'ش', 'ﺸ': 'ش', 'ﺶ': 'ش', 'ﺵ': 'ش',
+      'ﺻ': 'ص', 'ﺼ': 'ص', 'ﺺ': 'ص', 'ﺹ': 'ص',
+      'ﺿ': 'ض', 'ﻀ': 'ض', 'ﺾ': 'ض', 'ﺽ': 'ض',
+      'ﻃ': 'ط', 'ﻄ': 'ط', 'ﻂ': 'ط', 'ﻁ': 'ط',
+      'ﻇ': 'ظ', 'ﻈ': 'ظ', 'ﻆ': 'ظ', 'ﻅ': 'ظ',
+      'ﻋ': 'ع', 'ﻌ': 'ع', 'ﻊ': 'ع', 'ﻉ': 'ع',
+      'ﻏ': 'غ', 'ﻐ': 'غ', 'ﻎ': 'غ', 'ﻍ': 'غ',
+      'ﻓ': 'ف', 'ﻔ': 'ف', 'ﻒ': 'ف', 'ﻑ': 'ف',
+      'ﻗ': 'ق', 'ﻘ': 'ق', 'ﻖ': 'ق', 'ﻕ': 'ق',
+      'ﻛ': 'ك', 'ﻜ': 'ك', 'ﻚ': 'ك', 'ﻙ': 'ك',
+      'ﻟ': 'ل', 'ﻠ': 'ل', 'ﻞ': 'ل', 'ﻝ': 'ل',
+      'ﻣ': 'م', 'ﻤ': 'م', 'ﻢ': 'م', 'ﻡ': 'م',
+      'ﻧ': 'ن', 'ﻨ': 'ن', 'ﻦ': 'ن', 'ﻥ': 'ن',
+      'ﻫ': 'ه', 'ﻬ': 'ه', 'ﻪ': 'ه', 'ﻩ': 'ه',
+      'ﻭ': 'و', 'ﻮ': 'و', 'ﻱ': 'ي', 'ﻴ': 'ي', 'ﻲ': 'ي', 'ﻯ': 'ى', 'ﻰ': 'ى',
+      'ﻻ': 'لا', 'ﻼ': 'لا', 'ﻷ': 'لأ', 'ﻸ': 'لأ', 'ﻹ': 'لإ', 'ﻺ': 'لإ', 'ﻵ': 'لآ', 'ﻶ': 'لآ'
+    };
+
+    normalized = normalized.replace(/[\uFB50-\uFDFF\uFE70-\uFEFC]/g, function(ch) {
+      return arabicFormsMap[ch] || ch;
+    });
+
+    // 3. Clean garbage Latin symbols caused by PDF encoding issues (e.g. ï, º, »)
+    normalized = normalized.replace(/[ïº»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ]/g, '');
+
+    // 4. Remove Diacritics (Tashkeel) & Tatweel
+    normalized = normalized.replace(/[\u064B-\u0652]/g, "");
+    normalized = normalized.replace(/ـ+/g, "");
+
+    // 5. Clean up redundant spaces & tabs
+    normalized = normalized.replace(/[ \t]+/g, " ").trim();
+
+    return normalized;
+  }
+
+  // -------------------------------------------------------------
+  // PARSE FILE CONTENT (PDF WITH CMAPS & DOCX VIA MAMMOTH)
+  // -------------------------------------------------------------
+  function parseFileContent(file, textOutputId) {
+    const status = document.getElementById('parseStatus');
+    const output = document.getElementById(textOutputId);
+    if(!file) return;
+
+    status.className = 'status-msg ok'; 
+    status.innerText = "جاري قراءة واستخراج النصوص من المستند وتفكيك الترميز..."; 
+    status.style.display = "block";
+
+    if(file.type === "application/pdf") {
+      const fileReader = new FileReader();
+      fileReader.onload = function() {
+        const typedarray = new Uint8Array(this.result);
+        
+        // Pass CMapUrl & CMapPacked to enable proper Arabic PDF extraction in PDF.js
+        const loadingTask = pdfjsLib.getDocument({
+          data: typedarray,
+          cMapUrl: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/cmaps/',
+          cMapPacked: true
+        });
+
+        loadingTask.promise.then(function(pdf) {
+          let countPromises = [];
+          for (let j = 1; j <= pdf.numPages; j++) {
+            countPromises.push(
+              pdf.getPage(j).then(page => 
+                page.getTextContent().then(text => 
+                  text.items.map(s => s.str).join(' ')
+                )
+              )
+            );
+          }
+          Promise.all(countPromises).then(pageTexts => {
+            const rawExtracted = pageTexts.join('\n');
+            output.value = cleanAndNormalizeArabicText(rawExtracted); 
+            status.innerText = "تم سحب ونظافة نصوص ملف الـ PDF بنجاح!";
+          });
+        }).catch(err => {
+          status.className = 'status-msg err';
+          status.innerText = "خطأ أثناء تفكيك الـ PDF: " + err.message;
+        });
+      };
+      fileReader.readAsArrayBuffer(file);
+    } else if (file.name.endsWith('.docx')) {
+      const fileReader = new FileReader();
+      fileReader.onload = function(evt) {
+        mammoth.extractRawText({ arrayBuffer: evt.target.result })
+          .then(function(result) {
+            output.value = cleanAndNormalizeArabicText(result.value);
+            status.innerText = "تم سحب نصوص ملف Word (DOCX) بنجاح!";
+          })
+          .catch(function(err) { 
+            status.className = 'status-msg err'; 
+            status.innerText = "خطأ في قراءة ملف Word: " + err.message; 
+          });
+      };
+      fileReader.readAsArrayBuffer(file);
+    } else {
+      status.className = 'status-msg err'; 
+      status.innerText = "يرجى رفع صيغة PDF أو DOCX فقط.";
+    }
+  }
+
+  document.getElementById('cvFileDropEn').addEventListener('change', function(e) { parseFileContent(e.target.files[0], 'extractedCvTextEn'); });
+  document.getElementById('cvFileDropAr').addEventListener('change', function(e) { parseFileContent(e.target.files[0], 'extractedCvTextAr'); });
+
+  // -------------------------------------------------------------
+  // AI CLASSIFIER AND PREVIEW MODAL
+  // -------------------------------------------------------------
+  let parsedCvData = {};
+  let currentTargetLang = "en";
+
+  function analyzeTextAndShowModal(text, lang) {
+    if(!text.trim()){ alert("يرجى رفع ملف أو لصق النص المستخرج أولاً!"); return; }
+
+    currentTargetLang = lang;
+    const emailMatch = text.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
+    const phoneMatch = text.match(/(\+?\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4,6}/);
+    const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+
+    parsedCvData = {
+      name: lines[0] || (lang === 'ar' ? "عبدالمنعم سلطان" : "AbdElMoneim Sultan"),
+      title: lines[1] || (lang === 'ar' ? "تنفيذي مبيعات" : "Sales Executive"),
+      email: emailMatch ? emailMatch[0] : "abdosultan306@gmail.com",
+      phone: phoneMatch ? phoneMatch[0] : "+201114550112",
+      summary: text.substring(0, 300) + "..."
+    };
+
+    document.getElementById('cv_parsed_name').value = parsedCvData.name;
+    document.getElementById('cv_parsed_title').value = parsedCvData.title;
+    document.getElementById('cv_parsed_email').value = parsedCvData.email;
+    document.getElementById('cv_parsed_phone').value = parsedCvData.phone;
+    document.getElementById('cv_parsed_summary').value = parsedCvData.summary;
+
+    document.getElementById('parsedCvModal').classList.add('open');
+  }
+
+  document.getElementById('analyzeCvBtnEn').addEventListener('click', () => { analyzeTextAndShowModal(document.getElementById('extractedCvTextEn').value, 'en'); });
+  document.getElementById('analyzeCvBtnAr').addEventListener('click', () => { analyzeTextAndShowModal(document.getElementById('extractedCvTextAr').value, 'ar'); });
+
+  document.getElementById('closeCvModal').addEventListener('click', () => document.getElementById('parsedCvModal').classList.remove('open'));
+  document.getElementById('cancelCvImport').addEventListener('click', () => document.getElementById('parsedCvModal').classList.remove('open'));
+
+  document.getElementById('confirmCvImport').addEventListener('click', async () => {
+    try {
+      const email = document.getElementById('cv_parsed_email').value;
+      const phone = document.getElementById('cv_parsed_phone').value;
+      const summary = document.getElementById('cv_parsed_summary').value;
+
+      const updateData = {
+        contactData: { email, phone }
+      };
+
+      if(currentTargetLang === 'en') {
+        updateData.heroEn = { lead: summary };
+      } else {
+        updateData.heroAr = { lead: summary };
+      }
+
+      await setDoc(doc(db, "portfolio", "content"), updateData, { merge: true });
+
+      alert("تمت إضافة المخرجات المستخرجة لحقول الاتصال والواجهة بنجاح!");
+      document.getElementById('parsedCvModal').classList.remove('open');
+      loadDataFromFirebase();
+    } catch(e) { alert("حدث خطأ أثناء الحفظ: " + e.message); }
+  });
+
+  // -------------------------------------------------------------
+  // FIRESTORE DATA LOADING
+  // -------------------------------------------------------------
   async function loadDataFromFirebase() {
     try {
       const docRef = doc(db, "portfolio", "content");
@@ -645,7 +835,7 @@ input:checked + .slider:before{transform:translateX(20px);}
     } catch(e) { alert("حدث خطأ أثناء التراجع: " + e.message); }
   });
 
-  // RESTORE DEFAULT THEME SETTINGS (Does NOT delete data!)
+  // RESTORE DEFAULT THEME SETTINGS (Does NOT delete content!)
   document.getElementById('resetDefaultsBtn').addEventListener('click', async () => {
     if(confirm("هل أنت متأكد من استعادة المظهر الافتراضي للنظام؟ لن يتم مسح بيانات المشاريع أو السيرة الذاتية.")){
       try {
@@ -659,107 +849,6 @@ input:checked + .slider:before{transform:translateX(20px);}
         alert("تمت استعادة إعدادات المظهر الافتراضية بنجاح!");
       } catch(e) { alert("حدث خطأ: " + e.message); }
     }
-  });
-
-  // BILINGUAL CV PARSER ENGINE
-  let parsedCvData = {};
-  let currentTargetLang = "en";
-
-  function parseFileContent(file, textOutputId) {
-    const status = document.getElementById('parseStatus');
-    const output = document.getElementById(textOutputId);
-    if(!file) return;
-
-    status.className = 'status-msg ok'; status.innerText = "جاري قراءة واستخراج النصوص من المستند..."; status.style.display = "block";
-
-    if(file.type === "application/pdf") {
-      const fileReader = new FileReader();
-      fileReader.onload = function() {
-        const typedarray = new Uint8Array(this.result);
-        pdfjsLib.getDocument(typedarray).promise.then(function(pdf) {
-          let countPromises = [];
-          for (let j = 1; j <= pdf.numPages; j++) {
-            countPromises.push(pdf.getPage(j).then(page => page.getTextContent().then(text => text.items.map(s => s.str).join(' '))));
-          }
-          Promise.all(countPromises).then(pageTexts => {
-            output.value = pageTexts.join('\n'); 
-            status.innerText = "تم سحب نصوص ملف الـ PDF بنجاح!";
-          });
-        });
-      };
-      fileReader.readAsArrayBuffer(file);
-    } else if (file.name.endsWith('.docx')) {
-      const fileReader = new FileReader();
-      fileReader.onload = function(evt) {
-        mammoth.extractRawText({ arrayBuffer: evt.target.result })
-          .then(function(result) {
-            output.value = result.value;
-            status.innerText = "تم سحب نصوص ملف Word (DOCX) بنجاح!";
-          })
-          .catch(function(err) { status.className = 'status-msg err'; status.innerText = "خطأ في قراءة Word: " + err.message; });
-      };
-      fileReader.readAsArrayBuffer(file);
-    } else {
-      status.className = 'status-msg err'; status.innerText = "يرجى رفع صيغة PDF أو DOCX فقط.";
-    }
-  }
-
-  document.getElementById('cvFileDropEn').addEventListener('change', function(e) { parseFileContent(e.target.files[0], 'extractedCvTextEn'); });
-  document.getElementById('cvFileDropAr').addEventListener('change', function(e) { parseFileContent(e.target.files[0], 'extractedCvTextAr'); });
-
-  function analyzeTextAndShowModal(text, lang) {
-    if(!text.trim()){ alert("يرجى رفع ملف أو لصق النص المستخرج أولاً!"); return; }
-
-    currentTargetLang = lang;
-    const emailMatch = text.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
-    const phoneMatch = text.match(/(\+?\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4,6}/);
-    const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
-
-    parsedCvData = {
-      name: lines[0] || "AbdElMoneim Sultan",
-      title: lines[1] || "Sales Executive",
-      email: emailMatch ? emailMatch[0] : "abdosultan306@gmail.com",
-      phone: phoneMatch ? phoneMatch[0] : "+201114550112",
-      summary: text.substring(0, 300) + "..."
-    };
-
-    document.getElementById('cv_parsed_name').value = parsedCvData.name;
-    document.getElementById('cv_parsed_title').value = parsedCvData.title;
-    document.getElementById('cv_parsed_email').value = parsedCvData.email;
-    document.getElementById('cv_parsed_phone').value = parsedCvData.phone;
-    document.getElementById('cv_parsed_summary').value = parsedCvData.summary;
-
-    document.getElementById('parsedCvModal').classList.add('open');
-  }
-
-  document.getElementById('analyzeCvBtnEn').addEventListener('click', () => { analyzeTextAndShowModal(document.getElementById('extractedCvTextEn').value, 'en'); });
-  document.getElementById('analyzeCvBtnAr').addEventListener('click', () => { analyzeTextAndShowModal(document.getElementById('extractedCvTextAr').value, 'ar'); });
-
-  document.getElementById('closeCvModal').addEventListener('click', () => document.getElementById('parsedCvModal').classList.remove('open'));
-  document.getElementById('cancelCvImport').addEventListener('click', () => document.getElementById('parsedCvModal').classList.remove('open'));
-
-  document.getElementById('confirmCvImport').addEventListener('click', async () => {
-    try {
-      const email = document.getElementById('cv_parsed_email').value;
-      const phone = document.getElementById('cv_parsed_phone').value;
-      const summary = document.getElementById('cv_parsed_summary').value;
-
-      const updateData = {
-        contactData: { email, phone }
-      };
-
-      if(currentTargetLang === 'en') {
-        updateData.heroEn = { lead: summary };
-      } else {
-        updateData.heroAr = { lead: summary };
-      }
-
-      await setDoc(doc(db, "portfolio", "content"), updateData, { merge: true });
-
-      alert("تمت إضافة المخرجات المستخرجة لحقول الاتصال والواجهة بنجاح!");
-      document.getElementById('parsedCvModal').classList.remove('open');
-      loadDataFromFirebase();
-    } catch(e) { alert("حدث خطأ أثناء الحفظ: " + e.message); }
   });
 
   // SAVE HANDLERS
@@ -879,7 +968,6 @@ input:checked + .slider:before{transform:translateX(20px);}
       msg.className = 'status-msg ok'; msg.innerText = 'تم تطبيق وحفظ المظهر الشامل بنجاح!'; loadDataFromFirebase();
     } catch (e) { msg.className = 'status-msg err'; msg.innerText = e.message; }
   });
-  
 </script>
 </body>
 </html>
