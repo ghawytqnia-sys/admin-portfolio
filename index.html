@@ -474,8 +474,14 @@ window.triggerAllRenders = function() {
     </section>
 
     <!-- Experience Panel -->
+<!-- Experience Panel -->
     <section class="panel" id="panel-experience">
       <div class="main-head"><div><h2>مسار الخبرات (Experience)</h2></div></div>
+      <div class="card">
+        <div class="field-inline"><label>الوسم العلوي (Eyebrow)</label><input id="f_exp_eyebrow"></div>
+        <div class="field-inline"><label>عنوان القسم (Section Title)</label><input id="f_exp_title"></div>
+        <div class="field-inline"><label>النص الفرعي (Subtitle)</label><input id="f_exp_sub"></div>
+      </div>
       <div class="card" id="experience-editor" style="padding:16px;"></div>
       <button class="btn btn-primary save-btn" onclick="saveContextData('experience')"><i class="fa-solid fa-floppy-disk"></i> حفظ الخبرات</button>
       <p class="status-msg" id="experienceMsg"></p>
@@ -484,6 +490,10 @@ window.triggerAllRenders = function() {
     <!-- Projects Panel -->
     <section class="panel" id="panel-projects">
       <div class="main-head"><div><h2>المشاريع (Projects)</h2></div></div>
+      <div class="card">
+        <div class="field-inline"><label>الوسم العلوي (Eyebrow)</label><input id="f_proj_eyebrow"></div>
+        <div class="field-inline"><label>عنوان القسم (Section Title)</label><input id="f_proj_title"></div>
+      </div>
       <div class="card" id="projects-editor" style="padding:16px;"></div>
       <button class="btn btn-primary save-btn" onclick="saveContextData('projects')"><i class="fa-solid fa-floppy-disk"></i> حفظ المشاريع</button>
       <p class="status-msg" id="projectsMsg"></p>
@@ -492,6 +502,10 @@ window.triggerAllRenders = function() {
     <!-- Skills Panel -->
     <section class="panel" id="panel-skills">
       <div class="main-head"><div><h2>المهارات (Skills Matrix)</h2></div></div>
+      <div class="card">
+        <div class="field-inline"><label>الوسم العلوي (Eyebrow)</label><input id="f_skills_eyebrow"></div>
+        <div class="field-inline"><label>عنوان القسم (Section Title)</label><input id="f_skills_title"></div>
+      </div>
       <div class="card" id="skills-editor" style="padding:16px;"></div>
       <button class="btn btn-primary save-btn" onclick="saveContextData('skills')"><i class="fa-solid fa-floppy-disk"></i> حفظ المهارات</button>
       <p class="status-msg" id="skillsMsg"></p>
@@ -501,6 +515,9 @@ window.triggerAllRenders = function() {
     <section class="panel" id="panel-education">
       <div class="main-head"><div><h2>التعليم الأساسي (Education)</h2></div></div>
       <div class="card">
+        <div class="field-inline"><label>الوسم العلوي (Eyebrow)</label><input id="f_edu_eyebrow"></div>
+        <div class="field-inline"><label>عنوان القسم (Section Title)</label><input id="f_edu_title"></div>
+        <hr style="border:0; border-top:1px solid var(--border); margin:20px 0;">
         <div class="field-inline"><label>عنوان الدرجة الجامعية (Degree Title)</label><input id="f_edu_deg_title"></div>
         <div class="field-inline"><label>تفاصيل التخرج (Degree Meta Info)</label><input id="f_edu_deg_meta"></div>
         <div class="field-inline"><label>الشهادة التأسيسية (Main Cert Title)</label><input id="f_edu_cert_title"></div>
@@ -537,7 +554,7 @@ window.triggerAllRenders = function() {
       <p class="status-msg" id="sectionsMsg"></p>
     </section>
 
-    <!-- Contact & Globals Panel -->
+<!-- Contact & Globals Panel -->
     <section class="panel" id="panel-contact">
       <div class="main-head"><div><h2>الإعدادات العامة والتواصل (Globals & Contact)</h2></div></div>
       <div class="card">
@@ -547,7 +564,10 @@ window.triggerAllRenders = function() {
         <div class="field-inline"><label>البريد الإلكتروني المباشر (Global Email)</label><input id="f_contact_email" dir="ltr" style="text-align:left;"></div>
         <div class="field-inline"><label>رقم الهاتف / الواتساب (Global Phone)</label><input id="f_contact_phone" dir="ltr" style="text-align:left;" placeholder="+20 111 455 0112"></div>
         
-        <h4 style="color:var(--gold-l); margin-top:24px; margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:10px;">إعدادات خاصة باللغة النشطة (Context-Aware)</h4>
+        <h4 style="color:var(--gold-l); margin-top:24px; margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:10px;">نصوص عناوين التواصل (مخصصة للغة النشطة)</h4>
+        <div class="field-inline"><label>الوسم العلوي (Eyebrow)</label><input id="f_contact_eyebrow"></div>
+        <div class="field-inline"><label>عنوان القسم (Section Title)</label><input id="f_contact_title"></div>
+        <div class="field-inline"><label>النص الفرعي (Subtitle)</label><input id="f_contact_sub"></div>
         <div class="field-inline"><label>الموقع الجغرافي (Localized Location Name)</label><input id="f_contact_location"></div>
       </div>
       <button class="btn btn-primary" onclick="saveGlobalContact()"><i class="fa-solid fa-floppy-disk"></i> حفظ وتحديث الإعدادات العامة</button>
@@ -673,6 +693,11 @@ window.triggerAllRenders = function() {
     setValSafe('f_lead', st.hero?.lead);
     setValSafe('f_about_title', st.about?.title); 
     setValSafe('f_about_p1', st.about?.p1);
+    setValSafe('f_exp_eyebrow', st.exp?.eyebrow); setValSafe('f_exp_title', st.exp?.title); setValSafe('f_exp_sub', st.exp?.sub);
+    setValSafe('f_proj_eyebrow', st.proj?.eyebrow); setValSafe('f_proj_title', st.proj?.title);
+    setValSafe('f_skills_eyebrow', st.skills?.eyebrow); setValSafe('f_skills_title', st.skills?.title);
+    setValSafe('f_edu_eyebrow', st.education?.eyebrow); setValSafe('f_edu_title', st.education?.title);
+    setValSafe('f_contact_eyebrow', st.contact?.eyebrow); setValSafe('f_contact_title', st.contact?.title); setValSafe('f_contact_sub', st.contact?.sub);
     setValSafe('f_edu_deg_title', st.education?.degreeTitle); 
     setValSafe('f_edu_deg_meta', st.education?.degreeMeta);
     setValSafe('f_edu_cert_title', st.education?.icdlTitle); 
@@ -908,7 +933,7 @@ window.triggerAllRenders = function() {
     try {
       window.isAdminSaving = true;
       const payload = {};
-      if(section === 'hero') {
+if(section === 'hero') {
         payload.hero = { brandName: getValSafe('f_brand'), eyebrow: getValSafe('f_eyebrow'), title1: getValSafe('f_title1'), lead: getValSafe('f_lead') };
         payload.typed = window.appState[window.activeLang].typed; 
         payload.chips = window.appState[window.activeLang].chips; 
@@ -917,10 +942,25 @@ window.triggerAllRenders = function() {
         payload.facts = window.appState[window.activeLang].facts; 
         payload.arc = window.appState[window.activeLang].arc;
       }
-      if(section === 'experience') payload.experience = window.appState[window.activeLang].experience;
-      if(section === 'projects') payload.projects = window.appState[window.activeLang].projects;
-      if(section === 'skills') payload.skillCats = window.appState[window.activeLang].skillCats;
-      if(section === 'education') payload.education = { degreeTitle: getValSafe('f_edu_deg_title'), degreeMeta: getValSafe('f_edu_deg_meta'), icdlTitle: getValSafe('f_edu_cert_title'), icdlMeta: getValSafe('f_edu_cert_meta') };
+      if(section === 'experience') {
+        payload.experience = window.appState[window.activeLang].experience;
+        payload.exp = { eyebrow: getValSafe('f_exp_eyebrow'), title: getValSafe('f_exp_title'), sub: getValSafe('f_exp_sub') };
+      }
+      if(section === 'projects') {
+        payload.projects = window.appState[window.activeLang].projects;
+        payload.proj = { eyebrow: getValSafe('f_proj_eyebrow'), title: getValSafe('f_proj_title') };
+      }
+      if(section === 'skills') {
+        payload.skillCats = window.appState[window.activeLang].skillCats;
+        payload.skills = { eyebrow: getValSafe('f_skills_eyebrow'), title: getValSafe('f_skills_title') };
+      }
+      if(section === 'education') {
+        payload.education = { 
+          eyebrow: getValSafe('f_edu_eyebrow'), title: getValSafe('f_edu_title'),
+          degreeTitle: getValSafe('f_edu_deg_title'), degreeMeta: getValSafe('f_edu_deg_meta'), 
+          icdlTitle: getValSafe('f_edu_cert_title'), icdlMeta: getValSafe('f_edu_cert_meta') 
+        };
+      }
       if(section === 'certs') { 
         payload.certsElaraby = window.appState[window.activeLang].certsElaraby; 
         payload.certsAlmentor = window.appState[window.activeLang].certsAlmentor; 
@@ -940,7 +980,13 @@ window.triggerAllRenders = function() {
     try {
       window.isAdminSaving = true;
       // Localized location part
-      await setDoc(doc(db, "portfolio", window.activeLang), { contact: { location: getValSafe('f_contact_location') } }, { merge: true });
+// Localized location and titles part
+      await setDoc(doc(db, "portfolio", window.activeLang), { 
+        contact: { 
+          location: getValSafe('f_contact_location'),
+          eyebrow: getValSafe('f_contact_eyebrow'), title: getValSafe('f_contact_title'), sub: getValSafe('f_contact_sub')
+        } 
+      }, { merge: true });
       // Global part
       await setDoc(doc(db, "portfolio", "global"), { 
         aboutData: { profileImg: getValSafe('f_profile_img') },
