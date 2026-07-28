@@ -284,7 +284,8 @@ window.renderProjectsEditor = () => {
     <div class="list-editor-item">
       <button class="btn btn-danger btn-small remove-btn" onclick="removeProp('projects', ${idx}, 'renderProjectsEditor')"><i class="fa-solid fa-trash"></i> حذف</button>
       <div class="field-inline"><label>Project Title / عنوان المشروع</label><input type="text" value="${item.title||''}" oninput="updateProp('projects', ${idx}, 'title', this.value)"></div>
-      <div class="field-inline"><label>Description / التفاصيل</label><textarea style="min-height:70px;" oninput="updateProp('projects', ${idx}, 'desc', this.value)">${item.desc||''}</textarea></div>
+<div class="field-inline"><label>Description / التفاصيل</label><textarea style="min-height:70px;" oninput="updateProp('projects', ${idx}, 'desc', this.value)">${item.desc||''}</textarea></div>
+      <div class="field-inline"><label>Project Link / رابط المشروع (اختياري)</label><input type="text" value="${item.link||''}" oninput="updateProp('projects', ${idx}, 'link', this.value)" dir="ltr" placeholder="https://..."></div>
       <div class="lang-box-grid" style="margin-bottom:0;">
         <div class="field-inline"><label>Image URL (من معرض الصور)</label><input type="text" value="${item.img||''}" oninput="updateProp('projects', ${idx}, 'img', this.value)" dir="ltr"></div>
         <div class="field-inline"><label>Fallback Icon (مثال fa-robot)</label><input type="text" value="${item.icon||''}" oninput="updateProp('projects', ${idx}, 'icon', this.value)" dir="ltr"></div>
@@ -294,7 +295,7 @@ window.renderProjectsEditor = () => {
         <div class="field-inline"><label>Tags (الوسوم مفصولة بفاصلة)</label><input type="text" value="${(item.tags||[]).join(', ')}" oninput="updateProjectTags(${idx}, this.value)"></div>
       </div>
     </div>
-  `).join('') + `<button class="btn btn-ghost" onclick="addProp('projects', {title:'', desc:'', img:'', icon:'', status:'', tags:[]}, 'renderProjectsEditor')"><i class="fa-solid fa-plus"></i> إضافة مشروع جديد</button>`;
+`).join('') + `<button class="btn btn-ghost" onclick="addProp('projects', {title:'', desc:'', img:'', icon:'', status:'', tags:[], link:''}, 'renderProjectsEditor')"><i class="fa-solid fa-plus"></i> إضافة مشروع جديد</button>`;
 }
 
 window.updateSkillNode = function(catIdx, skillIdx, field, val) { window.appState[window.activeLang].skillCats[catIdx].skills[skillIdx][field] = field === 'value' ? parseInt(val||0) : val; window.markDirty(); };
