@@ -8,7 +8,7 @@
 
 <!-- Google Fonts & Icons -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700&family=Alexandria:wght@400;500;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700&family=Alexandria:wght@400;500;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 <!-- PDF & Word Parsers -->
@@ -273,7 +273,7 @@ input:checked + .slider:before { transform: translateX(20px); }
 .status-badge.expired { background: rgba(220,90,90,0.2); color: #e07a7a; border: 1px solid rgba(220,90,90,0.4); }
 .status-badge.deleted { background: rgba(255,255,255,0.08); color: var(--text-dim); border: 1px solid var(--border); }
 
-/* Public Viewer Container when opened via temporary link */
+/* Public Viewer Container */
 #publicViewer {
   display: none;
   min-height: 100vh;
@@ -1388,7 +1388,9 @@ window.triggerAllRenders = function() {
 
       populateForms();
       window.refreshPreview();
-      window.loadActivePublicPreviewLink(portfolioId);
+
+      // Load active temporary link associated with this portfolio
+      window.loadActivePublicPreviewLink(data.activePreviewToken || null);
 
       if (msg) { msg.className = 'status-msg ok'; msg.innerText = 'المزامنة حيّة ومتصلة!'; setTimeout(() => msg.style.display = 'none', 2000); }
     }, (err) => {
@@ -1462,6 +1464,9 @@ window.triggerAllRenders = function() {
           icdlTitle: getValSafe('f_edu_cert_title'), 
           icdlMeta: getValSafe('f_edu_cert_meta') 
         };
+      }
+      if(section === 'certs') {
+        // certs are kept updated in window.appState[lang]
       }
 
       await setDoc(portfolioDocRef(window.currentPortfolioId), {
@@ -1615,7 +1620,7 @@ window.triggerAllRenders = function() {
 
   // ========================================================
   // TEMPORARY PUBLIC PREVIEW LINK SYSTEM (Real Cross-Device Backend)
-  // Collection: public_previews/{token}
+  // Direct Document Reference: public_previews/{token}
   // ========================================================
   let activePreviewRecord = null;
   let countdownTimerId = null;
@@ -1626,7 +1631,7 @@ window.triggerAllRenders = function() {
     return Array.from(arr, b => b.toString(36).padStart(2, '0')).join('').substring(0, 16);
   }
 
-  window.loadActivePublicPreviewLink = async function(portfolioId) {
+  window.loadActivePublicPreviewLink = async function(token) {
     activePreviewRecord = null;
     if (countdownTimerId) { clearInterval(countdownTimerId); countdownTimerId = null; }
     
@@ -1637,22 +1642,28 @@ window.triggerAllRenders = function() {
     const reactivateBtn = document.getElementById('reactivatePublicLinkBtn');
     const deleteBtn = document.getElementById('deletePublicLinkBtn');
 
-    if (!portfolioId) {
+    if (!token) {
       if (detailsBox) detailsBox.style.display = 'none';
+      [openBtn, copyBtn, stopBtn, reactivateBtn, deleteBtn].forEach(b => { if(b) b.style.display = 'none'; });
       return;
     }
 
     try {
-      const q = query(collection(db, "public_previews"), where("portfolioId", "==", portfolioId), where("status", "!=", "deleted"));
-      const snap = await getDocs(q);
-      if (snap.empty) {
+      const snap = await getDoc(doc(db, "public_previews", token));
+      if (!snap.exists()) {
         if (detailsBox) detailsBox.style.display = 'none';
-        [openBtn, copyBtn, stopBtn, reactivateBtn, deleteBtn].forEach(b => b.style.display = 'none');
+        [openBtn, copyBtn, stopBtn, reactivateBtn, deleteBtn].forEach(b => { if(b) b.style.display = 'none'; });
         return;
       }
       
-      const docData = snap.docs[0].data();
-      activePreviewRecord = { id: snap.docs[0].id, ...docData };
+      const docData = snap.data();
+      if (docData.status === 'deleted') {
+        if (detailsBox) detailsBox.style.display = 'none';
+        [openBtn, copyBtn, stopBtn, reactivateBtn, deleteBtn].forEach(b => { if(b) b.style.display = 'none'; });
+        return;
+      }
+
+      activePreviewRecord = { id: snap.id, ...docData };
       renderPreviewLinkStatusUI();
     } catch(err) {
       console.warn("Could not check active preview link:", err);
@@ -1764,12 +1775,25 @@ window.triggerAllRenders = function() {
     };
 
     try {
-      const docRef = await addDoc(collection(db, "public_previews"), previewDoc);
-      activePreviewRecord = { id: docRef.id, ...previewDoc, createdAt: now, expiresAt: expires };
+      // 1. Direct write using document id = token (High performance & clear permissions)
+      await setDoc(doc(db, "public_previews", token), previewDoc);
+
+      // 2. Save active preview token in portfolio doc
+      await setDoc(portfolioDocRef(window.currentPortfolioId), {
+        activePreviewToken: token,
+        updatedAt: serverTimestamp()
+      }, { merge: true });
+
+      activePreviewRecord = { id: token, ...previewDoc, createdAt: now, expiresAt: expires };
       renderPreviewLinkStatusUI();
       alert("تم توليد الرابط العام المؤقت بنجاح!");
     } catch(err) {
-      alert("فشل توليد الرابط: " + err.message);
+      console.error("[PREVIEW-LINK-ERROR]", err);
+      if (err.code === 'permission-denied' || (err.message && err.message.includes('permissions'))) {
+        alert("فشل توليد الرابط: صلاحيات Firestore غير كافية لمجموعة public_previews.\n\nيرجى تحديث قواعد Firestore Rules في Firebase Console كما هو موضح لإتاحة الروابط العامة المؤقتة.");
+      } else {
+        alert("فشل توليد الرابط: " + err.message);
+      }
     }
   });
 
@@ -1789,7 +1813,7 @@ window.triggerAllRenders = function() {
   document.getElementById('stopPublicLinkBtn').addEventListener('click', async () => {
     if (!activePreviewRecord) return;
     try {
-      await updateDoc(doc(db, "public_previews", activePreviewRecord.id), { status: 'stopped' });
+      await updateDoc(doc(db, "public_previews", activePreviewRecord.token), { status: 'stopped' });
       activePreviewRecord.status = 'stopped';
       renderPreviewLinkStatusUI();
     } catch(err) { alert("حدث خطأ: " + err.message); }
@@ -1798,7 +1822,7 @@ window.triggerAllRenders = function() {
   document.getElementById('reactivatePublicLinkBtn').addEventListener('click', async () => {
     if (!activePreviewRecord) return;
     try {
-      await updateDoc(doc(db, "public_previews", activePreviewRecord.id), { status: 'active' });
+      await updateDoc(doc(db, "public_previews", activePreviewRecord.token), { status: 'active' });
       activePreviewRecord.status = 'active';
       renderPreviewLinkStatusUI();
     } catch(err) { alert("حدث خطأ: " + err.message); }
@@ -1808,11 +1832,18 @@ window.triggerAllRenders = function() {
     if (!activePreviewRecord) return;
     if (!confirm("هل أنت متأكد من حذف هذا الرابط العام نهائياً؟")) return;
     try {
-      await updateDoc(doc(db, "public_previews", activePreviewRecord.id), { status: 'deleted' });
+      await updateDoc(doc(db, "public_previews", activePreviewRecord.token), { status: 'deleted' });
+      if (window.currentPortfolioId) {
+        await setDoc(portfolioDocRef(window.currentPortfolioId), {
+          activePreviewToken: null,
+          updatedAt: serverTimestamp()
+        }, { merge: true });
+      }
       activePreviewRecord = null;
       document.getElementById('linkActiveDetails').style.display = 'none';
       ['openPublicLinkBtn','copyPublicLinkBtn','stopPublicLinkBtn','reactivatePublicLinkBtn','deletePublicLinkBtn'].forEach(id => {
-        document.getElementById(id).style.display = 'none';
+        const el = document.getElementById(id);
+        if(el) el.style.display = 'none';
       });
       alert("تم حذف الرابط العام نهائياً وبات غير صالح.");
     } catch(err) { alert("حدث خطأ: " + err.message); }
@@ -1824,21 +1855,25 @@ window.triggerAllRenders = function() {
     const token = params.get('preview');
     if (!token) return false;
 
-    // Switch view to public viewer
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('app').style.display = 'none';
     const viewer = document.getElementById('publicViewer');
     viewer.classList.add('show');
 
     try {
-      const q = query(collection(db, "public_previews"), where("token", "==", token), where("status", "==", "active"));
-      const snap = await getDocs(q);
-      if (snap.empty) {
+      // Direct getDoc by token
+      const snap = await getDoc(doc(db, "public_previews", token));
+      if (!snap.exists()) {
         document.getElementById('publicViewerContent').style.display = 'none';
         document.getElementById('publicViewerExpired').style.display = 'block';
         return true;
       }
-      const data = snap.docs[0].data();
+      const data = snap.data();
+      if (data.status !== 'active') {
+        document.getElementById('publicViewerContent').style.display = 'none';
+        document.getElementById('publicViewerExpired').style.display = 'block';
+        return true;
+      }
       const expiresAtDate = data.expiresAt?.toDate ? data.expiresAt.toDate() : new Date(data.expiresAt);
       if (Date.now() >= expiresAtDate.getTime()) {
         document.getElementById('publicViewerContent').style.display = 'none';
@@ -1854,6 +1889,7 @@ window.triggerAllRenders = function() {
       iframe.srcdoc = html;
       return true;
     } catch(e) {
+      console.warn("Public preview access error:", e);
       document.getElementById('publicViewerExpired').style.display = 'block';
       return true;
     }
@@ -3057,7 +3093,7 @@ ${rawText}`;
       eduCont.innerHTML = '<div class="p-empty-state">' + dict.emptyEdu + '</div>';
     }
 
-    // Certifications & Courses
+    // Certifications & Courses (الدورات والشهادات)
     var certsCont = document.getElementById('certsContainer');
     var allCerts = [];
     (d.certsElaraby || []).forEach(function(c) {
@@ -3203,10 +3239,10 @@ ${rawText}`;
     }
     let htmlOutput = window.generatePortfolioHTML(window.appState, window.activeLang);
 
-    // Practical minification and comment stripping (without breaking inline code or credentials)
+    // Practical minification and comment stripping
     htmlOutput = htmlOutput
-      .replace(/<!--[\s\S]*?-->/g, '') // remove HTML comments
-      .replace(/\/\*[\s\S]*?\*\//g, '') // remove CSS comments
+      .replace(/<!--[\s\S]*?-->/g, '')
+      .replace(/\/\*[\s\S]*?\*\//g, '')
       .replace(/\n\s+\n/g, '\n');
 
     const blob = new Blob([htmlOutput], { type: "text/html;charset=utf-8" });
